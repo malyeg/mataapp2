@@ -1,0 +1,35 @@
+default_platform(:android)
+
+platform :android do
+  desc "Building your App in version beta"
+  lane :beta do |options|
+    puts "+---------------------------------+".bold.blue
+    puts "|-- version: #{options[:version]} 🚀 --|".bold.blue
+    puts "+---------------------------------+".bold.blue
+
+    version = options[:version]
+    increment_version_code(
+    )
+    android_set_version_name(
+      version_name: version,
+    )
+    gradle(
+      task: "clean assembleRelease"
+    )
+    firebase_app_distribution(
+      app: ENV['APP_ID'],
+      groups: ENV["GROUPS"] || options[:groups],
+      release_notes: options[:notes] || "",
+    )
+    if options[:sync]
+      puts "|-- sync: #{options[:sync]} 🚀 --|".bold.blue
+      sync
+    end
+  end
+
+  private_lane :sync do |options|
+
+    git_commit(path: "./app/build.gradle", message: "Android version Bump")
+    push_to_git_remote
+  end
+end

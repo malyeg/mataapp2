@@ -1,0 +1,61 @@
+{
+  "app": {
+    "exitModal" : {
+      "title": "Hold on ar!",
+      "body": "Are you sure ar?"
+    }
+  },
+  "common": {
+    "form": {
+      "error": {
+        "email": "بريد غير صحيح",
+        "required": "حقل مطلوب"
+      }
+    },
+    "noData": "لا توجد بيانات",
+    "tabs": {
+      "Home": "Home ar",
+      "Profile": "Profile ar"
+    }
+  },
+  "menu":{
+    "home": "الصفحة الرئيسية",
+    "network": "الشبكة الطبية",
+    "services": "الخدمات",
+    "orders": "السله",
+    "en": "English",
+    "ar": "عربي",
+    "profile": "الملف الشخصي",
+    "logout": "الخروج"
+  },
+  "homeScreen": {
+    "title": "Home"
+  },
+  "networkScreen": {
+    "header": "Medical Network",
+    "mapLink":"Open in map"
+  },
+  "signInScreen": {
+    "title": "مرحبا بك",
+    "subTitle": "في برنامج الشبكه الطبيه",
+    "username": {
+      "placeholder": "رقم المحمول او البريد الاكتروني",
+      "required": "رقم الموبيل او البريد الاكتروني مطلوب",
+      "invalid": "رقم محمول او بريد غير صحيح"
+    },
+    "password": {
+      "placeholder": "الرقم السري",
+      "required": "الرقم السري مطلوب"
+    },
+    "forgotPasswordLink": "نسيت كلمه المرور",
+    "loginBtnTitle": "الدخول",
+    "registerBtnTitle": "التسجيل",
+    "guestBtnTitle": "الدخول كزائر",
+    "passwordLink": "نسيت كلمه السر؟"
+  },
+
+  "error": {
+    "auth/user-not-found" : "user not found ar",
+    "auth/user-disabled" : "user is disabled ar"
+  }
+}

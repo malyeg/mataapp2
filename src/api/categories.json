@@ -1,0 +1,72 @@
+[
+  {
+    "id": "home",
+    "name": "Home",
+    "level": 0
+  },
+  {
+    "id": "office",
+    "name": "Office",
+    "level": 0
+  },
+  {
+    "id": "garden",
+    "name": "Garden",
+    "level": 0
+  },
+  {
+    "id": "home furnitures",
+    "group": "Home",
+    "name": "Home Furnitures",
+    "parent": "home",
+    "level": -1
+  },
+  {
+    "id": "home appliances",
+    "group": "Home",
+    "name": "Home Appliances",
+    "parent": "home",
+    "level": -1
+  },
+  {
+    "id": "office furnitures",
+    "group": "Office",
+    "name": "Office Furnitures",
+    "parent": "office",
+    "level": -1
+  },
+  {
+    "id": "office appliances",
+    "group": "Office",
+    "name": "Office Appliances",
+    "parent": "office",
+    "level": -1
+  },
+  {
+    "id": "garden furnitures",
+    "group": "Garden",
+    "name": "Garden Furnitures",
+    "parent": "garden",
+    "level": -1
+  },
+  {
+    "id": "garden appliances",
+    "group": "Garden",
+    "name": "Garden Appliances",
+    "parent": "garden",
+    "level": -1
+  },
+  {
+    "id": "garage tools",
+    "group": "Garage",
+    "name": "Garage Tools",
+    "parent": "garden",
+    "level": -1
+  },
+  {
+    "id": "miscellaneous",
+    "group": "Miscellaneous",
+    "name": "Miscellaneous",
+    "level": -1
+  }
+ ]

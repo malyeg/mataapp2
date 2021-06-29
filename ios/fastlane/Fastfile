@@ -1,0 +1,94 @@
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+
+  lane :beta do |options|
+
+    loadResources(profile: options[:env])
+    updateVersion(version: options[:version])
+    build(profile: options[:env])
+    firebase_app_distribution(
+      app: ENV['APP_ID'],
+      groups: ENV["GROUPS"] || options[:groups],
+      release_notes: options[:notes] || "",
+      ipa_path: "build/mataApp.ipa"
+    )
+    if options[:sync]
+      puts "|-- sync: #{options[:sync]} 🚀 --|".bold.blue
+      sync
+    end  
+  end
+end
+
+private_lane :updateVersion do |options|
+
+  # version = get_version_number_from_git_branch
+  version = options[:version]
+  puts "|-- version: #{version} 🚀 --|".bold.blue
+  increment_build_number_in_plist(
+    plist_build_setting_support: true
+  )
+  increment_version_number_in_xcodeproj(
+    version_number: "#{version}",
+  )
+end
+
+private_lane :loadResources do |options|
+  get_certificates(
+    development: true,
+    username: ENV['APPLE_USERNAME']
+  )
+  get_provisioning_profile(
+    development: true,
+    username: ENV['APPLE_USERNAME'],
+    app_identifier: ENV['BUNDLE_ID'],
+    filename: "mata.mobileprovision"
+  )
+end
+
+private_lane :build do |options|
+  puts "+------------------------------------+".bold.blue
+  puts "|-- Environment: #{options[:profile]} 🚀 --|".bold.blue
+  puts "+------------------------------------+".bold.blue
+
+  # increment_build_number()
+
+  scheme = ENV['SCHEME_NAME']
+  method = (options[:profile] == 'distribution' ? "development" : "development")
+  profile = (options[:profile] == 'distribution' ? ENV['DISTRIBUTION_PROFILE_APPSTORE'] : ENV['DISTRIBUTION_PROFILE_FIREBASE'])
+
+  build_app(
+    scheme: scheme,
+    output_directory: "build",
+    output_name: "mataApp.ipa",
+    export_options: {
+      method: method,
+      uploadBitcode: false,
+      uploadSymbols: true,
+      compileBitcode: false,
+      provisioningProfiles: {
+        ENV['BUNDLE_ID'] => profile
+      }
+    },
+    include_bitcode: false,
+    clean: true
+  )
+end
+
+private_lane :sync do |options|
+
+  git_commit(path: "./mataApp.xcodeproj/project.pbxproj", message: "IOS Version Bump")
+  push_to_git_remote
+end
+
+private_lane :clean do |options|
+  clean_cocoapods_cache
+  xcclean
+end
+
+
+
+
+
