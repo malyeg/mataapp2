@@ -10,6 +10,7 @@ import {Linking} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../components/core/Toaster';
+import Sheet from '../components/widgets/Sheet';
 import constants from '../config/constants';
 import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
@@ -73,17 +74,13 @@ const linking: LinkingOptions = {
   },
   config: {
     screens: {
-      // HomeTabs: {
-      //   screens: {
-      //     HomeScreen: 'home',
-      //     // MyItemsScreen: 'items',
-      //   },
-      // },
+      HomeTabs: {
+        screens: {
+          HomeScreen: 'home',
+        },
+      },
       ItemDetailsScreen: 'items',
       MyItemsScreen: 'myItems',
-      // ['homeStack1']: {
-      //   path: 'home',
-      // },
     },
   },
 };

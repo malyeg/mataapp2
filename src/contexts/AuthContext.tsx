@@ -71,7 +71,8 @@ const onNetworkChanged = (netInfoState: NetInfoState) => {
 const AuthProvider: React.FC = (props: any) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
   const [initializing, setInitializing] = useState(true);
-  const analytics = useCrashlytics();
+  const crashlytics = useCrashlytics();
+
   const messaging = useMessaging();
   var authFlag = true; // workaround for onAuthStateChanged twice calls
   // const [connected, setConnected] = useState(false);
@@ -83,7 +84,8 @@ const AuthProvider: React.FC = (props: any) => {
           logger.debug('onAuthStateChanged');
           authFlag = false;
           const user = fromFirebaseUser(fbUser);
-          analytics.setUser(user);
+          crashlytics.setUser(user);
+          Analytics.setUser(user);
           messaging.getToken().then(token => updateToken(token, profile!));
           dispatch({
             type: AuthActionType.SIGNIN,
@@ -131,7 +133,8 @@ const AuthProvider: React.FC = (props: any) => {
 
         if (user && profile) {
           await profilesApi.saveToStorage(profile);
-          setUser(user);
+          crashlytics.setUser(user);
+          Analytics.setUser(user);
           dispatch({
             type: AuthActionType.SIGNIN,
             payload: {user, profile},

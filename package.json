@@ -15,7 +15,6 @@
     "bump-major": "yarn version major --new-version --no-git-tag-version && fastlane bump"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^3",
     "@hookform/resolvers": "^2.6.0",
     "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-community/checkbox": "^0.5.8",

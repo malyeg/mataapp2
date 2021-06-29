@@ -211,6 +211,7 @@ const PickerModal = ({
         )}
         <FlatList
           data={listItems}
+          showsVerticalScrollIndicator={false}
           renderItem={renderItemHandler}
           keyExtractor={item => item.id}
           ListEmptyComponent={listEmptyComponent}
