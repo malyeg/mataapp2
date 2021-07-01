@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/core';
-import React, {FC} from 'react';
+import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Item} from '../../api/itemsApi';
@@ -13,32 +13,23 @@ export const ITEM_CARD_HEIGHT = CARD_HEIGHT + CARD_BORDER;
 interface ItemCardProps extends ViewProps {
   item: Item;
   showActivityStatus?: boolean;
+  onSwap?: (item: Item) => void;
 }
-const ItemCard: FC<ItemCardProps> = ({item, style, showActivityStatus}) => {
+const ItemCard = ({item, style, showActivityStatus}: ItemCardProps) => {
   const navigtion = useNavigation();
 
-  const openItemDetails = () => {
+  const openItemDetails = useCallback(() => {
     // TODO refactor to constant
     navigtion.navigate('ItemDetailsScreen', {
-      title:
-        item.name.length > 20
-          ? item.name.substr(0, 20).trim() + ' ...'
-          : item.name,
       id: item.id,
     });
-  };
+  }, [item, navigtion]);
+
   return (
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>
       <View style={styles.cardHeader}>
-        {/* <Icon
-            style={styles.eyeIcon}
-            name="eye"
-            size={17} // TODO change to responsive
-            color={theme.colors.green}
-            //   onPress={toggleEyeIcon}
-          /> */}
         <Text body2>{item?.swapOption?.type}</Text>
-        <Text body2>{item.condition?.type === 'new' ? 'new' : 'used'}</Text>
+        {/* <Text body2>{item.condition?.type === 'new' ? 'new' : 'used'}</Text> */}
       </View>
       {showActivityStatus && (
         <View
@@ -103,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.green,
   },
   eyeIcon: {
-    paddingRight: 5,
+    marginRight: -5,
   },
   image: {
     flex: 3,

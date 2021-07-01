@@ -157,7 +157,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       }
       const timestamp = firestore.FieldValue.serverTimestamp();
       const id = await this.collection.doc().id;
-      const createdDoc = {...newDoc, timestamp};
+      const createdDoc: T = {...newDoc, timestamp};
       await this.collection.doc(id).set(createdDoc);
       createdDoc.id = id;
       options?.analyticsEvent &&
@@ -166,7 +166,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         cache.store(id, createdDoc, options.cache.expireInSeconds);
       }
       options?.cache?.evict && cache.remove(options?.cache?.evict);
-      return newDoc;
+      return createdDoc as T;
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();

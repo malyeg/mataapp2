@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import dealsApi from '../../api/dealsApi';
 import itemsApi, {Item, ItemStatus} from '../../api/itemsApi';
 import useAuth from '../../hooks/useAuth';
 import useLocale from '../../hooks/useLocale';
@@ -106,6 +107,22 @@ const NearByItems = ({
       </PressableObacity>
     </NoDataFound>
   );
+
+  // const onSwap = useCallback():
+
+  const renderItem = useCallback(
+    ({item}) => (
+      <ItemCard
+        item={item as Item}
+        onSwap={async () => {
+          console.log('new offer');
+          const deal = await dealsApi.createOffer(user.id, item);
+          console.log('new offer', deal);
+        }}
+      />
+    ),
+    [user.id],
+  );
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
@@ -126,7 +143,7 @@ const NearByItems = ({
         horizontal
         pageable
         itemsFunc={listData}
-        renderItem={({item}) => <ItemCard item={item as Item} />}
+        renderItem={renderItem}
         ListEmptyComponent={listEmptyComponent}
         itemSize={ITEM_HEIGHT}
       />

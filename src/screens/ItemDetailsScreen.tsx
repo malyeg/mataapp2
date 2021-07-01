@@ -6,16 +6,18 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import itemsApi, {ImageSource, Item} from '../api/itemsApi';
+import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
 import ItemActivity from '../components/widgets/ItemActivity';
 import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
 import LocationView from '../components/widgets/LocationView';
 import OwnerItemList from '../components/widgets/OwnerItemList';
+import SwapButton from '../components/widgets/SwapButton';
 import TextDescription from '../components/widgets/TextDescription';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
+import useLocale from '../hooks/useLocale';
 import {ItemDetailsRouteProp} from '../navigation/HomeStack';
 import theme from '../styles/theme';
 import {HOME_SCREEN} from './HomeScreen';
@@ -25,10 +27,11 @@ export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
 const ItemDetailsScreen = () => {
   const route = useRoute<ItemDetailsRouteProp>();
   const [item, setItem] = useState<Item>();
-  const {loader, loading, request} = useApi({loadingInitValue: true});
+  const {loader, request} = useApi({loadingInitValue: true});
   const {user} = useAuth();
   const navigation = useNavigation();
   const state = useNavigationState(s => s);
+  const {t} = useLocale('itemDetailsScreen');
 
   useEffect(() => {
     const loadData = async () => {
@@ -67,9 +70,10 @@ const ItemDetailsScreen = () => {
       if (i) {
         navigation.setOptions({
           headerRight: () => <ItemDetailsNav item={i} onDelete={deleteItem} />,
-          headerTitle: route.params?.title ?? i.name.length > 20
-          ? i.name.substr(0, 20).trim() + ' ...'
-          : i.name,
+          headerTitle:
+            i.name.trim().length > 20
+              ? i.name.substr(0, 20).trim() + ' ...'
+              : i.name,
         });
       }
     });
@@ -91,6 +95,14 @@ const ItemDetailsScreen = () => {
     [item],
   );
 
+  const swapHandler = useCallback(() => {
+    console.log('swap onpress');
+  }, []);
+
+  const conditionName = conditionList.find(
+    i => i.id === item?.condition.type,
+  )?.name;
+
   return item ? (
     <Screen scrollable={true} style={styles.screen}>
       {item.images && item.images.length === 1 ? (
@@ -102,24 +114,31 @@ const ItemDetailsScreen = () => {
       ) : (
         <Carousel images={item.images!} renderItem={itemImage} />
       )}
-      <View style={styles.ownerContainer}>
-        <Icon
-          style={styles.ownerIcon}
-          name="account-outline"
-          size={40} // TODO change to responsive
-          color={theme.colors.grey}
-          //   onPress={toggleEyeIcon}
-        />
-        <Text>{item.category.name}</Text>
+      <View style={[styles.row, styles.ownerContainer]}>
+        <View style={styles.categoryContainer}>
+          <Icon
+            style={styles.ownerIcon}
+            name="account-outline"
+            size={40} // TODO change to responsive
+            color={theme.colors.grey}
+            //   onPress={toggleEyeIcon}
+          />
+          <Text>{item.category.name}</Text>
+        </View>
+        <SwapButton onPress={swapHandler} />
       </View>
-      <Text style={styles.nameText}>{item.name}</Text>
       {!!item.description && (
-        <TextDescription>{item.description}</TextDescription>
+        <View style={styles.row}>
+          <Text style={styles.statusTitle}>{t('itemDescriptionTitle')}</Text>
+          <TextDescription>{item.description}</TextDescription>
+        </View>
       )}
       <View style={styles.statusContainer}>
-        <Text style={styles.statusTitle}>Condition: </Text>
+        <Text style={styles.statusTitle}>{t('itemConditionTitle')}</Text>
         <View>
-          <Text style={styles.status}>{item.condition?.type}</Text>
+          <Text style={styles.status}>
+            {conditionName ?? item.condition?.type}
+          </Text>
           {!!item.condition?.desc && <Text>{item.condition?.desc}</Text>}
         </View>
       </View>
@@ -127,7 +146,14 @@ const ItemDetailsScreen = () => {
       {!!item?.description ?? (
         <TextDescription>{item.description}</TextDescription>
       )}
+      <View style={[styles.row, styles.statusContainer]}>
+        <Text style={styles.rowTitle}>{t('addressTitle')}</Text>
+        <Text numberOfLines={2}>
+          {item.location?.address?.formattedAddress}
+        </Text>
+      </View>
       <LocationView location={item.location!} style={styles.location} />
+
       {!!item && item.userId !== user.id && route.params?.id === item.id && (
         <OwnerItemList item={item} />
       )}
@@ -146,7 +172,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   imageContainer: {
-    // backgroundColor: 'red',
     marginBottom: 10,
   },
   image: {
@@ -173,9 +198,21 @@ const styles = StyleSheet.create({
     color: theme.colors.salmon,
     fontWeight: theme.fontWeight.semiBold,
   },
+  rowTitle: {
+    color: theme.colors.salmon,
+    fontWeight: theme.fontWeight.semiBold,
+    flexShrink: 0,
+  },
   status: {
     color: theme.colors.grey,
     fontWeight: theme.fontWeight.semiBold,
+  },
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    // backgroundColor: 'grey',
+    // overflow: 'hidden',
   },
 
   location: {
@@ -185,7 +222,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  addressContainer: {},
+
   ownerContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  categoryContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,

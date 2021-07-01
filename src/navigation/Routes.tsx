@@ -44,20 +44,21 @@ const linking: LinkingOptions = {
     const unsubscribeNotification = messaging().onNotificationOpenedApp(
       message => {
         console.log('onNotificationOpenedApp', message);
-        const url = (message.notification as any)?.url;
+        const url = (message.data as any)?.url as string;
 
         if (url) {
-          listener(url);
+          listener(url.includes('//') ? url : `mataapp://${url}`);
         }
       },
     );
     const onMessageUnsubscribe = messaging().onMessage(remoteMessage => {
       console.log('onMessage', remoteMessage);
       const url = (remoteMessage.notification as any)?.url;
-      listener('mataapp://myItems');
+
       if (url) {
         // TODO show popup;
         // TODO if yes, listener(url);
+        listener('mataapp://myItems');
       }
     });
 

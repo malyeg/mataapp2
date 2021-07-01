@@ -261,7 +261,10 @@
     "submitSuccess": "Password changed succesfully 👋"
   },
   "itemDetailsScreen": {
-    "ownerItemsTitle": "Owner Items"
+    "ownerItemsTitle": "Owner other items",
+    "itemDescriptionTitle": "Description: ",
+    "addressTitle": "Address: ",
+    "itemConditionTitle": "Condition: "
   },
 
 

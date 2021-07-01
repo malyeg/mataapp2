@@ -12,6 +12,32 @@ export type ItemStatus = 'draft' | 'online' | 'pending';
 export type ConditionType = 'new' | 'goodAsNew' | 'used' | 'usedWithIssues';
 export type SwapType = 'free' | 'swapWithAnother' | 'swapWithAny';
 
+// export const conditionMap = {
+//   new: 'New',
+//   goodAsNew: 'New',
+//   used: 'New',
+//   usedWithIssues: 'New',
+// };
+
+export const conditionList: {id: ConditionType; name: string}[] = [
+  {
+    id: 'new',
+    name: 'New',
+  },
+  {
+    id: 'goodAsNew',
+    name: 'Good as new',
+  },
+  {
+    id: 'used',
+    name: 'Used',
+  },
+  {
+    id: 'usedWithIssues',
+    name: 'Used with issues',
+  },
+];
+
 export type ImageSource = {
   uri?: string;
   name?: string;
@@ -29,6 +55,7 @@ export interface Item extends DataSearchable, Entity {
   category: Category;
   // status: {type: string; desc?: string};
   condition: {
+    name?: string;
     type: ConditionType;
     desc?: string;
   };

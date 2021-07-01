@@ -25,6 +25,8 @@ const styles = StyleSheet.create({
   text: {
     ...theme.styles.scale.body1,
     color: theme.colors.dark,
+    flexShrink: 1,
+    flexWrap: 'wrap',
   },
 });
 

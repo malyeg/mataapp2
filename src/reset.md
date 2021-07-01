@@ -50,3 +50,6 @@ https://github.com/oblador/react-native-vector-icons#android
 ## app start icon
 xcode => Images.xcassets upload from assets appicon folder
 
+## svg
+https://github.com/kristerkari/react-native-svg-transformer#for-react-native-v057-or-newer--expo-sdk-v3100-or-newer
+https://github.com/kristerkari/react-native-svg-transformer#configuring-svgr-how-svg-images-get-transformed

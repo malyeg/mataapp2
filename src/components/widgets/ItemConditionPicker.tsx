@@ -1,31 +1,12 @@
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
-import {ConditionType} from '../../api/itemsApi';
+import {conditionList, ConditionType} from '../../api/itemsApi';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
 import {FormProps} from '../../types/DataTypes';
 import {Button} from '../core';
 import {Error, Picker, TextInput} from '../form';
 import PickerItem from '../form/PickerItem';
-
-export const conditionList: {id: ConditionType; name: string}[] = [
-  {
-    id: 'new',
-    name: 'New',
-  },
-  {
-    id: 'goodAsNew',
-    name: 'Good as new',
-  },
-  {
-    id: 'used',
-    name: 'Used',
-  },
-  {
-    id: 'usedWithIssues',
-    name: 'Used with issues',
-  },
-];
 
 const WITH_ISSUES_ITEM = conditionList.find(i => i.id === 'usedWithIssues')!;
 interface ItemConditionPickerProps extends ViewProps, FormProps {

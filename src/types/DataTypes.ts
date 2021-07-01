@@ -123,7 +123,6 @@ export interface Entity extends DataSearchable {
   id: string;
   name?: string;
   timestamp?: Date;
-  subItems?: Entity[];
 }
 
 // Form types
