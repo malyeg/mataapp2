@@ -19,7 +19,7 @@ const styles = create({
     // height: '100%',
     flex: 1,
     // backgroundColor: 'rgba(255,255,255, 0.1)',
-    backgroundColor: theme.colors.white,
+    // backgroundColor: theme.colors.white,
     // backgroundColor: theme.colors.white,
     position: 'absolute',
     top: 0,

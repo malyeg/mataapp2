@@ -4,6 +4,7 @@ import {
   LinkingOptions,
   NavigationContainer,
   NavigationContainerRef,
+  DefaultTheme,
 } from '@react-navigation/native';
 import React, {useRef} from 'react';
 import {Linking} from 'react-native';
@@ -14,6 +15,7 @@ import Sheet from '../components/widgets/Sheet';
 import constants from '../config/constants';
 import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
+import theme from '../styles/theme';
 import Analytics from '../utils/Analytics';
 import {LoggerFactory} from '../utils/logger';
 import AuthStack from './AuthStack';
@@ -97,8 +99,17 @@ const Routes = () => {
     RNBootSplash.hide({fade: true});
   };
 
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: theme.colors.white,
+    },
+  };
+
   return (
     <NavigationContainer
+      theme={MyTheme}
       ref={navigationRef}
       linking={linking}
       onReady={navigationOnReadyHandler}

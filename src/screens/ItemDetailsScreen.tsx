@@ -13,11 +13,13 @@ import ItemActivity from '../components/widgets/ItemActivity';
 import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
 import LocationView from '../components/widgets/LocationView';
 import OwnerItemList from '../components/widgets/OwnerItemList';
+import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
 import TextDescription from '../components/widgets/TextDescription';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
+import useSheet from '../hooks/useSheet';
 import {ItemDetailsRouteProp} from '../navigation/HomeStack';
 import theme from '../styles/theme';
 import {HOME_SCREEN} from './HomeScreen';
@@ -32,6 +34,7 @@ const ItemDetailsScreen = () => {
   const navigation = useNavigation();
   const state = useNavigationState(s => s);
   const {t} = useLocale('itemDetailsScreen');
+  const {show, sheetRef} = useSheet();
 
   useEffect(() => {
     const loadData = async () => {
@@ -47,39 +50,51 @@ const ItemDetailsScreen = () => {
         return freshItem;
       }
     };
-    const deleteItem = async (i: Item) => {
-      try {
-        await request(() =>
-          itemsApi.delete(i, {cache: {evict: itemsApi.MY_ITEMS_CACHE_KEY}}),
-        );
-        if (navigation.canGoBack()) {
-          const routes = state.routes;
-          if (routes[routes.length - 2]?.name === MY_ITEMS_SCREEN) {
-            navigation.navigate(MY_ITEMS_SCREEN, {refresh: true});
-          } else {
-            navigation.goBack();
-          }
-        } else {
-          navigation.navigate(HOME_SCREEN);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+
     loadData().then(i => {
       if (i) {
         navigation.setOptions({
-          headerRight: () => <ItemDetailsNav item={i} onDelete={deleteItem} />,
+          headerRight: () => (
+            <ItemDetailsNav
+              item={i}
+              onDelete={() =>
+                show({onConfirm: () => console.log('confirm succs')})
+              }
+            />
+          ),
           headerTitle:
             i.name.trim().length > 20
               ? i.name.substr(0, 20).trim() + ' ...'
               : i.name,
         });
+      } else {
+        console.warn('item not found', i);
+        navigation.navigate(MY_ITEMS_SCREEN);
       }
     });
     console.log('route', route.params?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params?.id]);
+
+  const deleteItem = useCallback(async () => {
+    try {
+      await request(() =>
+        itemsApi.delete(item!, {cache: {evict: itemsApi.MY_ITEMS_CACHE_KEY}}),
+      );
+      if (navigation.canGoBack()) {
+        const routes = state.routes;
+        if (routes[routes.length - 2]?.name === MY_ITEMS_SCREEN) {
+          navigation.navigate(MY_ITEMS_SCREEN, {refresh: true});
+        } else {
+          navigation.goBack();
+        }
+      } else {
+        navigation.navigate(HOME_SCREEN);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [item, navigation, request, state.routes]);
 
   const itemImage = useCallback(
     (itemInfo: {item: ImageSource}) => (
@@ -100,8 +115,10 @@ const ItemDetailsScreen = () => {
   }, []);
 
   const conditionName = conditionList.find(
-    i => i.id === item?.condition.type,
+    i => i.id === item?.condition?.type,
   )?.name;
+
+  console.log('item details', item);
 
   return item ? (
     <Screen scrollable={true} style={styles.screen}>
@@ -125,7 +142,7 @@ const ItemDetailsScreen = () => {
           />
           <Text>{item.category.name}</Text>
         </View>
-        <SwapButton onPress={swapHandler} />
+        {item.userId !== user.id && <SwapButton onPress={swapHandler} />}
       </View>
       {!!item.description && (
         <View style={styles.row}>
@@ -157,6 +174,15 @@ const ItemDetailsScreen = () => {
       {!!item && item.userId !== user.id && route.params?.id === item.id && (
         <OwnerItemList item={item} />
       )}
+      {/* {ConfirmSheet} */}
+      <Sheet
+        ref={sheetRef}
+        header={t('deleteConfirmationHeader')}
+        onConfirm={deleteItem}>
+        <Text style={styles.confirmText}>
+          Are you sure to delete item ({item.name})?
+        </Text>
+      </Sheet>
       {loader}
     </Screen>
   ) : (
@@ -236,5 +262,8 @@ const styles = StyleSheet.create({
   },
   ownerIcon: {
     marginLeft: -5,
+  },
+  confirmText: {
+    ...theme.styles.scale.h6,
   },
 });

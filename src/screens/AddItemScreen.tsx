@@ -35,7 +35,7 @@ type AddItemFormValues = {
 
 const AddItemScreen = () => {
   const {t} = useLocale('addItemScreen');
-  const defaultImageURL = useRef<string | null>(null);
+  const defaultImage = useRef<ImageSource | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
   const uploadSet = useRef(new Set()).current;
   const {loader, request} = useApi();
@@ -69,10 +69,12 @@ const AddItemScreen = () => {
         images: data.images
           ?.filter(image => !image.isTemplate)
           .map(image => {
-            delete image.uri;
-            return image;
+            const newImage = {...image};
+            delete newImage.uri;
+            return newImage;
           }),
-        defaultImageURL: defaultImageURL.current ?? data.images[0].downloadURL,
+        defaultImageURL:
+          defaultImage.current?.downloadURL ?? data.images[0].downloadURL,
         location: data.location,
         userId: user.id,
         status: 'online',
@@ -82,14 +84,13 @@ const AddItemScreen = () => {
       };
       !!data.usedWithIssuesDesc &&
         (item.condition.desc = data.usedWithIssuesDesc);
-      console.log('item', item.defaultImageURL);
+      console.log('item default url', item.defaultImageURL);
+      console.log('item images', item.images);
 
-      await request<Item>(() =>
-        request<Item>(() =>
-          itemsApi.add(item, undefined, {
-            cache: {enabled: false, evict: itemsApi.MY_ITEMS_CACHE_KEY},
-          }),
-        ),
+      const addedItem = await request<Item>(() =>
+        itemsApi.add(item, undefined, {
+          cache: {enabled: false, evict: itemsApi.MY_ITEMS_CACHE_KEY},
+        }),
       );
       // reset();
       showToast({
@@ -108,10 +109,15 @@ const AddItemScreen = () => {
     }
   };
 
-  const onItemImagesChange = (itemImages: ImageSource[], defUrl?: string) => {
-    if (defUrl) {
-      defaultImageURL.current = defUrl;
+  const onItemImagesChange = (
+    itemImages: ImageSource[],
+    defaultImg?: ImageSource,
+  ) => {
+    if (defaultImg) {
+      defaultImage.current = defaultImg;
     }
+
+    console.log('setting default url', defaultImage?.current?.downloadURL);
   };
 
   const uploadHandler = useCallback(

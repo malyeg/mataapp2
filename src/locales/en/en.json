@@ -66,6 +66,12 @@
     "nearByItems": {
       "title": "Items Nearby ({{city}})",
       "itemsLink": "View All"
+    },
+    "sheet": {
+      "header": "Confirm",
+      "confirmationTitle": "Confirm",
+      "confirmBtnText": "Confirm",
+      "cancelBtnText": "Cancel"
     }
   },
 
@@ -264,7 +270,8 @@
     "ownerItemsTitle": "Owner other items",
     "itemDescriptionTitle": "Description: ",
     "addressTitle": "Address: ",
-    "itemConditionTitle": "Condition: "
+    "itemConditionTitle": "Condition: ",
+    "deleteConfirmationHeader": "Confirm delete"
   },
 
 

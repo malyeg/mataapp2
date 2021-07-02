@@ -18,6 +18,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ThemeScreen from '../screens/ThemeScreen';
 import HomeTabs, {HOME_TABS} from './HomeTabs';
 import {screenOptions} from './Nav';
+import TestScreen from '../screens/TestScreen';
 
 export type StackParams = {
   HomeTabs: undefined;
@@ -115,6 +116,7 @@ const HomeStack = () => {
         component={ItemDetailsScreen}
         options={detailsOptions}
       />
+      <stack.Screen name="TestScreen" component={TestScreen} />
     </stack.Navigator>
   );
 };

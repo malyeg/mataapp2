@@ -25,6 +25,10 @@ const ItemCard = ({item, style, showActivityStatus}: ItemCardProps) => {
     });
   }, [item, navigtion]);
 
+  const imageUrl = item.defaultImageURL
+    ? item.defaultImageURL
+    : item.images[0].downloadURL;
+  console.log(imageUrl);
   return (
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>
       <View style={styles.cardHeader}>
@@ -40,7 +44,7 @@ const ItemCard = ({item, style, showActivityStatus}: ItemCardProps) => {
           <Text style={[styles.actvityStatusText]}>{item.status}</Text>
         </View>
       )}
-      <Image uri={item.defaultImageURL!} style={styles.image} />
+      <Image uri={imageUrl!} style={styles.image} />
       <Text numberOfLines={1} style={styles.nameText}>
         {item.name}
       </Text>

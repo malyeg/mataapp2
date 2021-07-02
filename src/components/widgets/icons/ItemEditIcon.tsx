@@ -18,7 +18,7 @@ const ItemEditIcon = ({onDelete}: ItemEditIconProps) => {
     <View style={styles.container}>
       <PressableObacity onPress={onEdit}>
         <Icon
-          // style={styles.errorIcon}
+          style={styles.editIcon}
           name="pencil-outline"
           // color="#F2A39C"
           color={theme.colors.grey}
@@ -43,5 +43,8 @@ export default React.memo(ItemEditIcon);
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+  },
+  editIcon: {
+    // marginHorizontal: 5,
   },
 });

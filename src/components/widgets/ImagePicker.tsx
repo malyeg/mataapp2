@@ -129,7 +129,7 @@ const ImagePicker: FC<ItemImageProps> = ({
         error => console.error(error),
         async () => {
           const downloadURL = await task.snapshot?.ref.getDownloadURL();
-          setUploading(false);
+
           const newImageSource: ImageSource = {
             ...resizedImage,
             uri: resizedImage?.uri!,
@@ -145,6 +145,7 @@ const ImagePicker: FC<ItemImageProps> = ({
           if (onUpload) {
             onUpload(newImageSource, 'finished');
           }
+          setUploading(false);
         },
       );
     });

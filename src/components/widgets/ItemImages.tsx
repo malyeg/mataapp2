@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 
 import {StyleSheet, View, ViewProps} from 'react-native';
 import {ImageSource} from '../../api/itemsApi';
@@ -17,23 +17,23 @@ interface ItemImagesProps extends ViewProps {
   items?: ImageSource[];
   defaultImageURL?: string;
   templateSize?: number;
-  onChange: (images: ImageSource[], defaultImageURL?: string) => void;
+  onChange: (images: ImageSource[], defaultIMage: ImageSource) => void;
   onUploadStart?: (image: ImageSource) => void;
   onUploadFinish?: (image: ImageSource) => void;
   onUpload?: (image: ImageSource, status: 'started' | 'finished') => void;
   control: any;
 }
-const ItemImages: FC<ItemImagesProps> = ({
+const ItemImages = ({
   name,
   items,
   defaultImageURL,
   onUpload,
   onChange,
   control,
-}) => {
+}: ItemImagesProps) => {
   const [images, setImages] = useState<ImageSource[]>([]);
-  const [defaultImage, setDefaultImage] = useState<ImageSource>();
   const [error, setError] = useState<Status>();
+  const defaultImage = useRef<ImageSource | null>(null);
   const {field, formState} = useController({
     control,
     defaultValue: undefined,
@@ -47,38 +47,56 @@ const ItemImages: FC<ItemImagesProps> = ({
     } else {
       setImages([templateImage, templateImage, templateImage]);
     }
-    if (defaultImageURL) {
-      setDefaultImage(images.find(i => i.downloadURL === defaultImageURL));
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, defaultImageURL]);
 
-  const updateItemImages = () => {
-    const filteredImages = images.filter(i => !i.isTemplate);
-    if (filteredImages && filteredImages.length > 0) {
-      onChange(images, defaultImage?.downloadURL ?? images[0].downloadURL);
-      field.onChange(images && images.length > 0 ? images : undefined);
-    } else {
-      onChange(undefined!);
-      field.onChange(undefined);
+  // const updateItemImages = () => {
+  //   const filteredImages = images.filter(i => !i.isTemplate);
+  //   if (filteredImages && filteredImages.length > 0) {
+  //     onChange(images);
+  //     field.onChange(images && images.length > 0 ? images : undefined);
+  //   } else {
+  //     onChange(undefined!);
+  //     field.onChange(undefined);
+  //   }
+  // };
+
+  const onImagesChange = (imageArray: ImageSource[]) => {
+    const filteredImages = imageArray.filter(i => !i.isTemplate);
+    if (onChange) {
+      onChange(filteredImages, defaultImage.current ?? images[0]);
     }
+    field.onChange(filteredImages);
+    // updateItemImages();
   };
 
   const onAddImage = (imageSource: ImageSource, index: number) => {
-    images[index] = imageSource;
-    updateItemImages();
+    setImages(imageArray => {
+      imageArray[index] = imageSource;
+      // const newImages = [...imageArray, imageSource];
+      onImagesChange(imageArray);
+      return imageArray;
+    });
   };
+
   const onImageDelete = (image: ImageSource, index: number) => {
     images[index] = templateImage;
-    if (image.downloadURL === defaultImage?.downloadURL) {
-      setDefaultImage(undefined);
-    }
-    updateItemImages();
+
+    setImages(imageArray => {
+      imageArray[index] = templateImage;
+      if (image.downloadURL === defaultImage.current?.downloadURL) {
+        defaultImage.current = null;
+      }
+      onImagesChange(imageArray);
+      return imageArray;
+    });
   };
   const onMarkAsDefault = (image: ImageSource) => {
-    setDefaultImage(image);
-    updateItemImages();
+    console.log('onMarkAsDefault', image);
+    defaultImage.current = image;
+    onImagesChange(images);
   };
+
   const onMaxSize = () => {
     const maxSizeparam = `${
       constants.firebase.MAX_IMAGE_SIZE / 1000 / 1000

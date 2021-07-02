@@ -32,6 +32,13 @@ const useToast = () => {
           autoHide: status.options?.autoHide ?? status.type !== 'error',
         });
       },
+      showErrorToast: (error: any) => {
+        Toast.show({
+          type: 'error',
+          text1: getToastMessage({code: error.code, message: error.message}),
+          autoHide: false,
+        });
+      },
       hideToast: () => {
         Toast.hide();
       },
