@@ -118,8 +118,6 @@ const ItemDetailsScreen = () => {
     i => i.id === item?.condition?.type,
   )?.name;
 
-  console.log('item details', item);
-
   return item ? (
     <Screen scrollable={true} style={styles.screen}>
       {item.images && item.images.length === 1 ? (

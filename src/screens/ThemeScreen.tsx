@@ -1,10 +1,8 @@
-import BottomSheet from '@gorhom/bottom-sheet';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 // import {useForm} from 'react-hook-form';
 import {StyleSheet} from 'react-native';
 import * as yup from 'yup';
 import {Button, Screen, Text} from '../components/core';
-import LocationSelector from '../components/widgets/LocationSelector';
 import useForm from '../hooks/useForm';
 
 const ThemeScreen = () => {
@@ -30,15 +28,15 @@ const ThemeScreen = () => {
       <Text>{JSON.stringify(state)}</Text>
       <Button title="get from cache" onPress={updateState} />
       {/* <LocationSelector control={control} /> */}
-      <BottomSheet
+      {/* <BottomSheet
         ref={bottomSheetRef}
         index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}>
-        <View style={styles.contentContainer}>
+        <View>
           <Text>Awesome 🎉</Text>
         </View>
-      </BottomSheet>
+      </BottomSheet> */}
     </Screen>
   );
 };

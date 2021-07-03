@@ -51,6 +51,10 @@ export const cart = {
   DEFAULT_CURRENCY: 'EGP',
 };
 
+export const screens = {
+  ITEMS: 'ItemsScreen',
+};
+
 const constants = {
   firebase,
   maps,
@@ -62,6 +66,7 @@ const constants = {
   cart,
   auth,
   DOMAINS,
+  screens,
 };
 
 export default constants;

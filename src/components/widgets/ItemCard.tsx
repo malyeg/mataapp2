@@ -28,7 +28,7 @@ const ItemCard = ({item, style, showActivityStatus}: ItemCardProps) => {
   const imageUrl = item.defaultImageURL
     ? item.defaultImageURL
     : item.images[0].downloadURL;
-  console.log(imageUrl);
+
   return (
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>
       <View style={styles.cardHeader}>

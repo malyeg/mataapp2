@@ -1,8 +1,6 @@
-import React, {useCallback, useEffect} from 'react';
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import messaging from '@react-native-firebase/messaging';
-
+import React, {useCallback} from 'react';
 import useLocale from '../hooks/useLocale';
 import AddItemScreen from '../screens/AddItemScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
@@ -18,7 +16,6 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ThemeScreen from '../screens/ThemeScreen';
 import HomeTabs, {HOME_TABS} from './HomeTabs';
 import {screenOptions} from './Nav';
-import TestScreen from '../screens/TestScreen';
 
 export type StackParams = {
   HomeTabs: undefined;
@@ -116,7 +113,6 @@ const HomeStack = () => {
         component={ItemDetailsScreen}
         options={detailsOptions}
       />
-      <stack.Screen name="TestScreen" component={TestScreen} />
     </stack.Navigator>
   );
 };

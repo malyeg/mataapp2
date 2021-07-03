@@ -9,6 +9,7 @@ import CategoryList from '../components/widgets/CategoryList';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
 import useAuth from '../hooks/useAuth';
+import useLoader from '../hooks/useLoader';
 import {MyItemsRouteProp} from '../navigation/HomeStack';
 import {Filter, Operation, QueryBuilder} from '../types/DataTypes';
 
@@ -18,21 +19,20 @@ const MyItemsScreen = () => {
   const route = useRoute<MyItemsRouteProp>();
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const lastRefresh = useRef(new Date());
-  useEffect(() => {
-    console.log('route.params', route.params);
-    // loadItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const cache = useRef(true);
+  const {loader, loading, hideLoader} = useLoader(true);
 
   useFocusEffect(() => {
     if (route.params?.refresh) {
       console.log('refreshing');
       lastRefresh.current = new Date();
+      cache.current = false;
     }
+    hideLoader();
   });
 
   const loadItems = useCallback(
-    async (lastDoc?: FirebaseFirestoreTypes.QueryDocumentSnapshot<Item>) => {
+    async () => {
       try {
         console.log('loadData');
         const filters: Filter<Item>[] = [{field: 'userId', value: user.id}];
@@ -45,11 +45,12 @@ const MyItemsScreen = () => {
           });
         let query = new QueryBuilder<Item>()
           .filters(filters)
-          .limit(10)
-          .after(lastDoc)
+          .limit(100)
+          // .after(lastDoc)
           .build();
+        console.log('cache.current', cache.current);
         const response = await itemsApi.getAll(query, {
-          cache: {enabled: false, key: itemsApi.MY_ITEMS_CACHE_KEY},
+          cache: {enabled: cache.current, key: itemsApi.MY_ITEMS_CACHE_KEY},
         });
         return response;
       } catch (error) {
@@ -57,20 +58,20 @@ const MyItemsScreen = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedCategory, lastRefresh],
+    [selectedCategory, lastRefresh, cache.current],
   );
 
-  const onSelectCategory = useCallback(
-    (category: Category) => {
-      if (category?.id === '0') {
-        setSelectedCategory(undefined);
-      } else {
-        setSelectedCategory(category);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setSelectedCategory, lastRefresh],
-  );
+  // const onSelectCategory = useCallback(
+  //   (category: Category) => {
+  //     if (category?.id === '0') {
+  //       setSelectedCategory(undefined);
+  //     } else {
+  //       setSelectedCategory(category);
+  //     }
+  //   },
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [setSelectedCategory, lastRefresh],
+  // );
 
   const renderItem = useCallback(
     ({item}: any) => (
@@ -80,24 +81,28 @@ const MyItemsScreen = () => {
   );
 
   return (
-    <Screen scrollable={false}>
-      <CategoryList
+    <Screen scrollable={false} style={styles.screen}>
+      {/* <CategoryList
         horizontal
         onChange={onSelectCategory}
         style={styles.categories}
-      />
-      <DataList
-        key={lastRefresh.current.getTime()}
-        showsVerticalScrollIndicator={false}
-        style={styles.flatlist}
-        itemsFunc={loadItems}
-        columnWrapperStyle={styles.columnWrapper}
-        numColumns={2}
-        pageable
-        refreshable
-        renderItem={renderItem}
-        itemSize={ITEM_CARD_HEIGHT}
-      />
+      /> */}
+      {!loading && (
+        <DataList
+          containerStyle={styles.datalist}
+          listStyle={styles.datalist}
+          key={lastRefresh.current.getTime()}
+          showsVerticalScrollIndicator={false}
+          itemsFunc={loadItems}
+          columnWrapperStyle={styles.columnWrapper}
+          numColumns={2}
+          // pageable
+          refreshable
+          renderItem={renderItem}
+          itemSize={ITEM_CARD_HEIGHT}
+        />
+      )}
+      {loader}
     </Screen>
   );
 };
@@ -105,9 +110,10 @@ const MyItemsScreen = () => {
 export default React.memo(MyItemsScreen);
 
 const styles = StyleSheet.create({
-  flatlist: {
-    // flexGrow: 0,
+  screen: {
+    flex: 1,
   },
+  datalist: {flex: 1},
   categories: {
     marginVertical: 20,
   },

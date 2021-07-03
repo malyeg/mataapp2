@@ -3,6 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import dealsApi from '../../api/dealsApi';
 import itemsApi, {Item, ItemStatus} from '../../api/itemsApi';
+import {screens} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
 import useLocale from '../../hooks/useLocale';
 import {ITEM_SEARCH_SCREEN} from '../../screens/ItemSearchScreen';
@@ -82,7 +83,7 @@ const NearByItems = ({
           .filters(updatedFilter)
           // .filter('timestamp', new Date(2021, 6, 1), Operation.GREATER_THAN)
           .after(doc)
-          .limit(5)
+          .limit(20)
           // .orderBy('timestamp', 'desc')
           .orderBy('userId')
           .build();
@@ -123,6 +124,14 @@ const NearByItems = ({
     ),
     [user.id],
   );
+  const onEndReached = (info: any, length: number) => {
+    console.log('info', info, length);
+    if (length > 20) {
+      navigation.navigate(screens.ITEMS);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  };
+
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
@@ -141,11 +150,12 @@ const NearByItems = ({
         refreshing={false}
         onRefresh={undefined}
         horizontal
-        pageable
+        // pageable
         itemsFunc={listData}
         renderItem={renderItem}
         ListEmptyComponent={listEmptyComponent}
         itemSize={ITEM_HEIGHT}
+        onEndReached={onEndReached}
       />
     </View>
   );

@@ -26,6 +26,9 @@ export interface DataListProps<T> extends Omit<FlatListProps<T>, 'data'> {
   // ListEmptyComponent?: React.ReactElement;
   hideNoDataFoundComponent?: boolean;
   HeaderComponent?: React.ReactElement;
+  containerStyle?: ViewStyle;
+  listStyle?: ViewStyle;
+  onEndReached?: (info: any, length: number) => void;
 }
 
 function DataList<T extends Entity>({
@@ -33,11 +36,15 @@ function DataList<T extends Entity>({
   itemSize,
   keyExtractor,
   pageable = false,
-  refreshable = false,
   horizontal,
   loaderStyle,
   HeaderComponent,
+  containerStyle,
+  listStyle,
+  showsVerticalScrollIndicator = false,
+  showsHorizontalScrollIndicator = false,
   // hideNoDataFoundComponent = false,
+  onEndReached,
   ...props
 }: DataListProps<T>) {
   console.log('DataList render');
@@ -80,7 +87,11 @@ function DataList<T extends Entity>({
   }, []);
 
   const loadMoreHandler = useMemo(
-    () => async () => {
+    () => async (info: {distanceFromEnd: number}) => {
+      if (!pageable && onEndReached) {
+        onEndReached(info, items.length);
+        return;
+      }
       if (pageable && !reloading && !!lastDoc) {
         dispatch({
           type: 'SET_RELOADING',
@@ -105,7 +116,15 @@ function DataList<T extends Entity>({
         }
       }
     },
-    [dispatch, itemsFunc, lastDoc, pageable, reloading],
+    [
+      dispatch,
+      items.length,
+      itemsFunc,
+      lastDoc,
+      onEndReached,
+      pageable,
+      reloading,
+    ],
   );
 
   const ListFooter = useCallback(() => {
@@ -136,11 +155,11 @@ function DataList<T extends Entity>({
 
   return !loading ? (
     items ? (
-      <View>
+      <View style={[styles.container, containerStyle]}>
         {HeaderComponent}
         <FlatList
           {...props}
-          style={styles.flatList}
+          style={[styles.flatList, listStyle]}
           horizontal={horizontal}
           // refreshing={false}
           // onRefresh={undefined}
@@ -160,6 +179,8 @@ function DataList<T extends Entity>({
           onEndReached={loadMoreHandler}
           ListEmptyComponent={NoDataHandler}
           ItemSeparatorComponent={separatorHandler}
+          showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+          showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
         />
       </View>
     ) : (
@@ -171,8 +192,15 @@ function DataList<T extends Entity>({
 }
 
 const styles = StyleSheet.create({
-  flatList: {
+  container: {
+    // flex: 1,
+  },
+  horizontal: {
     flexGrow: 0,
+  },
+  flatList: {
+    // flexGrow: 0,
+    // flex: 1,
   },
   listActivityContainer: {
     flex: 1,
