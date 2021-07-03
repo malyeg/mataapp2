@@ -31,16 +31,15 @@ const useAuth = () => {
     await authApi.changePassword(crednetials, newPassword);
   };
   const updateProfile = async (profile: Profile) => {
-    const updatedProfile = await profilesApi.update(profile, {
+    await profilesApi.update(profile, {
       analyticsEvent: {name: 'update_profile'},
-      cache: {enabled: true},
     });
+    console.log('updateProfile', profile);
     await profilesApi.saveToStorage(profile);
     authContext.dispatch({
       type: AuthActionType.SET_PROFILE,
-      payload: {profile: updatedProfile},
+      payload: {profile},
     });
-    return updatedProfile;
   };
 
   return {

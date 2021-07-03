@@ -89,7 +89,7 @@ const NearByItems = ({
           .build();
 
         const response = await itemsApi.getAll(query, {
-          cache: {enabled: true, key: 'nearBy_' + location?.city},
+          cache: {enabled: true, key: `nearBy_${location?.city}_${user.id}`},
         });
         return response;
       } catch (error) {

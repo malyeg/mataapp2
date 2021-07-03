@@ -109,12 +109,12 @@ class ItemsApi extends DataApi<Item> {
   delete = async (doc: Item, options?: APIOptions) => {
     await this.deleteById(doc.id, options);
     try {
-      doc.images?.forEach(image => {
-        this.deleteImage(doc.userId, image);
-        console.log('deleting image', image.name);
+      doc.images?.forEach(async image => {
+        await this.deleteImage(doc.userId, image);
+        // console.log('deleting image', image.name);
       });
     } catch (error) {
-      console.error(error);
+      console.warn(error);
       //TODO report error
     }
   };

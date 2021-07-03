@@ -17,9 +17,8 @@ const useSheet = (opts: UseSheetProps = {}) => {
 
   const context = useMemo(
     () => ({
-      show: (options: {onConfirm: () => void}) => {
+      show: () => {
         sheetRef?.current!.show();
-        sheetRef.current!.onConfirm = options.onConfirm;
       },
       hide: () => sheetRef.current!.hide(),
     }),

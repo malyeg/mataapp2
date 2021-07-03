@@ -10,7 +10,9 @@ import {Location} from '../types/DataTypes';
 import {LoggerFactory} from '../utils/logger';
 
 export interface LocationContextModel {
-  state: LocationState;
+  // state: LocationState;
+  connected: boolean;
+  location?: Location;
   dispatch: (value: LocationActions) => void;
 }
 
@@ -21,7 +23,7 @@ const LocationProvider: React.FC = (props: any) => {
   const loadingRef = useRef(false);
   const [state, dispatch] = useImmerReducer(locationReducer, {
     connected: false,
-  });
+  } as LocationState);
 
   useEffect(() => {
     logger.debug('useEffect', state);
@@ -72,15 +74,16 @@ const LocationProvider: React.FC = (props: any) => {
   }, []);
 
   const context = useMemo(
-    () => ({
-      location: state.location,
-      connected: state.connected,
-    }),
+    () =>
+      ({
+        location: state.location,
+        connected: state.connected,
+      } as LocationState),
     [state],
   );
 
   return (
-    <LocationContext.Provider value={{state, dispatch, ...context}}>
+    <LocationContext.Provider value={{dispatch, ...context}}>
       {props.children}
     </LocationContext.Provider>
   );

@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
 import countriesApi, {Country, State} from '../api/countriesApi';
 import profilesApi, {Profile} from '../api/profileApi';
-import {Button, Loader} from '../components/core';
+import {Button, Loader, Text} from '../components/core';
 import PressableScreen from '../components/core/PressableScreen';
 import {CheckBox, Error, FormView, Picker, TextInput} from '../components/form';
 import ProfileHeader from '../components/widgets/ProfileHeader';
@@ -27,14 +27,15 @@ type EditProfileFormValues = {
   acceptMarketingFlag: boolean;
 };
 const EditProfileScreen = () => {
+  // const [profile, setProfile] = useState<Profile>();
+  // const [states, setStates] = useState<State[]>([]);
+  const {user, profile, updateProfile} = useAuth();
+  const [selectedCountry, setSelectedCountry] = useState<Country | undefined>(
+    profile?.country,
+  );
   const {t} = useLocale('editProfileScreen');
   const {showToast, hideToast} = useToast();
-  const [profile, setProfile] = useState<Profile>();
-  const [states, setStates] = useState<State[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<Country | undefined>();
-  // const [profile, setProfile] = useState<Profile>();
 
-  const {user, updateProfile} = useAuth();
   const {loader, request} = useApi();
   // const {loader, showLoader, hideLoader, loading} = useLoader();
 
@@ -69,22 +70,27 @@ const EditProfileScreen = () => {
 
   const loadData = async () => {
     try {
-      const freshProfile = await request<Profile>(() =>
-        profilesApi.getById(user.id, {cache: {enabled: true}}),
-      );
-
-      if (freshProfile) {
-        setProfile(freshProfile);
-        updateStates(freshProfile.country?.id!);
-      } else {
-        console.log('profile not found');
-      }
+      // const freshProfile = await request<Profile>(() =>
+      //   profilesApi.getById(user.id, {cache: {enabled: true}}),
+      // );
+      // if (freshProfile) {
+      //   // setProfile(freshProfile);
+      //   // updateStates(freshProfile.country?.id!);
+      // } else {
+      //   console.log('profile not found');
+      // }
     } catch (error) {
       console.error(error);
     }
   };
 
   const countries = useMemo(() => countriesApi.getCountries(), []);
+
+  const states = useMemo(() => {
+    return selectedCountry?.id
+      ? countriesApi.getStates(selectedCountry.id)
+      : [];
+  }, [selectedCountry]);
 
   const onCountryChange = useCallback((value: string) => {
     const selectedCounty = countriesApi
@@ -93,19 +99,18 @@ const EditProfileScreen = () => {
 
     if (selectedCounty) {
       setSelectedCountry(selectedCounty);
-      updateStates(selectedCounty?.id!);
     }
   }, []);
 
-  const updateStates = (countryId: string) => {
-    const countryStates = countriesApi.getStates(countryId);
+  // const updateStates = (countryId: string) => {
+  //   const countryStates = countriesApi.getStates(countryId);
 
-    if (countryStates) {
-      setStates(countryStates);
-    } else {
-      setStates([]);
-    }
-  };
+  //   if (countryStates) {
+  //     setStates(countryStates);
+  //   } else {
+  //     setStates([]);
+  //   }
+  // };
 
   const onFormSuccess = async (data: EditProfileFormValues) => {
     //
@@ -135,10 +140,8 @@ const EditProfileScreen = () => {
         }
       });
 
-      const updatedProfile = await request<Profile>(() =>
-        updateProfile(newProfile!),
-      );
-      setProfile(updatedProfile);
+      await request<Profile>(() => updateProfile(newProfile!));
+      // setProfile(updatedProfile);
       reset(undefined, {keepValues: true});
       showToast({
         type: 'success',
@@ -156,7 +159,6 @@ const EditProfileScreen = () => {
       });
     }
   };
-  const onFormError = (data: any) => {};
 
   // return loader;
   return profile ? (
@@ -253,7 +255,7 @@ const EditProfileScreen = () => {
         <Button
           disabled={!formState.isDirty}
           title={t('submitBtnTitle')}
-          onPress={handleSubmit(onFormSuccess, onFormError)}
+          onPress={handleSubmit(onFormSuccess)}
         />
       </FormView>
       {loader}

@@ -218,7 +218,6 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         // cache.store(doc.id!, doc, options.cache.expireInSeconds);
       }
       options?.cache?.evict && cache.remove(options?.cache?.evict);
-      return newDoc;
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();

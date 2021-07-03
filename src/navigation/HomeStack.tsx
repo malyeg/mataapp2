@@ -37,22 +37,6 @@ const stack = createStackNavigator<StackParams>();
 const HomeStack = () => {
   const {t} = useLocale('common');
 
-  // const navigation = useNavigation();
-
-  // useEffect(() => {
-  //   const onMessageUnsubscribe = messaging().onMessage(remoteMessage => {
-  //     console.log('onMessage', remoteMessage);
-  //     const url = (remoteMessage.notification as any)?.url;
-  //     navigation.navigate('MyItemsScreen');
-  //     if (url) {
-  //       // TODO show popup;
-  //       // TODO if yes, listener(url);
-  //     }
-  //   });
-
-  //   return onMessageUnsubscribe;
-  // }, [navigation]);
-
   const detailsOptions = useCallback(
     ({route}: {route: ItemDetailsRouteProp}) => ({
       headerTitle: route.params?.title ?? t('screens.itemDetails'),
@@ -94,11 +78,6 @@ const HomeStack = () => {
         // options={{headerShown: false}}
       />
       <stack.Screen
-        name="ThemeScreen"
-        component={ThemeScreen}
-        options={{headerTitle: t('screens.addItem')}}
-      />
-      <stack.Screen
         name={MY_ITEMS_SCREEN}
         component={MyItemsScreen}
         options={{headerTitle: t('screens.myItems')}}
@@ -113,6 +92,11 @@ const HomeStack = () => {
         component={ItemDetailsScreen}
         options={detailsOptions}
       />
+      {/* <stack.Screen
+        name="ThemeScreen"
+        component={ThemeScreen}
+        options={{headerTitle: t('screens.addItem')}}
+      /> */}
     </stack.Navigator>
   );
 };

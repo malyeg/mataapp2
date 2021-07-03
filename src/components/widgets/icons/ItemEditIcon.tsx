@@ -16,7 +16,7 @@ const ItemEditIcon = ({onDelete}: ItemEditIconProps) => {
   };
   return (
     <View style={styles.container}>
-      <PressableObacity onPress={onEdit}>
+      {/* <PressableObacity onPress={onEdit}>
         <Icon
           style={styles.editIcon}
           name="pencil-outline"
@@ -24,7 +24,7 @@ const ItemEditIcon = ({onDelete}: ItemEditIconProps) => {
           color={theme.colors.grey}
           size={25}
         />
-      </PressableObacity>
+      </PressableObacity> */}
       <PressableObacity onPress={onDeleteHandler}>
         <Icon
           // style={styles.errorIcon}

@@ -55,12 +55,7 @@ const ItemDetailsScreen = () => {
       if (i) {
         navigation.setOptions({
           headerRight: () => (
-            <ItemDetailsNav
-              item={i}
-              onDelete={() =>
-                show({onConfirm: () => console.log('confirm succs')})
-              }
-            />
+            <ItemDetailsNav item={i} onDelete={() => show()} />
           ),
           headerTitle:
             i.name.trim().length > 20

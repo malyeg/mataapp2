@@ -34,7 +34,6 @@ const MyItemsScreen = () => {
   const loadItems = useCallback(
     async () => {
       try {
-        console.log('loadData');
         const filters: Filter<Item>[] = [{field: 'userId', value: user.id}];
         selectedCategory?.id &&
           selectedCategory?.id !== '0' &&
