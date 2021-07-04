@@ -2,11 +2,11 @@ import {useNavigation} from '@react-navigation/core';
 import React, {FC, useEffect, useState} from 'react';
 import {Pressable, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Screen, Text, Modal, Button} from '../components/core';
+import {Button, Modal, Screen, Text} from '../components/core';
 import ProfileHeader from '../components/widgets/ProfileHeader';
+import {screens} from '../config/constants';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
-import useLocation from '../hooks/useLocation';
 // import useSocial from '../hooks/useSocial';
 import theme from '../styles/theme';
 import {EDIT_PROFILE_SCREEN_NAME} from './EditProfileScreen';
@@ -39,6 +39,10 @@ const ProfileScreen = () => {
       <ProfileItem
         title={t('myItemsLink')}
         onPress={() => navigation.navigate(MY_ITEMS_SCREEN)}
+      />
+      <ProfileItem
+        title={t('dealsLink')}
+        onPress={() => navigation.navigate(screens.DEALS_SCREEN)}
       />
 
       <ProfileItem

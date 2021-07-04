@@ -6,6 +6,7 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import dealsApi from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
@@ -16,10 +17,12 @@ import OwnerItemList from '../components/widgets/OwnerItemList';
 import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
 import TextDescription from '../components/widgets/TextDescription';
+import {screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useSheet from '../hooks/useSheet';
+import useToast from '../hooks/useToast';
 import {ItemDetailsRouteProp} from '../navigation/HomeStack';
 import theme from '../styles/theme';
 import {HOME_SCREEN} from './HomeScreen';
@@ -35,6 +38,7 @@ const ItemDetailsScreen = () => {
   const state = useNavigationState(s => s);
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
+  const {showToast, hideToast} = useToast();
 
   useEffect(() => {
     const loadData = async () => {
@@ -117,9 +121,22 @@ const ItemDetailsScreen = () => {
     [item],
   );
 
-  const swapHandler = useCallback(() => {
+  const swapHandler = useCallback(async () => {
     console.log('swap onpress');
-  }, []);
+    // show({
+    //   header: t('swapHeader'),
+    //   body: t('swapBody'),
+    //   confirmCallback: async () => {
+    //     try {
+    //       const offer = await dealsApi.createOffer(user.id, item!);
+    //       navigation.navigate(screens.DEAL_DETAILS_SCREEN, {
+    //         id: offer.id,
+    //         toastType: 'newOffer',
+    //       });
+    //     } catch (error) {}
+    //   },
+    // });
+  }, [item, navigation, show, t, user.id]);
 
   const conditionName = conditionList.find(
     i => i.id === item?.condition?.type,

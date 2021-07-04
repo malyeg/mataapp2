@@ -53,6 +53,8 @@ export const cart = {
 
 export const screens = {
   ITEMS: 'ItemsScreen',
+  DEALS_SCREEN: 'DealsScreen',
+  DEAL_DETAILS_SCREEN: 'DealDetailsScreen' as 'DealDetailsScreen',
 };
 
 const constants = {

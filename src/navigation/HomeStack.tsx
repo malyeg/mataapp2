@@ -1,9 +1,11 @@
 import {RouteProp} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {useCallback} from 'react';
+import {screens} from '../config/constants';
 import useLocale from '../hooks/useLocale';
 import AddItemScreen from '../screens/AddItemScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import DealDetailsScreen from '../screens/DealDetailsScreen';
 import EditProfileScreen, {
   EDIT_PROFILE_SCREEN_NAME,
 } from '../screens/EditProfileScreen';
@@ -25,6 +27,7 @@ export type StackParams = {
   AddItemScreen: undefined;
   ItemsScreen: undefined;
   ItemDetailsScreen: {id: string; title: string} | undefined;
+  [screens.DEAL_DETAILS_SCREEN]: {id: string; toastType: string} | undefined;
   MyItemsScreen: {refresh: boolean} | undefined;
   ThemeScreen: undefined;
 };
@@ -88,10 +91,16 @@ const HomeStack = () => {
         options={{headerTitle: t('screens.items')}}
       />
       <stack.Screen
+        name={screens.DEAL_DETAILS_SCREEN}
+        component={DealDetailsScreen}
+      />
+
+      <stack.Screen
         name={ITEM_DETAILS_SCREEN_NAME}
         component={ItemDetailsScreen}
         options={detailsOptions}
       />
+
       {/* <stack.Screen
         name="ThemeScreen"
         component={ThemeScreen}
