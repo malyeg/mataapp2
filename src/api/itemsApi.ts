@@ -70,6 +70,7 @@ export interface Item extends DataSearchable, Entity {
     type: SwapType;
     category?: string;
   };
+  offers?: number;
 }
 class ItemsApi extends DataApi<Item> {
   constructor() {

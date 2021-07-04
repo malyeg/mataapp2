@@ -114,6 +114,7 @@ const NearByItems = ({
   const renderItem = useCallback(
     ({item}) => (
       <ItemCard
+        showSwapIcon
         item={item as Item}
         onSwap={async () => {
           console.log('new offer');

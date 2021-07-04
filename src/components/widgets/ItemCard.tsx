@@ -3,8 +3,11 @@ import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Item} from '../../api/itemsApi';
+import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
+import SwapButton from './SwapButton';
+import SwapIcon from './SwapIcon';
 
 const CARD_BORDER = 2;
 const CARD_HEIGHT = 200;
@@ -14,9 +17,16 @@ interface ItemCardProps extends ViewProps {
   item: Item;
   showActivityStatus?: boolean;
   onSwap?: (item: Item) => void;
+  showSwapIcon?: boolean;
 }
-const ItemCard = ({item, style, showActivityStatus}: ItemCardProps) => {
+const ItemCard = ({
+  item,
+  style,
+  showActivityStatus,
+  showSwapIcon = false,
+}: ItemCardProps) => {
   const navigtion = useNavigation();
+  const {user} = useAuth();
 
   const openItemDetails = useCallback(() => {
     // TODO refactor to constant
@@ -32,18 +42,24 @@ const ItemCard = ({item, style, showActivityStatus}: ItemCardProps) => {
   return (
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>
       <View style={styles.cardHeader}>
-        <Text body2>{item?.swapOption?.type}</Text>
-        {/* <Text body2>{item.condition?.type === 'new' ? 'new' : 'used'}</Text> */}
+        {item?.swapOption?.type === 'free' && (
+          <Image
+            style={styles.freeImage}
+            uri={'https://www.freeiconspng.com/uploads/free-icon-0.png'}
+          />
+        )}
+        {showSwapIcon && <SwapIcon item={item} />}
+        {showActivityStatus && (
+          <View
+            style={[
+              styles.actvityStatusContainer,
+              item.status === 'online' ? styles.onlineBackgroundColor : {},
+            ]}>
+            <Text style={[styles.actvityStatusText]}>{item.status}</Text>
+          </View>
+        )}
       </View>
-      {showActivityStatus && (
-        <View
-          style={[
-            styles.actvityStatusContainer,
-            item.status === 'online' ? styles.onlineBackgroundColor : {},
-          ]}>
-          <Text style={[styles.actvityStatusText]}>{item.status}</Text>
-        </View>
-      )}
+
       <Image uri={imageUrl!} style={styles.image} />
       <Text numberOfLines={1} style={styles.nameText}>
         {item.name}
@@ -64,13 +80,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     width: 150,
     height: 200,
-    padding: 10,
+    paddingHorizontal: 7,
   },
   cardHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 2,
+    // backgroundColor: 'grey',
   },
   viewsContainer: {
     flexDirection: 'row',
@@ -79,9 +96,9 @@ const styles = StyleSheet.create({
     // marginBottom: 6,
   },
   actvityStatusContainer: {
-    position: 'absolute',
-    marginTop: 5,
-    right: 0,
+    // position: 'absolute',
+    // marginTop: 5,
+    // right: 0,
     width: 45,
     height: 25,
     borderTopLeftRadius: 11.5,
@@ -97,17 +114,11 @@ const styles = StyleSheet.create({
   onlineBackgroundColor: {
     backgroundColor: theme.colors.green,
   },
-  eyeIcon: {
-    marginRight: -5,
-  },
   image: {
     flex: 3,
     marginBottom: 5,
     backgroundColor: 'grey',
   },
-  // image: {
-  //   flex: 1,
-  // },
   cardCategory: {
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -122,8 +133,14 @@ const styles = StyleSheet.create({
   nameText: {
     ...theme.styles.scale.body2,
   },
-
-  userId: {
-    fontSize: 10,
+  freeImage: {
+    // position: 'absolute',
+    // alignSelf: 'flex-start',
+    marginRight: 'auto',
+    // top: -10,
+    // left: -10,
+    width: 35,
+    height: 35,
+    transform: [{rotate: '-10deg'}],
   },
 });

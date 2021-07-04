@@ -55,7 +55,17 @@ const ItemDetailsScreen = () => {
       if (i) {
         navigation.setOptions({
           headerRight: () => (
-            <ItemDetailsNav item={i} onDelete={() => show()} />
+            <ItemDetailsNav
+              item={i}
+              onDelete={() =>
+                show({
+                  header: t('deleteConfirmationHeader'),
+                  body: t('deleteConfirmationBody'),
+                  cancelCallback: () => console.log('canceliing'),
+                  confirmCallback: deleteItem,
+                })
+              }
+            />
           ),
           headerTitle:
             i.name.trim().length > 20
@@ -74,7 +84,9 @@ const ItemDetailsScreen = () => {
   const deleteItem = useCallback(async () => {
     try {
       await request(() =>
-        itemsApi.delete(item!, {cache: {evict: itemsApi.MY_ITEMS_CACHE_KEY}}),
+        itemsApi.delete(item!, {
+          cache: {evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`},
+        }),
       );
       if (navigation.canGoBack()) {
         const routes = state.routes;
@@ -89,7 +101,7 @@ const ItemDetailsScreen = () => {
     } catch (error) {
       console.error(error);
     }
-  }, [item, navigation, request, state.routes]);
+  }, [item, navigation, request, state.routes, user.id]);
 
   const itemImage = useCallback(
     (itemInfo: {item: ImageSource}) => (
@@ -124,6 +136,7 @@ const ItemDetailsScreen = () => {
       ) : (
         <Carousel images={item.images!} renderItem={itemImage} />
       )}
+
       <View style={[styles.row, styles.ownerContainer]}>
         <View style={styles.categoryContainer}>
           <Icon
@@ -135,7 +148,9 @@ const ItemDetailsScreen = () => {
           />
           <Text>{item.category.name}</Text>
         </View>
-        {item.userId !== user.id && <SwapButton onPress={swapHandler} />}
+        {item.userId !== user.id && (
+          <SwapButton onPress={swapHandler} item={item} />
+        )}
       </View>
       {!!item.description && (
         <View style={styles.row}>
@@ -168,14 +183,14 @@ const ItemDetailsScreen = () => {
         <OwnerItemList item={item} />
       )}
       {/* {ConfirmSheet} */}
-      <Sheet
-        ref={sheetRef}
-        header={t('deleteConfirmationHeader')}
-        onConfirm={deleteItem}>
-        <Text style={styles.confirmText}>
-          Are you sure to delete item ({item.name})?
-        </Text>
-      </Sheet>
+      <Sheet ref={sheetRef} />
+
+      {item?.swapOption?.type === 'free' && (
+        <Image
+          style={styles.freeImage}
+          uri={'https://www.freeiconspng.com/uploads/free-icon-0.png'}
+        />
+      )}
       {loader}
     </Screen>
   ) : (
@@ -258,5 +273,13 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     ...theme.styles.scale.h6,
+  },
+  freeImage: {
+    position: 'absolute',
+    top: -10,
+    left: 0,
+    width: 70,
+    height: 70,
+    transform: [{rotate: '-10deg'}],
   },
 });

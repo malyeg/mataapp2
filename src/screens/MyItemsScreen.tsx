@@ -24,7 +24,6 @@ const MyItemsScreen = () => {
 
   useFocusEffect(() => {
     if (route.params?.refresh) {
-      console.log('refreshing');
       lastRefresh.current = new Date();
       cache.current = false;
     }
@@ -47,9 +46,11 @@ const MyItemsScreen = () => {
           .limit(100)
           // .after(lastDoc)
           .build();
-        console.log('cache.current', cache.current);
         const response = await itemsApi.getAll(query, {
-          cache: {enabled: cache.current, key: itemsApi.MY_ITEMS_CACHE_KEY},
+          cache: {
+            enabled: cache.current,
+            key: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`,
+          },
         });
         return response;
       } catch (error) {

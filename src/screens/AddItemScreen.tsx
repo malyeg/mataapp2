@@ -89,7 +89,10 @@ const AddItemScreen = () => {
 
       const addedItem = await request<Item>(() =>
         itemsApi.add(item, undefined, {
-          cache: {enabled: false, evict: itemsApi.MY_ITEMS_CACHE_KEY},
+          cache: {
+            enabled: false,
+            evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`,
+          },
         }),
       );
       // reset();

@@ -271,7 +271,8 @@
     "itemDescriptionTitle": "Description: ",
     "addressTitle": "Address: ",
     "itemConditionTitle": "Condition: ",
-    "deleteConfirmationHeader": "Confirm delete"
+    "deleteConfirmationHeader": "Confirm delete",
+    "deleteConfirmationBody": "Are you sure?"
   },
 
 

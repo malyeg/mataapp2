@@ -4,30 +4,32 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
-import {Button, Modal} from '../core';
+import {Button, Modal, Text} from '../core';
 
 export interface SheetProps {
-  header?: string;
-  isVisible?: boolean;
-  onCancel?: () => void;
-  onConfirm?: () => void;
-  onClose?: () => void;
-  show?: () => void;
-  hide?: () => void;
-  children?: React.ReactNode;
+  // header?: string;
+  // isVisible?: boolean;
+  // children?: React.ReactNode;
+  // show: (options: ShowOptions) => void;
+  // hide: () => void;
 }
-const Sheet = (
-  {header, onClose, onConfirm, onCancel, children}: SheetProps,
-  ref: any,
-) => {
+export interface ShowOptions {
+  header: string;
+  body: string;
+  cancelCallback?: () => void;
+  confirmCallback?: () => void;
+}
+const Sheet = ({...props}: SheetProps, ref: any) => {
   const {t} = useLocale('widgets');
   const [isVisible, setVisible] = useState(false);
+  const [sheetContent, setSheetContent] = useState<ShowOptions>();
 
   useImperativeHandle(ref, () => ({
-    show() {
+    show(options: ShowOptions) {
+      setSheetContent(options);
       setVisible(true);
     },
     hide() {
@@ -36,28 +38,29 @@ const Sheet = (
   }));
 
   const closeSheet = useCallback(() => {
-    if (onClose) {
-      onClose();
-    }
     setVisible(false);
-  }, [onClose]);
+  }, []);
+
   const cancelHandler = useCallback(() => {
-    if (onCancel) {
-      onCancel();
+    console.log(sheetContent);
+    if (sheetContent?.cancelCallback) {
+      sheetContent?.cancelCallback();
     }
     setVisible(false);
-  }, [onCancel]);
+  }, [sheetContent]);
+
   const confirmHandler = useCallback(() => {
-    if (onConfirm) {
-      onConfirm();
+    if (sheetContent?.confirmCallback) {
+      sheetContent?.confirmCallback();
     }
+
     setVisible(false);
-  }, [onConfirm]);
+  }, [sheetContent]);
 
   return (
     <Modal isVisible={isVisible} onClose={closeSheet}>
-      {header && <Text style={styles.confirmLogoutTitle}>{header}</Text>}
-      {children}
+      <Text style={styles.confirmTitle}>{sheetContent?.header}</Text>
+      <Text style={styles.confirmBody}>{sheetContent?.body}</Text>
       <View style={styles.modalButtonContainer}>
         <Button
           title={t('sheet.cancelBtnText')}
@@ -95,12 +98,12 @@ const styles = StyleSheet.create({
   confirmText: {
     color: theme.colors.dark,
   },
-  confirmLogoutTitle: {
+  confirmTitle: {
     ...theme.styles.scale.h5,
     fontWeight: theme.fontWeight.semiBold,
     color: theme.colors.salmon,
   },
-  confirmLogoutText: {
+  confirmBody: {
     ...theme.styles.scale.h6,
   },
 });
