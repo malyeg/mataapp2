@@ -16,8 +16,12 @@ const useMessaging = () => {
   // };
 
   const getToken = async () => {
-    const token = await messaging().getToken();
-    return token;
+    try {
+      const token = await messaging().getToken();
+      return token;
+    } catch (error) {
+      console.warn('couldnt get token');
+    }
   };
 
   const onTokenRefresh = (callback: (token: string) => void) => {

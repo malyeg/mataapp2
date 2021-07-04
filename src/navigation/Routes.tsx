@@ -1,17 +1,16 @@
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import messaging from '@react-native-firebase/messaging';
 import {
+  DefaultTheme,
   LinkingOptions,
   NavigationContainer,
   NavigationContainerRef,
-  DefaultTheme,
 } from '@react-navigation/native';
 import React, {useRef} from 'react';
 import {Linking} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../components/core/Toaster';
-import Sheet from '../components/widgets/Sheet';
 import constants from '../config/constants';
 import useAuth from '../hooks/useAuth';
 import useToast from '../hooks/useToast';
@@ -30,11 +29,15 @@ const linking: LinkingOptions = {
     const url = await Linking.getInitialURL();
     const link = await dynamicLinks().getInitialLink();
     const message = await messaging().getInitialNotification();
-    const initUrl =
+    let initUrl =
       url ??
       link?.url ??
       (message?.notification as any)?.url ??
       'mataapp://home';
+    if (initUrl.includes('?link=')) {
+      initUrl = initUrl.substring(initUrl.indexOf('?link=') + 6);
+      initUrl = decodeURIComponent(initUrl);
+    }
     console.log('initUrl', initUrl);
     return initUrl;
   },
@@ -46,13 +49,14 @@ const linking: LinkingOptions = {
     const unsubscribeNotification = messaging().onNotificationOpenedApp(
       message => {
         console.log('onNotificationOpenedApp', message);
-        const url = (message.data as any)?.url as string;
+        let url = (message.data as any)?.url as string;
 
         if (url) {
           listener(url.includes('//') ? url : `mataapp://${url}`);
         }
       },
     );
+
     const onMessageUnsubscribe = messaging().onMessage(remoteMessage => {
       console.log('onMessage', remoteMessage);
       const url = (remoteMessage.notification as any)?.url;
@@ -60,7 +64,7 @@ const linking: LinkingOptions = {
       if (url) {
         // TODO show popup;
         // TODO if yes, listener(url);
-        listener('mataapp://myItems');
+        listener(url);
       }
     });
 
