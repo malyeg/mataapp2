@@ -11,11 +11,12 @@ export interface Deal extends DataSearchable, Entity {
   userId: string;
   item: {
     id: string;
+    name: string;
     ownerId: string;
+    imageUrl: string;
   };
   status: DealStatus;
 }
-
 class DealsApi extends DataApi<Deal> {
   constructor() {
     super(
@@ -29,6 +30,8 @@ class DealsApi extends DataApi<Deal> {
       item: {
         id: item.id,
         ownerId: item.userId,
+        imageUrl: item.defaultImageURL ?? item.images![0]?.downloadURL!,
+        name: item.name,
       },
       userId,
       status: 'new',

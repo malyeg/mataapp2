@@ -1,4 +1,4 @@
-import React, {FC, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import MapView, {MapEvent, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Modal from 'react-native-modal';
@@ -117,29 +117,32 @@ const LocationSelector = ({
     ref.current.animateToRegion({...coords, ...delta}, 1000);
   };
   return (
-    <Pressable style={[styles.container, style]} onPress={openModal}>
-      <MapView
-        ref={mapSummaryRef}
-        provider={PROVIDER_GOOGLE}
-        // onPress={openModal}
-        style={styles.map}
-        zoomEnabled={false}
-        scrollEnabled={false}
-        showsUserLocation={false}
-        region={
-          location
-            ? {
-                ...location.coordinate,
-                ...summaryDelta,
-              }
-            : undefined
-        }
-        initialRegion={constants.maps.DEFAULT_LOCATION}
-        // fitToSuppliedMarkers={true}
-        // minZoomLevel={10}
-      >
-        {!!location?.coordinate && <Marker coordinate={location.coordinate} />}
-      </MapView>
+    <View style={[styles.container, style]}>
+      <Pressable style={styles.map} onPress={openModal}>
+        <MapView
+          ref={mapSummaryRef}
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          zoomEnabled={false}
+          scrollEnabled={false}
+          showsUserLocation={false}
+          region={
+            location
+              ? {
+                  ...location.coordinate,
+                  ...summaryDelta,
+                }
+              : undefined
+          }
+          initialRegion={constants.maps.DEFAULT_LOCATION}
+          // fitToSuppliedMarkers={true}
+          // minZoomLevel={10}
+        >
+          {!!location?.coordinate && (
+            <Marker coordinate={location.coordinate} />
+          )}
+        </MapView>
+      </Pressable>
       {formState.errors[name] && <Error error={formState.errors[name]} />}
       <Modal
         style={[styles.modal]}
@@ -197,7 +200,7 @@ const LocationSelector = ({
           </KeyboardView>
         </ModalView>
       </Modal>
-    </Pressable>
+    </View>
   );
 };
 
@@ -206,8 +209,6 @@ export default React.memo(LocationSelector);
 const styles = StyleSheet.create({
   container: {
     minHeight: 100,
-    // backgroundColor: 'grey',
-    zIndex: 1,
   },
   search: {
     marginBottom: 15,
@@ -215,15 +216,12 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-    height: 100,
-    backgroundColor: 'grey',
-    zIndex: 1,
+    // height: 100,
   },
   modal: {
     margin: 0,
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'grey',
   },
   confirmButtonContainer: {
     position: 'absolute',

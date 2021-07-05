@@ -151,7 +151,6 @@ const NearByItems = ({
         refreshing={false}
         onRefresh={undefined}
         horizontal
-        // pageable
         itemsFunc={listData}
         renderItem={renderItem}
         ListEmptyComponent={listEmptyComponent}

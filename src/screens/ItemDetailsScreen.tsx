@@ -122,7 +122,6 @@ const ItemDetailsScreen = () => {
   );
 
   const swapHandler = useCallback(async () => {
-    console.log('swap onpress');
     // show({
     //   header: t('swapHeader'),
     //   body: t('swapBody'),

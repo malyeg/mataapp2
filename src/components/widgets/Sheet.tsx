@@ -9,13 +9,7 @@ import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
 import {Button, Modal, Text} from '../core';
 
-export interface SheetProps {
-  // header?: string;
-  // isVisible?: boolean;
-  // children?: React.ReactNode;
-  // show: (options: ShowOptions) => void;
-  // hide: () => void;
-}
+export interface SheetProps {}
 export interface ShowOptions {
   header: string;
   body: string;
@@ -42,7 +36,6 @@ const Sheet = ({...props}: SheetProps, ref: any) => {
   }, []);
 
   const cancelHandler = useCallback(() => {
-    console.log(sheetContent);
     if (sheetContent?.cancelCallback) {
       sheetContent?.cancelCallback();
     }

@@ -52,8 +52,8 @@ export const cart = {
 };
 
 export const screens = {
-  ITEMS: 'ItemsScreen',
-  DEALS_SCREEN: 'DealsScreen',
+  ITEMS: 'ItemsScreen' as 'ItemsScreen',
+  DEALS_SCREEN: 'DealsScreen' as 'DealsScreen',
   DEAL_DETAILS_SCREEN: 'DealDetailsScreen' as 'DealDetailsScreen',
 };
 

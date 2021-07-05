@@ -52,7 +52,8 @@
       "changePassword": "Change password",
       "myItems":"My items",
       "items":"{{name}} Items",
-      "itemDetails":"Item details"
+      "itemDetails":"Item details",
+      "deals":"Deals"
     },
     "location": {
       "title": "Select location",

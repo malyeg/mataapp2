@@ -5,6 +5,7 @@ import usePerformance from './usePerformance';
 type UseApiProps = {
   loadingInitValue?: boolean;
 };
+// Important Note: don't use request as a hook depenedency
 const useApi = (props?: UseApiProps) => {
   const {loader, loading, showLoader, hideLoader} = useLoader(
     props?.loadingInitValue,

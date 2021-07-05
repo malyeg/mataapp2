@@ -6,6 +6,7 @@ import useLocale from '../hooks/useLocale';
 import AddItemScreen from '../screens/AddItemScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import DealDetailsScreen from '../screens/DealDetailsScreen';
+import DealsScreen from '../screens/DealsScreen';
 import EditProfileScreen, {
   EDIT_PROFILE_SCREEN_NAME,
 } from '../screens/EditProfileScreen';
@@ -28,6 +29,7 @@ export type StackParams = {
   ItemsScreen: undefined;
   ItemDetailsScreen: {id: string; title: string} | undefined;
   [screens.DEAL_DETAILS_SCREEN]: {id: string; toastType: string} | undefined;
+  [screens.DEALS_SCREEN]: undefined;
   MyItemsScreen: {refresh: boolean} | undefined;
   ThemeScreen: undefined;
 };
@@ -89,6 +91,11 @@ const HomeStack = () => {
         name="ItemsScreen"
         component={ItemsScreen}
         options={{headerTitle: t('screens.items')}}
+      />
+      <stack.Screen
+        name={screens.DEALS_SCREEN}
+        component={DealsScreen}
+        options={{headerTitle: t('screens.deals')}}
       />
       <stack.Screen
         name={screens.DEAL_DETAILS_SCREEN}
