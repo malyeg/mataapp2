@@ -23,13 +23,16 @@ platform :android do
     )
     if options[:sync]
       puts "|-- sync: #{options[:sync]} 🚀 --|".bold.blue
-      sync
+      sync(version: options[:version])
     end
   end
 
   private_lane :sync do |options|
-
+    version = options[:version]
     git_commit(path: "./app/build.gradle", message: "Android version Bump")
+    add_git_tag(
+      tag: "v#{version}"
+    )
     push_to_git_remote
   end
 end

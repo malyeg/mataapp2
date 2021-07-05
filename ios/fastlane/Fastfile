@@ -17,7 +17,7 @@ platform :ios do
     )
     if options[:sync]
       puts "|-- sync: #{options[:sync]} 🚀 --|".bold.blue
-      sync
+      sync(version: options[:version])
     end  
   end
 end
@@ -78,9 +78,13 @@ private_lane :build do |options|
 end
 
 private_lane :sync do |options|
-
+  version = options[:version]
   git_commit(path: "./mataApp.xcodeproj/project.pbxproj", message: "IOS Version Bump")
+  add_git_tag(
+    tag: "v#{version}"
+  )
   push_to_git_remote
+  
 end
 
 private_lane :clean do |options|
