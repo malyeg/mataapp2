@@ -66,7 +66,7 @@ const ItemDetailsScreen = () => {
                   header: t('deleteConfirmationHeader'),
                   body: t('deleteConfirmationBody'),
                   cancelCallback: () => console.log('canceliing'),
-                  confirmCallback: deleteItem,
+                  confirmCallback: () => deleteItem(i.id),
                 })
               }
             />
@@ -85,27 +85,30 @@ const ItemDetailsScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params?.id]);
 
-  const deleteItem = useCallback(async () => {
-    try {
-      await request(() =>
-        itemsApi.delete(item!, {
-          cache: {evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`},
-        }),
-      );
-      if (navigation.canGoBack()) {
-        const routes = state.routes;
-        if (routes[routes.length - 2]?.name === MY_ITEMS_SCREEN) {
-          navigation.navigate(MY_ITEMS_SCREEN, {refresh: true});
+  const deleteItem = useCallback(
+    async (id: string) => {
+      try {
+        await request(() =>
+          itemsApi.deleteById(id, {
+            cache: {evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`},
+          }),
+        );
+        if (navigation.canGoBack()) {
+          const routes = state.routes;
+          if (routes[routes.length - 2]?.name === MY_ITEMS_SCREEN) {
+            navigation.navigate(MY_ITEMS_SCREEN, {refresh: true});
+          } else {
+            navigation.goBack();
+          }
         } else {
-          navigation.goBack();
+          navigation.navigate(HOME_SCREEN);
         }
-      } else {
-        navigation.navigate(HOME_SCREEN);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [item, navigation, request, state.routes, user.id]);
+    },
+    [item, navigation, request, state.routes, user.id],
+  );
 
   const itemImage = useCallback(
     (itemInfo: {item: ImageSource}) => (
