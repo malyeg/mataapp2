@@ -95,7 +95,7 @@ const ItemDetailsScreen = () => {
         if (navigation.canGoBack()) {
           const routes = state.routes;
           if (routes[routes.length - 2]?.name === MY_ITEMS_SCREEN) {
-            navigation.navigate(MY_ITEMS_SCREEN, {refresh: true});
+            navigation.navigate(MY_ITEMS_SCREEN, {lastRefresh: Date.now()});
           } else {
             navigation.goBack();
           }

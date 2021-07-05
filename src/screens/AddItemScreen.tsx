@@ -86,12 +86,13 @@ const AddItemScreen = () => {
         (item.condition.desc = data.usedWithIssuesDesc);
       console.log('item default url', item.defaultImageURL);
       console.log('item images', item.images);
-
+      const evict = `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`;
+      console.log('evict', evict);
       await request<Item>(() =>
         itemsApi.add(item, undefined, {
           cache: {
             enabled: false,
-            evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`,
+            evict,
           },
         }),
       );

@@ -132,8 +132,8 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         timestamp: (snapshot?.data()?.timestamp as any)?.toDate(),
         id,
       } as T;
-      options?.cache?.enabled &&
-        cache.store(id, doc, options.cache.expireInSeconds);
+      !!options?.cache?.enabled &&
+        (await cache.store(id, doc, options.cache.expireInSeconds));
 
       return doc;
     }
@@ -163,9 +163,9 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent)?.then();
       if (options?.cache?.enabled) {
-        cache.store(id, createdDoc, options.cache.expireInSeconds);
+        await cache.store(id, createdDoc, options.cache.expireInSeconds);
       }
-      options?.cache?.evict && cache.remove(options?.cache?.evict);
+      options?.cache?.evict && (await cache.remove(options?.cache?.evict));
       return createdDoc as T;
     } catch (error) {
       options?.analyticsEvent &&
@@ -193,9 +193,9 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent)?.then();
       if (options?.cache?.enabled) {
-        cache.store(id, createdDoc, options?.cache?.expireInSeconds);
+        await cache.store(id, createdDoc, options?.cache?.expireInSeconds);
       }
-      options?.cache?.evict && cache.remove(options?.cache?.evict);
+      options?.cache?.evict && (await cache.remove(options?.cache?.evict));
       return newDoc;
     } catch (error) {
       options?.analyticsEvent &&
@@ -217,7 +217,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         console.warn('not supported');
         // cache.store(doc.id!, doc, options.cache.expireInSeconds);
       }
-      options?.cache?.evict && cache.remove(options?.cache?.evict);
+      options?.cache?.evict && (await cache.remove(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
@@ -229,10 +229,10 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     try {
       this.logger.debug('deleteById:', docId);
       await this.collection.doc(docId).delete();
-      options?.analyticsEvent &&
+      !!options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent)?.then();
-      cache.remove(docId).then();
-      options?.cache?.evict && cache.remove(options?.cache?.evict);
+      await cache.remove(docId);
+      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
@@ -246,8 +246,8 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       await this.collection.doc(doc.id).delete();
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent)?.then();
-      cache.remove(doc.id).then();
-      options?.cache?.evict && cache.remove(options?.cache?.evict);
+      await cache.remove(doc.id);
+      options?.cache?.evict && (await cache.remove(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();

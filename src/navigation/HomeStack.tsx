@@ -31,7 +31,7 @@ export type StackParams = {
   ItemDetailsScreen: {id: string; title: string} | undefined;
   [screens.DEAL_DETAILS_SCREEN]: {id: string; toastType: string} | undefined;
   [screens.DEALS_TABS]: undefined;
-  MyItemsScreen: {refresh: boolean} | undefined;
+  MyItemsScreen: {lastRefresh: number} | undefined;
   ThemeScreen: undefined;
 };
 

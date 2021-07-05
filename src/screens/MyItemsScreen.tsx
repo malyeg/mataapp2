@@ -1,54 +1,48 @@
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {Category} from '../api/categoriesApi';
 import itemsApi, {Item} from '../api/itemsApi';
 import {Screen} from '../components/core';
-import CategoryList from '../components/widgets/CategoryList';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
 import useAuth from '../hooks/useAuth';
 import useLoader from '../hooks/useLoader';
 import {MyItemsRouteProp} from '../navigation/HomeStack';
-import {Filter, Operation, QueryBuilder} from '../types/DataTypes';
+import {Filter, QueryBuilder} from '../types/DataTypes';
 
 export const MY_ITEMS_SCREEN = 'MyItemsScreen';
 const MyItemsScreen = () => {
   const {user} = useAuth();
   const route = useRoute<MyItemsRouteProp>();
-  const [selectedCategory, setSelectedCategory] = useState<Category>();
-  const lastRefresh = useRef(new Date());
-  const cache = useRef(true);
+  const lastRefresh = useRef<number>();
+  // const [lastRefresh, setLastRefresh] = useState<number>(Date.now());
   const {loader, loading, hideLoader} = useLoader(true);
 
   useFocusEffect(() => {
-    if (route.params?.refresh) {
-      lastRefresh.current = new Date();
-      cache.current = false;
+    console.log('useFocusEffect');
+    if (route.params?.lastRefresh) {
+      console.log('useFocusEffect refresh');
+      lastRefresh.current = route.params?.lastRefresh;
+      // setLastRefresh(Date.now());
     }
+
     hideLoader();
   });
 
   const loadItems = useCallback(
     async () => {
       try {
+        console.log('loadItems');
         const filters: Filter<Item>[] = [{field: 'userId', value: user.id}];
-        selectedCategory?.id &&
-          selectedCategory?.id !== '0' &&
-          filters.push({
-            field: 'category.id',
-            value: selectedCategory?.id,
-            operation: Operation.EQUAL,
-          });
         let query = new QueryBuilder<Item>()
           .filters(filters)
           .limit(100)
-          // .after(lastDoc)
           .build();
+        const cacheEnabled = route.params?.lastRefresh === lastRefresh.current;
+        console.log('cacheEnabled', route.params?.lastRefresh, cacheEnabled);
         const response = await itemsApi.getAll(query, {
           cache: {
-            enabled: cache.current,
+            enabled: cacheEnabled,
             key: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`,
           },
         });
@@ -58,20 +52,8 @@ const MyItemsScreen = () => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedCategory, lastRefresh, cache.current],
+    [route.params?.lastRefresh],
   );
-
-  // const onSelectCategory = useCallback(
-  //   (category: Category) => {
-  //     if (category?.id === '0') {
-  //       setSelectedCategory(undefined);
-  //     } else {
-  //       setSelectedCategory(category);
-  //     }
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [setSelectedCategory, lastRefresh],
-  // );
 
   const renderItem = useCallback(
     ({item}: any) => (
@@ -82,16 +64,11 @@ const MyItemsScreen = () => {
 
   return (
     <Screen scrollable={false} style={styles.screen}>
-      {/* <CategoryList
-        horizontal
-        onChange={onSelectCategory}
-        style={styles.categories}
-      /> */}
       {!loading && (
         <DataList
           containerStyle={styles.datalist}
           listStyle={styles.datalist}
-          key={lastRefresh.current.getTime()}
+          // key={lastRefresh}
           showsVerticalScrollIndicator={false}
           itemsFunc={loadItems}
           columnWrapperStyle={styles.columnWrapper}
