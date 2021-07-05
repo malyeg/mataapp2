@@ -8,7 +8,7 @@ import constants from '../../config/constants';
 import useLocale from '../../hooks/useLocale';
 import useController from '../../hooks/userController';
 import {Coordinate, Location} from '../../types/DataTypes';
-import {Button} from '../core';
+import {Button, Text} from '../core';
 import {Error, KeyboardView} from '../form';
 import LocationSearch from './LocationSearch';
 import ModalView from './ModalView';
@@ -118,9 +118,11 @@ const LocationSelector = ({
   };
   return (
     <View style={[styles.container, style]}>
+      <Text>asfd</Text>
       <Pressable style={styles.map} onPress={openModal}>
         <MapView
           ref={mapSummaryRef}
+          onPress={openModal}
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           zoomEnabled={false}
