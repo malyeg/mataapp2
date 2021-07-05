@@ -118,7 +118,6 @@ const LocationSelector = ({
   };
   return (
     <View style={[styles.container, style]}>
-      <Text>asfd</Text>
       <Pressable style={styles.map} onPress={openModal}>
         <MapView
           ref={mapSummaryRef}
