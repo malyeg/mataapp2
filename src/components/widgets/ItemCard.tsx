@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
 import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Item} from '../../api/itemsApi';
+import FreeIcon from '../../assets/svgs/free.svg';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
-import SwapButton from './SwapButton';
 import SwapIcon from './SwapIcon';
 
 const CARD_BORDER = 2;
@@ -26,7 +25,6 @@ const ItemCard = ({
   showSwapIcon = false,
 }: ItemCardProps) => {
   const navigtion = useNavigation();
-  const {user} = useAuth();
 
   const openItemDetails = useCallback(() => {
     // TODO refactor to constant
@@ -43,9 +41,11 @@ const ItemCard = ({
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>
       <View style={styles.cardHeader}>
         {item?.swapOption?.type === 'free' && (
-          <Image
+          <FreeIcon
+            width={30}
+            height={30}
+            fill={theme.colors.salmon}
             style={styles.freeImage}
-            uri={'https://www.freeiconspng.com/uploads/free-icon-0.png'}
           />
         )}
         {showSwapIcon && <SwapIcon item={item} />}
@@ -61,6 +61,7 @@ const ItemCard = ({
       </View>
 
       <Image uri={imageUrl!} style={styles.image} />
+
       <Text numberOfLines={1} style={styles.nameText}>
         {item.name}
       </Text>
@@ -132,6 +133,7 @@ const styles = StyleSheet.create({
   },
   nameText: {
     ...theme.styles.scale.body2,
+    fontWeight: theme.fontWeight.semiBold,
   },
   freeImage: {
     // position: 'absolute',

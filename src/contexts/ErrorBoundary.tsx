@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {ErrorBoundary as EBoundary} from 'react-error-boundary';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import {
   setJSExceptionHandler,
   setNativeExceptionHandler,
@@ -40,8 +41,13 @@ function ErrorFallback({error, resetErrorBoundary}: any) {
 }
 
 const errorHandler = (_error: Error, info?: {componentStack: string}) => {
-  console.debug('errorHandler:', _error, JSON.stringify(info));
+  console.error('errorHandler:', _error, JSON.stringify(info));
   // TODO crashlytics
+  // if (_error instanceof Error) {
+  //   crashlytics().recordError(_error);
+  // } else {
+  //   // crashlytics().recordError(new Error(_error));
+  // }
 };
 
 const ErrorBoundary: FC = ({children}) => {

@@ -17,6 +17,7 @@ import ItemsScreen from '../screens/ItemsScreen';
 import MyItemsScreen, {MY_ITEMS_SCREEN} from '../screens/MyItemsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ThemeScreen from '../screens/ThemeScreen';
+import DealsTabs from './DealsTabs';
 import HomeTabs, {HOME_TABS} from './HomeTabs';
 import {screenOptions} from './Nav';
 
@@ -29,7 +30,7 @@ export type StackParams = {
   ItemsScreen: undefined;
   ItemDetailsScreen: {id: string; title: string} | undefined;
   [screens.DEAL_DETAILS_SCREEN]: {id: string; toastType: string} | undefined;
-  [screens.DEALS_SCREEN]: undefined;
+  [screens.DEALS_TABS]: undefined;
   MyItemsScreen: {refresh: boolean} | undefined;
   ThemeScreen: undefined;
 };
@@ -93,10 +94,16 @@ const HomeStack = () => {
         options={{headerTitle: t('screens.items')}}
       />
       <stack.Screen
+        name={screens.DEALS_TABS}
+        component={DealsTabs}
+        options={{headerTitle: t('screens.deals')}}
+      />
+      {/* <stack.Screen
         name={screens.DEALS_SCREEN}
         component={DealsScreen}
         options={{headerTitle: t('screens.deals')}}
-      />
+      /> */}
+
       <stack.Screen
         name={screens.DEAL_DETAILS_SCREEN}
         component={DealDetailsScreen}

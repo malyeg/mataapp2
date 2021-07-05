@@ -42,7 +42,7 @@ const ProfileScreen = () => {
       />
       {/* <ProfileItem
         title={t('dealsLink')}
-        onPress={() => navigation.navigate(screens.DEALS_SCREEN)}
+        onPress={() => navigation.navigate(screens.DEALS_TABS)}
       /> */}
 
       <ProfileItem

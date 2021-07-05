@@ -86,7 +86,11 @@ const AuthProvider: React.FC = (props: any) => {
           const user = fromFirebaseUser(fbUser);
           crashlytics.setUser(user);
           Analytics.setUser(user);
-          messaging.getToken().then(token => updateToken(token, profile!));
+          messaging.getToken().then(token => {
+            if (token) {
+              updateToken(token, profile!);
+            }
+          });
           dispatch({
             type: AuthActionType.SIGNIN,
             payload: {user, profile},

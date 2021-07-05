@@ -22,11 +22,11 @@ import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useSheet from '../hooks/useSheet';
-import useToast from '../hooks/useToast';
 import {ItemDetailsRouteProp} from '../navigation/HomeStack';
 import theme from '../styles/theme';
 import {HOME_SCREEN} from './HomeScreen';
 import {MY_ITEMS_SCREEN} from './MyItemsScreen';
+import FreeIcon from '../assets/svgs/free.svg';
 
 export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
 const ItemDetailsScreen = () => {
@@ -38,7 +38,6 @@ const ItemDetailsScreen = () => {
   const state = useNavigationState(s => s);
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
-  const {showToast, hideToast} = useToast();
 
   useEffect(() => {
     const loadData = async () => {
@@ -107,7 +106,7 @@ const ItemDetailsScreen = () => {
         console.error(error);
       }
     },
-    [item, navigation, request, state.routes, user.id],
+    [navigation, request, state.routes, user.id],
   );
 
   const itemImage = useCallback(
@@ -125,19 +124,19 @@ const ItemDetailsScreen = () => {
   );
 
   const swapHandler = useCallback(async () => {
-    // show({
-    //   header: t('swapHeader'),
-    //   body: t('swapBody'),
-    //   confirmCallback: async () => {
-    //     try {
-    //       const offer = await dealsApi.createOffer(user.id, item!);
-    //       navigation.navigate(screens.DEAL_DETAILS_SCREEN, {
-    //         id: offer.id,
-    //         toastType: 'newOffer',
-    //       });
-    //     } catch (error) {}
-    //   },
-    // });
+    show({
+      header: t('swapHeader'),
+      body: t('swapBody'),
+      confirmCallback: async () => {
+        try {
+          const offer = await dealsApi.createOffer(user.id, item!);
+          navigation.navigate(screens.DEAL_DETAILS_SCREEN, {
+            id: offer.id,
+            toastType: 'newOffer',
+          });
+        } catch (error) {}
+      },
+    });
   }, [item, navigation, show, t, user.id]);
 
   const conditionName = conditionList.find(
@@ -168,7 +167,12 @@ const ItemDetailsScreen = () => {
           <Text>{item.category.name}</Text>
         </View>
         {item.userId !== user.id && (
-          <SwapButton onPress={swapHandler} item={item} />
+          <SwapButton
+            onPress={swapHandler}
+            item={item}
+            iconStyle={styles.swapButton}
+            iconSize={20}
+          />
         )}
       </View>
       {!!item.description && (
@@ -205,10 +209,9 @@ const ItemDetailsScreen = () => {
       <Sheet ref={sheetRef} />
 
       {item?.swapOption?.type === 'free' && (
-        <Image
-          style={styles.freeImage}
-          uri={'https://www.freeiconspng.com/uploads/free-icon-0.png'}
-        />
+        <View style={styles.freeImage}>
+          <FreeIcon width={60} height={60} fill={theme.colors.salmon} />
+        </View>
       )}
       {loader}
     </Screen>
@@ -295,10 +298,14 @@ const styles = StyleSheet.create({
   },
   freeImage: {
     position: 'absolute',
-    top: -10,
-    left: 0,
+    top: -5,
+    left: 10,
     width: 70,
     height: 70,
     transform: [{rotate: '-10deg'}],
+  },
+  swapButton: {
+    height: 30,
+    // backgroundColor: 'grey',
   },
 });

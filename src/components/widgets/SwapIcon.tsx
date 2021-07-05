@@ -8,11 +8,12 @@ import {Text} from '../core';
 interface SwapIconProps extends ViewProps {
   item: Item;
   onPress?: () => void;
+  iconSize?: number;
 }
-const SwapIcon = ({item, style}: SwapIconProps) => {
+const SwapIcon = ({item, iconSize = 15, style}: SwapIconProps) => {
   return (
     <View style={[styles.container, style]}>
-      <Swap width={15} height={15} fill={theme.colors.salmon} />
+      <Swap width={iconSize} height={iconSize} fill={theme.colors.salmon} />
       {!!item && (
         <Text style={styles.offersText}>
           {isNaN(item.offers) ? 0 : item.offers}

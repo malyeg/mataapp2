@@ -62,7 +62,7 @@ function DataList<T extends Entity>({
         type: 'SET_ITEMS',
         items: response?.items,
         lastDoc:
-          response?.items.length === response?.query?.limit
+          response?.items?.length === response?.query?.limit
             ? response?.lastDoc
             : undefined,
       });
@@ -89,7 +89,7 @@ function DataList<T extends Entity>({
   const loadMoreHandler = useMemo(
     () => async (info: {distanceFromEnd: number}) => {
       if (!pageable && onEndReached) {
-        onEndReached(info, items.length);
+        onEndReached(info, items?.length);
         return;
       }
       if (pageable && !reloading && !!lastDoc) {
@@ -102,7 +102,7 @@ function DataList<T extends Entity>({
           const hasMoreData =
             !!response?.query?.limit &&
             !!response.lastDoc &&
-            response.items.length === response?.query?.limit;
+            response.items?.length === response?.query?.limit;
 
           dispatch({
             type: 'LOAD_MORE_ITEMS',
@@ -116,15 +116,7 @@ function DataList<T extends Entity>({
         }
       }
     },
-    [
-      dispatch,
-      items.length,
-      itemsFunc,
-      lastDoc,
-      onEndReached,
-      pageable,
-      reloading,
-    ],
+    [dispatch, items, itemsFunc, lastDoc, onEndReached, pageable, reloading],
   );
 
   const ListFooter = useCallback(() => {
@@ -168,7 +160,7 @@ function DataList<T extends Entity>({
           // }
           data={items}
           contentContainerStyle={
-            !!items && items.length === 0 ? styles.noData : undefined
+            !!items && items?.length === 0 ? styles.noData : undefined
           }
           getItemLayout={itemSize ? getItemLayout : undefined}
           keyExtractor={keyExtractor ?? keyExtractorHandler}

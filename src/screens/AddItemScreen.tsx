@@ -87,7 +87,7 @@ const AddItemScreen = () => {
       console.log('item default url', item.defaultImageURL);
       console.log('item images', item.images);
 
-      const addedItem = await request<Item>(() =>
+      await request<Item>(() =>
         itemsApi.add(item, undefined, {
           cache: {
             enabled: false,

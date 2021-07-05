@@ -101,11 +101,11 @@ const NearByItems = ({
 
   const listEmptyComponent = (
     <NoDataFound body={'no items found in ' + location.city} icon="">
-      <PressableObacity
+      {/* <PressableObacity
         onPress={() => navigation.navigate(ITEM_SEARCH_SCREEN)}
         hitSlop={{left: 20, right: 20, top: 20, bottom: 5}}>
         <Text style={styles.anotherAreaLink}>try another area</Text>
-      </PressableObacity>
+      </PressableObacity> */}
     </NoDataFound>
   );
 
