@@ -1,5 +1,5 @@
 import {useFocusEffect, useRoute} from '@react-navigation/native';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {StyleSheet} from 'react-native';
 import itemsApi, {Item} from '../api/itemsApi';
 import {Screen} from '../components/core';
