@@ -66,7 +66,7 @@ const OwnerItemList = ({item}: ItemListProps) => {
           itemsFunc={loadData}
           renderItem={renderItem}
           itemSize={ITEM_HEIGHT}
-          ListEmptyComponent={undefined}
+          ListEmptyComponent={<View />}
           HeaderComponent={listHeaderComponent}
         />
       )}

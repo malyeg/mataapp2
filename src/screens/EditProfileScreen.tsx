@@ -2,9 +2,9 @@ import produce from 'immer';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
-import countriesApi, {Country, State} from '../api/countriesApi';
+import countriesApi, {Country} from '../api/countriesApi';
 import profilesApi, {Profile} from '../api/profileApi';
-import {Button, Loader, Text} from '../components/core';
+import {Button, Loader} from '../components/core';
 import PressableScreen from '../components/core/PressableScreen';
 import {CheckBox, Error, FormView, Picker, TextInput} from '../components/form';
 import ProfileHeader from '../components/widgets/ProfileHeader';
@@ -27,9 +27,7 @@ type EditProfileFormValues = {
   acceptMarketingFlag: boolean;
 };
 const EditProfileScreen = () => {
-  // const [profile, setProfile] = useState<Profile>();
-  // const [states, setStates] = useState<State[]>([]);
-  const {user, profile, updateProfile} = useAuth();
+  const {user, profile, loadProfile, updateProfile} = useAuth();
   const [selectedCountry, setSelectedCountry] = useState<Country | undefined>(
     profile?.country,
   );
@@ -70,15 +68,9 @@ const EditProfileScreen = () => {
 
   const loadData = async () => {
     try {
-      // const freshProfile = await request<Profile>(() =>
-      //   profilesApi.getById(user.id, {cache: {enabled: true}}),
-      // );
-      // if (freshProfile) {
-      //   // setProfile(freshProfile);
-      //   // updateStates(freshProfile.country?.id!);
-      // } else {
-      //   console.log('profile not found');
-      // }
+      if (!profile) {
+        await request<Profile>(() => loadProfile());
+      }
     } catch (error) {
       console.error(error);
     }
@@ -101,16 +93,6 @@ const EditProfileScreen = () => {
       setSelectedCountry(selectedCounty);
     }
   }, []);
-
-  // const updateStates = (countryId: string) => {
-  //   const countryStates = countriesApi.getStates(countryId);
-
-  //   if (countryStates) {
-  //     setStates(countryStates);
-  //   } else {
-  //     setStates([]);
-  //   }
-  // };
 
   const onFormSuccess = async (data: EditProfileFormValues) => {
     //

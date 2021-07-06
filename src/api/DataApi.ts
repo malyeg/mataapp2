@@ -145,7 +145,6 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     options?: APIOptions,
   ) => {
     try {
-      this.logger.debug('add:', doc);
       const newDoc = this.removeEmpty(doc as T);
       if (searchable && searchable.keywords.length > 0) {
         let searchArray = [];
@@ -165,7 +164,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       if (options?.cache?.enabled) {
         await cache.store(id, createdDoc, options.cache.expireInSeconds);
       }
-      options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
       return createdDoc as T;
     } catch (error) {
       options?.analyticsEvent &&
@@ -195,7 +194,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       if (options?.cache?.enabled) {
         await cache.store(id, createdDoc, options?.cache?.expireInSeconds);
       }
-      options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
       return newDoc;
     } catch (error) {
       options?.analyticsEvent &&
@@ -217,7 +216,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         console.warn('not supported');
         // cache.store(doc.id!, doc, options.cache.expireInSeconds);
       }
-      options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
@@ -247,7 +246,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent)?.then();
       await cache.remove(doc.id);
-      options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();

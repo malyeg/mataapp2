@@ -89,6 +89,7 @@ export default React.memo(MyItemsScreen);
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    paddingTop: 20,
   },
   datalist: {flex: 1},
   categories: {

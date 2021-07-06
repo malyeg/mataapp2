@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {differenceInSeconds} from 'date-fns';
 import {LoggerFactory} from '../logger';
 
-const PREFIX = 'cache_';
+const PREFIX = '';
 const REGISTERY = 'registery';
 const EXPIRE_IN_SECONDS = 60 * 1;
 const CACHE_DISABLED = false;
@@ -28,7 +28,9 @@ export interface Registery {
 const logger = LoggerFactory.getLogger('cache');
 class Cache {
   store = async (key: string, value: unknown, expireInSeconds?: number) => {
-    if(CACHE_DISABLED) return;
+    if (CACHE_DISABLED) {
+      return;
+    }
     try {
       logger.debug('store', key);
       const cacheKey = PREFIX + key;
@@ -45,11 +47,14 @@ class Cache {
   };
 
   get = async <T extends unknown>(key: String) => {
-    if(CACHE_DISABLED) return;
+    if (CACHE_DISABLED) {
+      return;
+    }
     try {
       const cacheKey = PREFIX + key;
       const item = await AsyncStorage.getItem(cacheKey);
       if (!item) {
+        logger.debug('no cache found', key);
         return;
       }
       logger.debug('getting data from cache', key);
@@ -57,6 +62,7 @@ class Cache {
       if (this.isExpired(cacheItem)) {
         await AsyncStorage.removeItem(cacheKey);
         await this.removeFromRegistry(cacheKey);
+        logger.debug('cache expired');
       } else {
         return cacheItem.value;
       }
@@ -73,7 +79,9 @@ class Cache {
   };
 
   remove = async (key: string | RegExp) => {
-    if(CACHE_DISABLED) return;
+    if (CACHE_DISABLED) {
+      return;
+    }
     try {
       logger.debug('remove', key);
       if (key instanceof RegExp) {
@@ -82,7 +90,7 @@ class Cache {
           await AsyncStorage.removeItem(registeryKey.key);
         }
       } else {
-        await AsyncStorage.removeItem(key);
+        await AsyncStorage.removeItem(PREFIX + key);
       }
     } catch (error) {
       console.error(error);
@@ -90,7 +98,9 @@ class Cache {
   };
 
   removeBatch = async (keys: string[]) => {
-    if(CACHE_DISABLED) return;
+    if (CACHE_DISABLED) {
+      return;
+    }
     try {
       if (!keys || keys.length === 0) {
         return;
@@ -108,7 +118,9 @@ class Cache {
   };
 
   clear = async () => {
-    if(CACHE_DISABLED) return;
+    if (CACHE_DISABLED) {
+      return;
+    }
     try {
       const registryArray = await this.getRegistery();
       await AsyncStorage.multiRemove(
@@ -147,7 +159,10 @@ class Cache {
     }
   };
 
-  private addToRegistry = async (key: string, cacheItem?: CacheItem<unknown>) => {
+  private addToRegistry = async (
+    key: string,
+    cacheItem?: CacheItem<unknown>,
+  ) => {
     try {
       const registryArray = await this.getRegistery();
       registryArray.push({

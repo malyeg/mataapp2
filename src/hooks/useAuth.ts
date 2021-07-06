@@ -42,6 +42,16 @@ const useAuth = () => {
     });
   };
 
+  const loadProfile = async () => {
+    const profile = await profilesApi.getById(authContext.state.user?.id!);
+    if (profile) {
+      authContext.dispatch({
+        type: AuthActionType.SET_PROFILE,
+        payload: {profile},
+      });
+    }
+  };
+
   return {
     user: authContext.state?.user!,
     profile: authContext.state?.profile,
@@ -51,6 +61,7 @@ const useAuth = () => {
     sendPasswordResetEmail,
     updateProfile,
     changePassword,
+    loadProfile,
   };
 };
 

@@ -114,7 +114,7 @@ const AuthProvider: React.FC = (props: any) => {
         );
       }
     };
-    load;
+    load();
     const authUnsubscribe = auth.onAuthStateChanged(onAuthStateChanged);
     const netUnsubscribe = NetInfo.addEventListener(onNetworkChanged);
 
