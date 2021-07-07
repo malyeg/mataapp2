@@ -141,14 +141,18 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
 
   add = async (
     doc: Omit<T, 'id'>,
-    searchable?: {keywords: string[]},
+    // searchable?: {keywords: string[]},
     options?: APIOptions,
   ) => {
     try {
       const newDoc = this.removeEmpty(doc as T);
-      if (searchable && searchable.keywords.length > 0) {
+      if (
+        options &&
+        options.searchable &&
+        options.searchable.keywords.length > 0
+      ) {
         let searchArray = [];
-        for (const field of searchable.keywords) {
+        for (const field of options.searchable.keywords) {
           const compinations = allCombinations(field);
           searchArray.push(...compinations);
         }

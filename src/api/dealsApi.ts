@@ -1,6 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import Config from 'react-native-config';
 import {DataSearchable, Entity} from '../types/DataTypes';
+import {APIOptions} from './Api';
 import {DataApi} from './DataApi';
 import {Item} from './itemsApi';
 
@@ -9,12 +10,7 @@ type DealStatus = 'new' | 'pre-approved' | 'canceled' | 'rejected' | 'finished';
 export interface Deal extends DataSearchable, Entity {
   id: string;
   userId: string;
-  item: {
-    id: string;
-    name: string;
-    ownerId: string;
-    imageUrl: string;
-  };
+  item: Item;
   status: DealStatus;
 }
 class DealsApi extends DataApi<Deal> {
@@ -25,18 +21,13 @@ class DealsApi extends DataApi<Deal> {
     );
   }
 
-  createOffer = (userId: string, item: Item) => {
+  createOffer = (userId: string, item: Item, options?: APIOptions) => {
     const deal: Omit<Deal, 'id'> = {
-      item: {
-        id: item.id,
-        ownerId: item.userId,
-        imageUrl: item.defaultImageURL ?? item.images![0]?.downloadURL!,
-        name: item.name,
-      },
+      item,
       userId,
       status: 'new',
     };
-    return this.add(deal);
+    return this.add(deal, options);
   };
 
   readonly DEALS_CACHE_KEY = 'deals';

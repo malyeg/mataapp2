@@ -34,8 +34,12 @@ export type StackParams = {
   MyItemsScreen: {lastRefresh: number} | undefined;
   ThemeScreen: undefined;
 };
-
+const DEAL_DETAILS_SCREEN = screens.DEAL_DETAILS_SCREEN;
 export type ItemDetailsRouteProp = RouteProp<StackParams, 'ItemDetailsScreen'>;
+export type DealDetailsRouteProp = RouteProp<
+  StackParams,
+  typeof screens.DEAL_DETAILS_SCREEN
+>;
 export type MyItemsRouteProp = RouteProp<StackParams, 'MyItemsScreen'>;
 
 const stack = createStackNavigator<StackParams>();
@@ -107,6 +111,7 @@ const HomeStack = () => {
       <stack.Screen
         name={screens.DEAL_DETAILS_SCREEN}
         component={DealDetailsScreen}
+        options={{headerTitle: t('screens.dealDetails')}}
       />
 
       <stack.Screen

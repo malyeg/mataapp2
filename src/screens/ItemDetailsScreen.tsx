@@ -6,7 +6,7 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import dealsApi from '../api/dealsApi';
+import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
@@ -129,7 +129,13 @@ const ItemDetailsScreen = () => {
       body: t('swapBody'),
       confirmCallback: async () => {
         try {
-          const offer = await dealsApi.createOffer(user.id, item!);
+          const offer = await request<Deal>(() =>
+            dealsApi.createOffer(user.id, item!, {
+              cache: {
+                evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`,
+              },
+            }),
+          );
           navigation.navigate(screens.DEAL_DETAILS_SCREEN, {
             id: offer.id,
             toastType: 'newOffer',

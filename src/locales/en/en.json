@@ -53,7 +53,8 @@
       "myItems":"My items",
       "items":"{{name}} Items",
       "itemDetails":"Item details",
-      "deals":"Deals"
+      "deals":"Deals",
+      "dealDetails":"Deal details"
     },
     "location": {
       "title": "Select location",

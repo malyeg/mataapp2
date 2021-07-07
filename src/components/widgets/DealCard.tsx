@@ -15,9 +15,12 @@ const DealCard = ({deal}: DealCardProps) => {
   const onPress = useCallback(() => {
     navigation.navigate(screens.DEAL_DETAILS_SCREEN, {id: deal.id});
   }, [deal.id, navigation]);
+  const imageUrl = deal.item.defaultImageURL
+    ? deal.item.defaultImageURL
+    : deal.item.images[0].downloadURL;
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <Image uri={deal.item.imageUrl} style={styles.image} />
+      <Image uri={imageUrl} style={styles.image} />
       <View>
         {!!deal.timestamp && (
           <Text style={styles.date}>

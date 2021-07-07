@@ -112,18 +112,8 @@ const NearByItems = ({
   // const onSwap = useCallback():
 
   const renderItem = useCallback(
-    ({item}) => (
-      <ItemCard
-        showSwapIcon
-        item={item as Item}
-        onSwap={async () => {
-          console.log('new offer');
-          const deal = await dealsApi.createOffer(user.id, item);
-          console.log('new offer', deal);
-        }}
-      />
-    ),
-    [user.id],
+    ({item}) => <ItemCard showSwapIcon item={item as Item} />,
+    [],
   );
   const onEndReached = (info: any, length: number) => {
     console.log('info', info, length);

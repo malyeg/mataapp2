@@ -89,7 +89,7 @@ const AddItemScreen = () => {
       const evict = `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`;
       console.log('evict', evict);
       await request<Item>(() =>
-        itemsApi.add(item, undefined, {
+        itemsApi.add(item, {
           cache: {
             enabled: false,
             evict,

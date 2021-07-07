@@ -40,10 +40,10 @@ const ProfileScreen = () => {
         title={t('myItemsLink')}
         onPress={() => navigation.navigate(MY_ITEMS_SCREEN)}
       />
-      {/* <ProfileItem
+      <ProfileItem
         title={t('dealsLink')}
         onPress={() => navigation.navigate(screens.DEALS_TABS)}
-      /> */}
+      />
 
       <ProfileItem
         style={styles.logout}

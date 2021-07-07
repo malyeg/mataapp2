@@ -14,6 +14,7 @@ export interface ApiResponse<T> {
 export interface APIOptions {
   analyticsEvent?: AnalyticsEvent;
   cache?: CacheConfig;
+  searchable?: {keywords: string[]};
 }
 export class Api {
   logger = LoggerFactory.getLogger(this.constructor.name);
