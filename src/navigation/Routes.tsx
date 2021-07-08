@@ -34,6 +34,7 @@ const linking: LinkingOptions = {
       link?.url ??
       (message?.notification as any)?.url ??
       'mataapp://home';
+    // 'mataapp://theme';
     if (initUrl.includes('?link=')) {
       initUrl = initUrl.substring(initUrl.indexOf('?link=') + 6);
       initUrl = decodeURIComponent(initUrl);
@@ -88,6 +89,7 @@ const linking: LinkingOptions = {
       },
       ItemDetailsScreen: 'items',
       MyItemsScreen: 'myItems',
+      ThemeScreen: 'theme',
     },
   },
 };

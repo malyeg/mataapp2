@@ -1,42 +1,149 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {GiftedChat} from 'react-native-gifted-chat';
+import {StyleSheet, View} from 'react-native';
+import {
+  Bubble,
+  Day,
+  GiftedChat,
+  IMessage,
+  Send,
+} from 'react-native-gifted-chat';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import messagesApi from '../../api/messagesApi';
+import useAuth from '../../hooks/useAuth';
+import theme from '../../styles/theme';
 
-const Chat = () => {
-  const [messages, setMessages] = useState<any>([]);
+interface ChatProps {
+  dealId: string;
+}
+const Chat = ({dealId}: ChatProps) => {
+  const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
+  //   const {request} = useApi();
+  const {user} = useAuth();
 
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+    const messagesUnsubscribe = messagesApi.collection
+      .where('dealId', '==', dealId)
+      .orderBy('timestamp', 'desc')
+      .onSnapshot(
+        querySnapshot => {
+          const messages: IMessage[] = querySnapshot.docs.map(doc => {
+            const docData = doc.data();
+
+            const timestamp = (doc.data()?.timestamp as any)?.toDate();
+            const message: IMessage = {
+              _id: doc.id,
+              text: docData.text,
+              createdAt: timestamp,
+              user: {
+                _id: docData.user._id,
+              },
+            };
+            return message;
+          });
+
+          setChatMessages(prevMessages => {
+            if (messages?.length > 0 && messages.length > prevMessages.length) {
+              console.log('setting messages');
+              return messages;
+            }
+            return prevMessages;
+          });
         },
-      },
-    ]);
+        error => console.error(error),
+      );
+
+    return messagesUnsubscribe;
+  }, [dealId]);
+  const renderSend = useCallback(
+    props => (
+      <Send {...props} containerStyle={styles.sendContainer}>
+        <Icon name="send-circle" color={theme.colors.salmon} size={35} />
+      </Send>
+    ),
+    [],
+  );
+
+  const onSend = useCallback(async (newMessages = []) => {
+    const lastMessage = newMessages[newMessages.length - 1];
+    lastMessage.userId = user.id;
+    lastMessage.dealId = dealId;
+    console.log('lastMessage', lastMessage);
+    await messagesApi.set(lastMessage._id, {
+      ...lastMessage,
+      dealId,
+    });
+    // setChatMessages((previousMessages: IMessage[]) =>
+    //   GiftedChat.append(previousMessages, [lastMessage]),
+    // );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSend = useCallback((messages = []) => {
-    setMessages(previousMessages =>
-      GiftedChat.append(previousMessages, messages),
-    );
+  const renderBubble = useCallback(
+    props => (
+      <Bubble
+        {...props}
+        // bottomContainerStyle={{right: styles.rightText, left: styles.leftText}}
+        textStyle={{right: styles.rightText, left: styles.leftText}}
+        wrapperStyle={{right: styles.rightBubble, left: styles.leftBubble}}
+      />
+    ),
+    [],
+  );
+
+  const renderDay = useCallback(props => {
+    return <Day {...props} textStyle={styles.day} />;
   }, []);
 
   return (
-    <GiftedChat
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      user={{
-        _id: 1,
-      }}
-    />
+    <View style={styles.container}>
+      <GiftedChat
+        messagesContainerStyle={styles.messagesContainer}
+        // renderDay={renderDay}
+        // renderMessage={}
+        timeTextStyle={{right: styles.rightText, left: styles.leftText}}
+        renderBubble={renderBubble}
+        renderSend={renderSend}
+        messages={chatMessages}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: user.id,
+        }}
+      />
+    </View>
   );
 };
 
 export default Chat;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  chatContainer: {
+    flex: 1,
+  },
+  sendContainer: {
+    height: 60,
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  messagesContainer: {
+    // backgroundColor: 'blue',
+  },
+  rightBubble: {
+    backgroundColor: theme.colors.lightGrey,
+  },
+  leftBubble: {
+    backgroundColor: theme.colors.rose,
+  },
+  rightText: {
+    color: theme.colors.dark,
+  },
+  leftText: {
+    color: theme.colors.dark,
+  },
+  day: {
+    color: 'red',
+  },
+});

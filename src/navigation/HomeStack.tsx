@@ -54,13 +54,7 @@ const HomeStack = () => {
     [t],
   );
   return (
-    <stack.Navigator
-      screenOptions={screenOptions}
-      // initialRouteName="HomeTabs"
-      // initialRouteName={EDIT_PROFILE_SCREEN_NAME}
-      // initialRouteName="ItemDetailsScreen"
-      // initialRouteName="ThemeScreen" //
-    >
+    <stack.Navigator screenOptions={screenOptions}>
       <stack.Screen
         name={HOME_TABS}
         component={HomeTabs}
@@ -102,11 +96,6 @@ const HomeStack = () => {
         component={DealsTabs}
         options={{headerTitle: t('screens.deals')}}
       />
-      {/* <stack.Screen
-        name={screens.DEALS_SCREEN}
-        component={DealsScreen}
-        options={{headerTitle: t('screens.deals')}}
-      /> */}
 
       <stack.Screen
         name={screens.DEAL_DETAILS_SCREEN}
@@ -120,11 +109,11 @@ const HomeStack = () => {
         options={detailsOptions}
       />
 
-      {/* <stack.Screen
+      <stack.Screen
         name="ThemeScreen"
         component={ThemeScreen}
-        options={{headerTitle: t('screens.addItem')}}
-      /> */}
+        options={{headerTitle: 'Theme'}}
+      />
     </stack.Navigator>
   );
 };

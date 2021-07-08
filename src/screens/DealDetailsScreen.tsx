@@ -21,7 +21,6 @@ const DealDetailsScreen = () => {
         const freshDeal = await request<Deal>(() =>
           dealsApi.getById(route.params?.id!),
         );
-        console.log('freshDeal', freshDeal);
         if (freshDeal) {
           setDeal(freshDeal);
           return;
@@ -41,8 +40,8 @@ const DealDetailsScreen = () => {
           <Text>{deal.item?.name}</Text>
           <Text>{deal.item?.swapOption?.type}</Text>
         </View>
-        <Chat />
       </View>
+      <Chat dealId={deal.id} />
     </Screen>
   ) : (
     <Loader />
@@ -53,6 +52,7 @@ export default DealDetailsScreen;
 
 const styles = StyleSheet.create({
   screen: {
+    flex: 1,
     paddingTop: 10,
   },
   header: {

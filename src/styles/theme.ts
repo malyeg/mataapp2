@@ -28,6 +28,7 @@ export const colors = {
   grey: '#b2b2b2',
   lightGrey: '#f3f3f4',
   salmon: '#ff7f78',
+  rose: '#ffe7e5',
   pink: '#EBCECC',
   green: '#83D2C8',
 };

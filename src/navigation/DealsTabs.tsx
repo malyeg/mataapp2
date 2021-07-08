@@ -9,8 +9,8 @@ const Tab = createMaterialTopTabNavigator();
 const DealsTabs = () => {
   return (
     <Tab.Navigator lazy>
-      <Tab.Screen name="Incoming" component={DealsScreen} />
       <Tab.Screen name="Outgoing" component={MyDealsScreen} />
+      <Tab.Screen name="Incoming" component={DealsScreen} />
     </Tab.Navigator>
   );
 };

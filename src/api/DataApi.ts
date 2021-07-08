@@ -74,7 +74,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       }
       return collectionQuery
         .limit(query?.limit || DEFAULT_LIMIT)
-        .onSnapshot(observerCallback);
+        .onSnapshot(observerCallback, error => console.error(error));
     } catch (error) {
       this.logger.error(error);
       throw error;
