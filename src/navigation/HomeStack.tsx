@@ -6,7 +6,6 @@ import useLocale from '../hooks/useLocale';
 import AddItemScreen from '../screens/AddItemScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import DealDetailsScreen from '../screens/DealDetailsScreen';
-import DealsScreen from '../screens/DealsScreen';
 import EditProfileScreen, {
   EDIT_PROFILE_SCREEN_NAME,
 } from '../screens/EditProfileScreen';

@@ -1,4 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
+import {Platform} from 'react-native';
 import profilesApi from '../api/profileApi';
 import useAuth from './useAuth';
 
@@ -17,10 +18,16 @@ const useMessaging = () => {
 
   const getToken = async () => {
     try {
+      if (
+        Platform.OS === 'ios' &&
+        !messaging().isDeviceRegisteredForRemoteMessages
+      ) {
+        await messaging().registerDeviceForRemoteMessages();
+      }
       const token = await messaging().getToken();
       return token;
     } catch (error) {
-      console.warn('couldnt get token');
+      console.warn('couldnt get token', error);
     }
   };
 

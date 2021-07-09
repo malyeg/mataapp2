@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
-import {Screen} from '../components/core';
+import {Loader, Screen} from '../components/core';
 import DealCard from '../components/widgets/DealCard';
 import NoDataFound from '../components/widgets/NoDataFound';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import {QueryBuilder} from '../types/DataTypes';
 
-const MyDealsScreen = () => {
+const OutgoingDealsScreen = () => {
   const [deals, setDeals] = useState<Deal[]>([]);
-  const {loader, request, loading} = useApi();
+  const {request, loading} = useApi();
   const {user} = useAuth();
   useEffect(() => {
     const loadData = async () => {
@@ -28,10 +28,13 @@ const MyDealsScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const _renderItem = ({item}: any) => <DealCard deal={item} />;
+  const _renderItem = useCallback(
+    ({item}: any) => <DealCard deal={item} />,
+    [],
+  );
   const itemSeparator = () => <View style={styles.separator} />;
 
-  return (
+  return !loading ? (
     <Screen style={styles.screen}>
       <FlatList
         data={deals}
@@ -39,12 +42,13 @@ const MyDealsScreen = () => {
         ItemSeparatorComponent={itemSeparator}
         ListEmptyComponent={NoDataFound}
       />
-      {loader}
     </Screen>
+  ) : (
+    <Loader />
   );
 };
 
-export default MyDealsScreen;
+export default OutgoingDealsScreen;
 
 const styles = StyleSheet.create({
   screen: {

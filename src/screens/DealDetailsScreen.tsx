@@ -1,14 +1,14 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Pressable, StyleSheet, View} from 'react-native';
 import dealsApi, {Deal} from '../api/dealsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
-import {format} from 'date-fns';
+import Chat from '../components/widgets/Chat';
+import SwapIcon from '../components/widgets/SwapIcon';
 import {screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import {DealDetailsRouteProp} from '../navigation/HomeStack';
 import theme from '../styles/theme';
-import Chat from '../components/widgets/Chat';
 
 const DealDetailsScreen = () => {
   const route = useRoute<DealDetailsRouteProp>();
@@ -31,16 +31,23 @@ const DealDetailsScreen = () => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, route.params]);
+
+  const onHeaderPress = useCallback(() => {
+    navigation.navigate(screens.ITEM_DETAILS, {id: deal?.item.id});
+  }, [deal?.item.id, navigation]);
   return deal ? (
     <Screen style={styles.screen}>
-      <View style={styles.header}>
+      <Pressable style={styles.header} onPress={onHeaderPress}>
         <Image uri={deal.item.defaultImageURL!} style={styles.image} />
         <View>
-          <Text>{deal.item?.category?.name}</Text>
+          <Text style={styles.categoryName}>{deal.item?.category?.name}</Text>
           <Text>{deal.item?.name}</Text>
-          <Text>{deal.item?.swapOption?.type}</Text>
+          <View style={styles.typeContainer}>
+            <SwapIcon style={styles.swapIcon} />
+            <Text>{deal.item?.swapOption?.type}</Text>
+          </View>
         </View>
-      </View>
+      </Pressable>
       <Chat dealId={deal.id} />
     </Screen>
   ) : (
@@ -64,6 +71,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     marginHorizontal: -20,
+  },
+  categoryName: {
+    color: theme.colors.grey,
+  },
+  typeContainer: {
+    flexDirection: 'row',
+  },
+  swapIcon: {
+    // width: 40,
+    // marginRight: 5,
+    borderWidth: 0,
   },
   image: {
     width: 80,

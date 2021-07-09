@@ -53,6 +53,7 @@ export const cart = {
 
 export const screens = {
   ITEMS: 'ItemsScreen' as 'ItemsScreen',
+  ITEM_DETAILS: 'ItemDetailsScreen' as 'ItemDetailsScreen',
   DEALS_SCREEN: 'DealsScreen' as 'DealsScreen',
   MY_DEALS_SCREEN: 'MyDealsScreen' as 'MyDealsScreen',
   DEALS_TABS: 'DealsTabs' as 'DealsTabs',

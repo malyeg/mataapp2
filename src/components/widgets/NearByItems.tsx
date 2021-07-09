@@ -116,7 +116,6 @@ const NearByItems = ({
     [],
   );
   const onEndReached = (info: any, length: number) => {
-    console.log('info', info, length);
     if (length > 20) {
       navigation.navigate(screens.ITEMS);
     }

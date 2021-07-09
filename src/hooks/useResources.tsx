@@ -38,21 +38,26 @@ const syncRTL = async () => {
 export default function useResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const {fetchConfig} = useConfig();
+  const {requestUserPermission} = useMessaging();
 
   useEffect(() => {
     logger.debug('useEffect');
     const loadResourcesAndDataAsync = async () => {
       try {
-        await Promise.all([
+        const promises: Promise<any>[] = [
           syncRTL(),
           fetchConfig(60),
           Icons.loadFont(),
-          Geocoder.init(
-            Platform.OS === 'ios'
-              ? Config.GOOGLE_MAPS_IOS_API_KEY
-              : Config.GOOGLE_MAPS_ANDROID_API_KEY,
-          ),
-        ]);
+        ];
+        if (Platform.OS === 'ios') {
+          promises.push(requestUserPermission());
+        }
+        await Promise.all(promises);
+        Geocoder.init(
+          Platform.OS === 'ios'
+            ? Config.GOOGLE_MAPS_IOS_API_KEY
+            : Config.GOOGLE_MAPS_ANDROID_API_KEY,
+        );
       } catch (e) {
         logger.error(e);
         // TODO handle loading app error

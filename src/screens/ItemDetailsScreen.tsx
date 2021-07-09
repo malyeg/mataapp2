@@ -27,6 +27,7 @@ import theme from '../styles/theme';
 import {HOME_SCREEN} from './HomeScreen';
 import {MY_ITEMS_SCREEN} from './MyItemsScreen';
 import FreeIcon from '../assets/svgs/free.svg';
+import useToast from '../hooks/useToast';
 
 export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
 const ItemDetailsScreen = () => {
@@ -38,6 +39,7 @@ const ItemDetailsScreen = () => {
   const state = useNavigationState(s => s);
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
+  const {showToast} = useToast();
 
   useEffect(() => {
     const loadData = async () => {
@@ -124,17 +126,21 @@ const ItemDetailsScreen = () => {
   );
 
   const swapHandler = useCallback(async () => {
+    const existingDeals = await dealsApi.getUserDeals(user.id, item!);
+    if (!!existingDeals && existingDeals.items.length > 0) {
+      showToast({
+        message: t('alreadyHasDealError'),
+        type: 'warn',
+      });
+      return;
+    }
     show({
       header: t('swapHeader'),
       body: t('swapBody'),
       confirmCallback: async () => {
         try {
           const offer = await request<Deal>(() =>
-            dealsApi.createOffer(user.id, item!, {
-              cache: {
-                evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`,
-              },
-            }),
+            dealsApi.createOffer(user.id, item!),
           );
           navigation.navigate(screens.DEAL_DETAILS_SCREEN, {
             id: offer.id,
@@ -143,6 +149,7 @@ const ItemDetailsScreen = () => {
         } catch (error) {}
       },
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, navigation, show, t, user.id]);
 
   const conditionName = conditionList.find(

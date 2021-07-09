@@ -31,6 +31,7 @@ export const colors = {
   rose: '#ffe7e5',
   pink: '#EBCECC',
   green: '#83D2C8',
+  warn: '#FFFED1',
 };
 
 // // type ColorKeys = keyof typeof Color;

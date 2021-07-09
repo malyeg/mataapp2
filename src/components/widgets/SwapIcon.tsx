@@ -6,7 +6,7 @@ import theme from '../../styles/theme';
 import {Text} from '../core';
 
 interface SwapIconProps extends ViewProps {
-  item: Item;
+  item?: Item;
   onPress?: () => void;
   iconSize?: number;
 }
@@ -15,9 +15,7 @@ const SwapIcon = ({item, iconSize = 15, style}: SwapIconProps) => {
     <View style={[styles.container, style]}>
       <Swap width={iconSize} height={iconSize} fill={theme.colors.salmon} />
       {!!item && (
-        <Text style={styles.offersText}>
-          {isNaN(item.offers) ? 0 : item.offers}
-        </Text>
+        <Text style={styles.offersText}>{item.offers ? item.offers : 0}</Text>
       )}
     </View>
   );

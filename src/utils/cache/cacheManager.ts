@@ -11,7 +11,7 @@ export interface CacheConfig {
   enabled?: boolean;
   key?: string;
   expireInSeconds?: number;
-  evict?: string;
+  evict?: string | string[];
 }
 export interface CacheItem<T> {
   value: T;

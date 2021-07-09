@@ -18,7 +18,7 @@ type StatusIcon = {icon: string; bgColor: string};
 const icons: Icons = {
   success: {icon: 'check-circle-outline', bgColor: theme.colors.green},
   info: {icon: 'check-circle-outline', bgColor: theme.colors.green},
-  warn: {icon: 'alert-outline', bgColor: theme.colors.salmon},
+  warn: {icon: 'alert-outline', bgColor: theme.colors.warn},
   error: {icon: 'alert-circle', bgColor: theme.colors.salmon},
 };
 

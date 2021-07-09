@@ -9,7 +9,7 @@ import {
   Operation,
   Query,
 } from '../types/DataTypes';
-import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
+// import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
 import cache, {CacheConfig} from '../utils/cache/cacheManager';
 import {allCombinations} from '../utils/CommonUtils';
 import {Api, APIOptions, ApiResponse} from './Api';
@@ -25,61 +25,6 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   ) {
     super();
   }
-
-  onDocumentSnapshot = (
-    docId: string,
-    observerCallback: (snapshot: DocumentSnapshot<T>) => void,
-  ) => {
-    return this.collection.doc(docId).onSnapshot(observerCallback);
-  };
-  onQuerySnapshot = (
-    observerCallback: (snapshot: QuerySnapshot<T>) => void,
-    onError?: ((error: Error) => void) | undefined,
-    query?: Query<T>,
-  ) => {
-    try {
-      let collectionQuery:
-        | FirebaseFirestoreTypes.Query<T>
-        | DataCollection<T>
-        | null = this.collection;
-      if (query) {
-        if (query.filters && query.filters.length > 0) {
-          for (const filter of query.filters) {
-            if (filter.operation === Operation.CONTAINS) {
-              collectionQuery = this.collection.where(
-                'searchArray',
-                'array-contains',
-                filter.value,
-              );
-            } else {
-              collectionQuery = this.collection.where(
-                filter.field as any,
-                filter.operation ?? Operation.EQUAL,
-                filter.value,
-              );
-            }
-          }
-        }
-        if (query.orderBy && query.orderBy.length > 0) {
-          for (const sort of query.orderBy) {
-            collectionQuery = collectionQuery.orderBy(
-              sort.field as unknown as FirebaseFirestoreTypes.FieldPath,
-              sort.direction || 'asc',
-            );
-          }
-        }
-      }
-      if (query?.afterDoc) {
-        collectionQuery = collectionQuery.startAfter(query?.afterDoc);
-      }
-      return collectionQuery
-        .limit(query?.limit || DEFAULT_LIMIT)
-        .onSnapshot(observerCallback, error => console.error(error));
-    } catch (error) {
-      this.logger.error(error);
-      throw error;
-    }
-  };
 
   getAll = async (query?: Query<T>, options?: APIOptions) => {
     try {
@@ -168,7 +113,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       if (options?.cache?.enabled) {
         await cache.store(id, createdDoc, options.cache.expireInSeconds);
       }
-      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
       return createdDoc as T;
     } catch (error) {
       options?.analyticsEvent &&
@@ -198,7 +143,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       if (options?.cache?.enabled) {
         await cache.store(id, createdDoc, options?.cache?.expireInSeconds);
       }
-      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
       return newDoc;
     } catch (error) {
       options?.analyticsEvent &&
@@ -220,7 +165,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         console.warn('not supported');
         // cache.store(doc.id!, doc, options.cache.expireInSeconds);
       }
-      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
@@ -235,7 +180,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       !!options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent)?.then();
       await cache.remove(docId);
-      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
@@ -250,12 +195,24 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent)?.then();
       await cache.remove(doc.id);
-      !!options?.cache?.evict && (await cache.remove(options?.cache?.evict));
+      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
       throw error;
     }
+  };
+
+  private evict = (list: string | string[]) => {
+    const promises: Promise<void>[] = [];
+    if (Array.isArray(list)) {
+      list.forEach(item => {
+        promises.push(cache.remove(item));
+      });
+    } else {
+      promises.push(cache.remove(list));
+    }
+    return Promise.all(promises);
   };
 
   private getSearchArray = (searchable: {keywords: string[]}) => {
