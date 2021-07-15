@@ -12,13 +12,15 @@ const WITH_ISSUES_ITEM = conditionList.find(i => i.id === 'usedWithIssues')!;
 interface ItemConditionPickerProps extends ViewProps, FormProps {
   // placeholder?: string;
   // control: any;
+  label?: string;
 }
 
-const ItemConditionPicker: FC<ItemConditionPickerProps> = ({
+const ItemConditionPicker = ({
   name,
   control,
   defaultValue = '',
-}) => {
+  label,
+}: ItemConditionPickerProps) => {
   const [desc, setDesc] = useState<string>();
   const [selectedValue, setSelectedValue] = useState<string>();
   const [error, setError] = useState<string>();
@@ -90,6 +92,7 @@ const ItemConditionPicker: FC<ItemConditionPickerProps> = ({
   return (
     <Picker
       control={control}
+      label={label}
       modalStyle={styles.modal}
       name={name}
       items={conditionList}

@@ -7,11 +7,12 @@ import theme from '../../styles/theme';
 import {Entity} from '../../types/DataTypes';
 import {Text} from '../core';
 import Error from './Error';
-import PickerModal from './PickerModal';
+import PickerModal, {PickerModalProps} from './PickerModal';
 
-export interface PickerProps<T> {
+export interface PickerProps<T extends Entity> {
   name: string;
   items: T[];
+  position?: PickerModalProps['position'];
   placeholder?: string;
   modalTitle?: string;
   label?: string;
@@ -94,7 +95,12 @@ function Picker<T extends Entity>({
             ? styles.textInputBorderError
             : styles.textInputBorder,
         ]}>
-        <Text style={styles.inputText} numberOfLines={1}>
+        <Text
+          style={[
+            styles.inputText,
+            selectedItem?.name ? {} : styles.placeholderText,
+          ]}
+          numberOfLines={1}>
           {selectedItem?.name ?? placeholder ?? t('picker.pickerPlaceholder')}
         </Text>
         <Icon
@@ -134,8 +140,14 @@ const styles = StyleSheet.create({
   },
   inputText: {
     flex: 1,
+    // color: theme.colors.grey,
   },
-  label: {},
+  placeholderText: {
+    color: theme.colors.grey,
+  },
+  label: {
+    // color: theme.colors.grey,
+  },
 
   searchInput: {
     marginHorizontal: -15,
@@ -163,4 +175,3 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(Picker);
-Picker.whyDidYouRender = true;

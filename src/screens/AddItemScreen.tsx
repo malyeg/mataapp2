@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import * as yup from 'yup';
 import categoriesApi from '../api/categoriesApi';
@@ -10,11 +10,11 @@ import itemsApi, {
 } from '../api/itemsApi';
 import {Button} from '../components/core';
 import PressableScreen from '../components/core/PressableScreen';
-import {FormView, TextInput} from '../components/form';
-import CategoryPicker from '../components/widgets/CategoryPicker';
+import {Picker, TextInput} from '../components/form';
+import ItemConditionPicker from '../components/widgets/ItemConditionPicker';
 import ItemImages from '../components/widgets/ItemImages';
 import LocationSelector from '../components/widgets/LocationSelector';
-import ItemConditionPicker from '../components/widgets/ItemConditionPicker';
+import swapTypes from '../data/swapTypes';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
@@ -36,6 +36,7 @@ type AddItemFormValues = {
 const AddItemScreen = () => {
   const {t} = useLocale('addItemScreen');
   const defaultImage = useRef<ImageSource | null>(null);
+  const [swapType, setSwapType] = useState<SwapType | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
   const uploadSet = useRef(new Set()).current;
   const {loader, request} = useApi();
@@ -50,7 +51,15 @@ const AddItemScreen = () => {
     description: yup.string().max(200),
     location: yup.object().required(t('location.required')),
     usedWithIssuesDesc: yup.string().max(200),
-    swapType: yup.string().required().default('free'),
+    swapType: yup.string().required(),
+    swapCategory: yup
+      .string()
+      .test('swapCategory', t('swapCategory.required'), function (value) {
+        if (this.parent.swapType === ('swapWithAnother' as SwapType)) {
+          return !!value;
+        }
+        return true;
+      }),
   });
 
   const onFormError = async (data: any) => {
@@ -87,7 +96,7 @@ const AddItemScreen = () => {
       console.log('item default url', item.defaultImageURL);
       console.log('item images', item.images);
       const evict = `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`;
-      console.log('evict', evict);
+
       await request<Item>(() =>
         itemsApi.add(item, {
           cache: {
@@ -145,43 +154,77 @@ const AddItemScreen = () => {
     [uploadSet],
   );
 
+  const onSwapChange = useCallback((value: string) => {
+    setSwapType(value as SwapType);
+  }, []);
+
+  const categories = useMemo(() => categoriesApi.getAll(), []);
+
   return (
     <PressableScreen style={styles.screen}>
-      <FormView style={styles.form}>
-        <ItemImages
-          name="images"
-          onChange={onItemImagesChange}
-          templateSize={3}
-          onUpload={uploadHandler}
+      <ItemImages
+        name="images"
+        onChange={onItemImagesChange}
+        templateSize={3}
+        onUpload={uploadHandler}
+        control={control}
+      />
+
+      <TextInput
+        name="name"
+        placeholder={t('name.placeholder')}
+        returnKeyType="next"
+        control={control}
+      />
+      <TextInput
+        name="description"
+        placeholder={t('description.placeholder')}
+        returnKeyType="next"
+        control={control}
+      />
+
+      {/* <CategoryPicker control={control} /> */}
+      <Picker
+        name="category"
+        items={categories}
+        placeholder="Category"
+        modalTitle="Category"
+        control={control}
+        multiLevel
+      />
+
+      <ItemConditionPicker name="conditionType" control={control} label="" />
+
+      <Picker
+        position="bottom"
+        name={'swapType'}
+        items={swapTypes}
+        placeholder="Swap type"
+        modalTitle="Swap Type"
+        control={control}
+        onChange={onSwapChange}
+      />
+
+      {swapType === 'swapWithAnother' && (
+        <Picker
+          name="swapCategory"
+          items={categories}
+          placeholder="Swap category"
+          modalTitle="Swap category"
           control={control}
+          multiLevel
         />
-        <TextInput
-          name="name"
-          placeholder={t('name.placeholder')}
-          returnKeyType="next"
-          control={control}
-        />
+      )}
 
-        <CategoryPicker control={control} />
+      <LocationSelector style={styles.location} control={control} />
 
-        <ItemConditionPicker name="conditionType" control={control} />
+      <Button
+        title={t('submitBtnTitle')}
+        style={styles.submit}
+        disabled={uploading}
+        onPress={handleSubmit(onFormSuccess, onFormError)}
+      />
 
-        <TextInput
-          name="description"
-          placeholder={t('description.placeholder')}
-          returnKeyType="next"
-          control={control}
-        />
-
-        <LocationSelector style={styles.location} control={control} />
-
-        <Button
-          title={t('submitBtnTitle')}
-          style={styles.submit}
-          disabled={uploading}
-          onPress={handleSubmit(onFormSuccess, onFormError)}
-        />
-      </FormView>
       {loader}
     </PressableScreen>
   );
@@ -192,9 +235,9 @@ export default AddItemScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    justifyContent: 'space-evenly',
     // backgroundColor: 'grey',
   },
-  modal: {},
   form: {
     flex: 1,
     justifyContent: 'space-evenly',

@@ -14,12 +14,13 @@ import NoDataFound from '../widgets/NoDataFound';
 import pickerReducer, {PickerState} from '../widgets/picker/pickerReducer';
 import PickerItem from './PickerItem';
 
-interface PickerModalProps {
+export interface PickerModalProps {
   items: Entity[];
   isModalVisible: boolean;
   style?: ViewStyle;
   onItemChange: (item: Entity) => void;
   onCloseModal: () => void;
+  position?: 'bottom' | 'full';
   showHeaderLeft?: boolean;
   headerTitle?: string;
   defaultValue?: string;
@@ -36,6 +37,7 @@ interface PickerModalProps {
 }
 const PickerModal = ({
   items,
+  position = 'full',
   isModalVisible,
   showHeaderLeft = true,
   headerTitle,
@@ -171,7 +173,7 @@ const PickerModal = ({
 
   return items ? (
     <Modal
-      style={[styles.modal]}
+      style={styles.modal}
       useNativeDriver={true}
       isVisible={isModalVisible}
       swipeDirection={['down']}
@@ -180,7 +182,12 @@ const PickerModal = ({
       onBackdropPress={onCloseModal}
       onBackButtonPress={onCloseModal}
       propagateSwipe>
-      <SafeAreaView style={[styles.modalContainer, style]}>
+      <SafeAreaView
+        style={[
+          styles.modalContainer,
+          style,
+          position === 'bottom' ? styles.bottomModal : {},
+        ]}>
         <StatusBar
           translucent
           backgroundColor="transparent"
@@ -232,6 +239,14 @@ const styles = StyleSheet.create({
     margin: 0,
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  bottomModal: {
+    flex: 0.5,
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: 30,
+    paddingTop: 30,
+    borderTopStartRadius: 50,
+    borderTopEndRadius: 50,
   },
   modalHeader: {
     flexDirection: 'row',

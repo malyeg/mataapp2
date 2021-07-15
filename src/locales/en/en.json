@@ -184,7 +184,7 @@
     "location": {
       "required": "Item location is required"
     },
-    "submitBtnTitle": "Submit"
+    "submitBtnTitle": "Add"
   },
   "profileScreen": {
     "myItemsLink": "My Items",
