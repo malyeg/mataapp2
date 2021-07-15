@@ -28,7 +28,7 @@ https://rnfirebase.io/#2-android-setup
 
 https://rnfirebase.io/messaging/ios-permissions
 
-IOS: enable capabilities—> push notification
+https://rnfirebase.io/messaging/usage/ios-setup
 ## google maps
 https://github.com/react-native-maps/react-native-maps/blob/master/docs/installation.md
 

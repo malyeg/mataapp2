@@ -15,6 +15,8 @@ export interface ShowOptions {
   body: string;
   cancelCallback?: () => void;
   confirmCallback?: () => void;
+  confirmTitle?: string;
+  cancelTitle?: string;
 }
 const Sheet = ({...props}: SheetProps, ref: any) => {
   const {t} = useLocale('widgets');
@@ -56,12 +58,12 @@ const Sheet = ({...props}: SheetProps, ref: any) => {
       <Text style={styles.confirmBody}>{sheetContent?.body}</Text>
       <View style={styles.modalButtonContainer}>
         <Button
-          title={t('sheet.cancelBtnText')}
+          title={sheetContent?.cancelTitle ?? t('sheet.cancelBtnText')}
           style={[styles.modalButton]}
           onPress={cancelHandler}
         />
         <Button
-          title={t('sheet.confirmBtnText')}
+          title={sheetContent?.confirmTitle ?? t('sheet.confirmBtnText')}
           style={[styles.modalButton, styles.confirmButton]}
           textStyle={styles.confirmText}
           onPress={confirmHandler}

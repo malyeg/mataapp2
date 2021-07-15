@@ -167,8 +167,8 @@ const AuthProvider: React.FC = (props: any) => {
       },
       signOut: async () => {
         try {
-          await auth.signOut();
           await profilesApi.removeFromStorage();
+          await auth.signOut();
         } finally {
           dispatch({
             type: AuthActionType.SIGNOUT,

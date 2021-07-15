@@ -44,7 +44,7 @@ class ProfilesApi extends DataApi<Profile> {
 
   updateToken = async (profile: Profile, token: string) => {
     const newProfile = {...profile, token};
-    await this.update({id: newProfile.id, token});
+    await this.update(profile.id, {token});
     await this.saveToStorage(newProfile);
     return newProfile;
   };

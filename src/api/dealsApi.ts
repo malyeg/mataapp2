@@ -5,13 +5,19 @@ import {APIOptions} from './Api';
 import {DataApi} from './DataApi';
 import itemsApi, {Item} from './itemsApi';
 
-type DealStatus = 'new' | 'pre-approved' | 'canceled' | 'rejected' | 'finished';
+export type DealStatus =
+  | 'new'
+  | 'accepted'
+  | 'canceled'
+  | 'rejected'
+  | 'finished';
 
 export interface Deal extends DataSearchable, Entity {
   id: string;
   userId: string;
   item: Item;
   status: DealStatus;
+  statusChanges?: {status: DealStatus; userId: string}[];
 }
 class DealsApi extends DataApi<Deal> {
   constructor() {
@@ -29,7 +35,7 @@ class DealsApi extends DataApi<Deal> {
     };
     const options: APIOptions = {
       cache: {
-        evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${userId}`,
+        evict: [`${itemsApi.MY_ITEMS_CACHE_KEY}_${userId}`, item.id],
       },
     };
     return await this.add(deal, options);
@@ -46,6 +52,22 @@ class DealsApi extends DataApi<Deal> {
         key: `deals_${userId}_${item.id}`,
       },
     });
+  };
+
+  // TODO replace with FB function
+  updateStatus = (deal: Deal, userId: string, status: DealStatus) => {
+    const statusChange = {status, userId};
+    const statusChanges = deal.statusChanges
+      ? [...deal.statusChanges, statusChange]
+      : [statusChange];
+    return this.update(
+      deal.id,
+      {
+        status,
+        statusChanges,
+      },
+      {cache: {evict: deal.id}},
+    );
   };
 
   readonly DEALS_CACHE_KEY = 'deals';

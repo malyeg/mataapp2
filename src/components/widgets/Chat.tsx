@@ -2,27 +2,31 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {
   Bubble,
+  Composer,
   Day,
   GiftedChat,
   IMessage,
   Send,
 } from 'react-native-gifted-chat';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Deal} from '../../api/dealsApi';
 import messagesApi from '../../api/messagesApi';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
 
 interface ChatProps {
-  dealId: string;
+  deal: Deal;
+  disableComposer?: boolean;
+  alwaysShowSend?: boolean;
 }
-const Chat = ({dealId}: ChatProps) => {
+const Chat = ({deal, disableComposer, alwaysShowSend}: ChatProps) => {
   const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
   //   const {request} = useApi();
   const {user} = useAuth();
 
   useEffect(() => {
     const messagesUnsubscribe = messagesApi.collection
-      .where('dealId', '==', dealId)
+      .where('dealId', '==', deal.id)
       .orderBy('timestamp', 'desc')
       .onSnapshot(
         querySnapshot => {
@@ -43,7 +47,6 @@ const Chat = ({dealId}: ChatProps) => {
 
           setChatMessages(prevMessages => {
             if (messages?.length > 0 && messages.length > prevMessages.length) {
-              console.log('setting messages');
               return messages;
             }
             return prevMessages;
@@ -53,7 +56,7 @@ const Chat = ({dealId}: ChatProps) => {
       );
 
     return messagesUnsubscribe;
-  }, [dealId]);
+  }, [deal]);
   const renderSend = useCallback(
     props => (
       <Send {...props} containerStyle={styles.sendContainer}>
@@ -66,15 +69,12 @@ const Chat = ({dealId}: ChatProps) => {
   const onSend = useCallback(async (newMessages = []) => {
     const lastMessage = newMessages[newMessages.length - 1];
     lastMessage.userId = user.id;
-    lastMessage.dealId = dealId;
+    lastMessage.dealId = deal.id;
     console.log('lastMessage', lastMessage);
     await messagesApi.set(lastMessage._id, {
       ...lastMessage,
-      dealId,
+      dealId: deal.id,
     });
-    // setChatMessages((previousMessages: IMessage[]) =>
-    //   GiftedChat.append(previousMessages, [lastMessage]),
-    // );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -90,16 +90,15 @@ const Chat = ({dealId}: ChatProps) => {
     [],
   );
 
-  const renderDay = useCallback(props => {
-    return <Day {...props} textStyle={styles.day} />;
-  }, []);
+  const renderComposer = useCallback(
+    props => (disableComposer ? <></> : <Composer {...props} />),
+    [disableComposer],
+  );
 
   return (
     <View style={styles.container}>
       <GiftedChat
         messagesContainerStyle={styles.messagesContainer}
-        // renderDay={renderDay}
-        // renderMessage={}
         timeTextStyle={{right: styles.rightText, left: styles.leftText}}
         renderBubble={renderBubble}
         renderSend={renderSend}
@@ -108,6 +107,9 @@ const Chat = ({dealId}: ChatProps) => {
         user={{
           _id: user.id,
         }}
+        disableComposer={disableComposer}
+        alwaysShowSend={alwaysShowSend}
+        // renderComposer={renderComposer}
       />
     </View>
   );

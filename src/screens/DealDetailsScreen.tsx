@@ -1,25 +1,29 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import dealsApi, {Deal} from '../api/dealsApi';
-import {Image, Loader, Screen, Text} from '../components/core';
+import dealsApi, {Deal, DealStatus} from '../api/dealsApi';
+import {Button, Image, Loader, Screen, Text} from '../components/core';
 import Chat from '../components/widgets/Chat';
 import SwapIcon from '../components/widgets/SwapIcon';
 import {screens} from '../config/constants';
 import useApi from '../hooks/useApi';
+import useAuth from '../hooks/useAuth';
 import {DealDetailsRouteProp} from '../navigation/HomeStack';
 import theme from '../styles/theme';
 
 const DealDetailsScreen = () => {
   const route = useRoute<DealDetailsRouteProp>();
   const navigation = useNavigation();
-  const {request} = useApi();
+  const {request, loader} = useApi();
+  const {user} = useAuth();
   const [deal, setDeal] = useState<Deal>();
   useEffect(() => {
     const loadData = async () => {
       if (route.params?.id) {
         const freshDeal = await request<Deal>(() =>
-          dealsApi.getById(route.params?.id!),
+          dealsApi.getById(route.params?.id!, {
+            cache: {enabled: true},
+          }),
         );
         if (freshDeal) {
           setDeal(freshDeal);
@@ -31,6 +35,36 @@ const DealDetailsScreen = () => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, route.params]);
+
+  const acceptHandler = useCallback(async () => {
+    console.log('acceptHandler');
+    await request<Deal>(() =>
+      dealsApi.updateStatus(deal!, user.id, 'accepted'),
+    );
+    setDeal(d => {
+      return {...d, status: 'accepted'} as Deal;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const rejectHandler = useCallback(async () => {
+    const status: DealStatus = 'rejected';
+    await request<Deal>(() => dealsApi.updateStatus(deal!, user.id, status));
+    setDeal(d => {
+      return {...d, status} as Deal;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const finishHandler = useCallback(async () => {
+    const status: DealStatus = 'finished';
+    await request<Deal>(() => dealsApi.updateStatus(deal!, user.id, status));
+    setDeal(d => {
+      return {...d, status} as Deal;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const isOpen =
+    !!deal && (deal.status === 'new' || deal.status === 'accepted');
 
   const onHeaderPress = useCallback(() => {
     navigation.navigate(screens.ITEM_DETAILS, {id: deal?.item.id});
@@ -48,7 +82,35 @@ const DealDetailsScreen = () => {
           </View>
         </View>
       </Pressable>
-      <Chat dealId={deal.id} />
+      {isOpen &&
+        (deal.userId === user.id ? (
+          <View />
+        ) : (
+          <View style={styles.actionContainer}>
+            {deal.status === 'new' && (
+              <Button
+                title="Accept"
+                style={styles.actionButton}
+                onPress={acceptHandler}
+              />
+            )}
+
+            <Button
+              title="Reject"
+              style={styles.actionButton}
+              onPress={rejectHandler}
+            />
+            {deal.status === 'accepted' && (
+              <Button
+                title="Finish deal"
+                style={styles.actionButton}
+                onPress={finishHandler}
+              />
+            )}
+          </View>
+        ))}
+      <Chat deal={deal} disableComposer={!isOpen} />
+      {loader}
     </Screen>
   ) : (
     <Loader />
@@ -77,6 +139,15 @@ const styles = StyleSheet.create({
   },
   typeContainer: {
     flexDirection: 'row',
+  },
+  actionContainer: {
+    // flex: 1,
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+  actionButton: {
+    flex: 1,
+    marginHorizontal: 20,
   },
   swapIcon: {
     // width: 40,

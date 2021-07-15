@@ -4,7 +4,6 @@ import {Status} from '../types/DataTypes';
 import useLocale from './useLocale';
 
 const useToast = () => {
-  // const {showToast, hideToast} = useContext(LocalizationContext);
   const {t} = useLocale();
 
   const getToastMessage = (status: Status) => {

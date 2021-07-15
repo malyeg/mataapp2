@@ -18,6 +18,7 @@ const useMessaging = () => {
 
   const getToken = async () => {
     try {
+      console.log('getToken');
       if (
         Platform.OS === 'ios' &&
         !messaging().isDeviceRegisteredForRemoteMessages

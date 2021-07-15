@@ -152,18 +152,17 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     }
   };
 
-  update = async (doc: Partial<T>, options?: APIOptions) => {
+  update = async (id: string, doc: Partial<T>, options?: APIOptions) => {
     try {
       this.logger.debug('update:', doc);
-      cache.remove(doc.id!);
+      cache.remove(id);
       const newDoc = {...doc};
       delete newDoc.timestamp;
-      await this.collection.doc(doc.id).update(newDoc);
+      await this.collection.doc(id).update(newDoc);
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent)?.then();
       if (options?.cache?.enabled) {
         console.warn('not supported');
-        // cache.store(doc.id!, doc, options.cache.expireInSeconds);
       }
       !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
     } catch (error) {

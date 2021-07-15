@@ -272,7 +272,7 @@
   "itemDetailsScreen": {
     "ownerItemsTitle": "Owner other items",
     "itemDescriptionTitle": "Description: ",
-    "addressTitle": "Address: ",
+    "addressTitle": "Location: ",
     "itemConditionTitle": "Condition: ",
     "deleteConfirmationHeader": "Confirm delete",
     "deleteConfirmationBody": "Are you sure?",

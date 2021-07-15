@@ -1,9 +1,10 @@
 import {
+  useFocusEffect,
   useNavigation,
   useNavigationState,
   useRoute,
 } from '@react-navigation/native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import dealsApi, {Deal} from '../api/dealsApi';
@@ -40,22 +41,23 @@ const ItemDetailsScreen = () => {
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
   const {showToast} = useToast();
+  const refreshItem = useRef(false);
+
+  const loadData = async () => {
+    const itemId = route.params?.id;
+
+    if (itemId) {
+      const freshItem = await request<Item>(() =>
+        itemsApi.getById(itemId, {cache: {enabled: true}}),
+      );
+      if (freshItem) {
+        setItem(freshItem);
+      }
+      return freshItem;
+    }
+  };
 
   useEffect(() => {
-    const loadData = async () => {
-      const itemId = route.params?.id;
-
-      if (itemId) {
-        const freshItem = await request<Item>(() =>
-          itemsApi.getById(itemId, {cache: {enabled: true}}),
-        );
-        if (freshItem) {
-          setItem(freshItem);
-        }
-        return freshItem;
-      }
-    };
-
     loadData().then(i => {
       if (i) {
         navigation.setOptions({
@@ -66,7 +68,7 @@ const ItemDetailsScreen = () => {
                 show({
                   header: t('deleteConfirmationHeader'),
                   body: t('deleteConfirmationBody'),
-                  cancelCallback: () => console.log('canceliing'),
+                  cancelCallback: () => console.log('canceling'),
                   confirmCallback: () => deleteItem(i.id),
                 })
               }
@@ -85,6 +87,13 @@ const ItemDetailsScreen = () => {
     console.log('route', route.params?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params?.id]);
+
+  useFocusEffect(() => {
+    if (refreshItem.current === true) {
+      refreshItem.current = false;
+      loadData().then(() => console.log('useFocusEffect'));
+    }
+  });
 
   const deleteItem = useCallback(
     async (id: string) => {
@@ -130,7 +139,11 @@ const ItemDetailsScreen = () => {
     if (!!existingDeals && existingDeals.items.length > 0) {
       showToast({
         message: t('alreadyHasDealError'),
-        type: 'warn',
+        type: 'error',
+        options: {
+          duration: 5000,
+          autoHide: true,
+        },
       });
       return;
     }
@@ -142,6 +155,7 @@ const ItemDetailsScreen = () => {
           const offer = await request<Deal>(() =>
             dealsApi.createOffer(user.id, item!),
           );
+          refreshItem.current = true;
           navigation.navigate(screens.DEAL_DETAILS_SCREEN, {
             id: offer.id,
             toastType: 'newOffer',
@@ -210,7 +224,7 @@ const ItemDetailsScreen = () => {
       <View style={[styles.row, styles.statusContainer]}>
         <Text style={styles.rowTitle}>{t('addressTitle')}</Text>
         <Text numberOfLines={2}>
-          {item.location?.address?.formattedAddress}
+          {item.location?.city}, {item.location?.country?.name}
         </Text>
       </View>
       <LocationView location={item.location!} style={styles.location} />

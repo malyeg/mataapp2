@@ -38,6 +38,7 @@ const IncomingDealsScreen = () => {
         renderItem={_renderItem}
         ItemSeparatorComponent={itemSeparator}
         ListEmptyComponent={NoDataFound}
+        showsVerticalScrollIndicator={false}
       />
     </Screen>
   ) : (

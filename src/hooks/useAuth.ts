@@ -31,7 +31,7 @@ const useAuth = () => {
     await authApi.changePassword(crednetials, newPassword);
   };
   const updateProfile = async (profile: Profile) => {
-    await profilesApi.update(profile, {
+    await profilesApi.update(profile.id, profile, {
       analyticsEvent: {name: 'update_profile'},
     });
     console.log('updateProfile', profile);
