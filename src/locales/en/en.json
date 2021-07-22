@@ -176,7 +176,11 @@
     "status": {
       "placeholder": "Status",
       "required": "Status is required",
-      "invalid": "Invalid Status"
+      "invalid": "Invalid Status",
+      "label": "Status",
+      "online": "Online",
+      "draft": "Draft",
+      "saveAsDraftLabel": "Save as draft"
     },
     "images": {
       "required": "Minimum of 1 image is required"
@@ -184,7 +188,7 @@
     "location": {
       "required": "Item location is required"
     },
-    "submitBtnTitle": "Add"
+    "submitBtnTitle": "Add",
   },
   "profileScreen": {
     "myItemsLink": "My Items",

@@ -134,7 +134,7 @@ export interface FieldError extends FieldErrorBase {
 export interface FormProps {
   name: string;
   control: any;
-  defaultValue?: string | object;
+  defaultValue?: string | boolean | object;
 }
 
 export type PickerFieldItem = {

@@ -37,6 +37,8 @@ const ItemCard = ({
     ? item.defaultImageURL
     : item.images[0].downloadURL;
 
+  // console.log(item.status);
+
   return (
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>
       <View style={styles.cardHeader}>

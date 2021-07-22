@@ -1,22 +1,18 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useMemo} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import dealsApi from '../../api/dealsApi';
 import itemsApi, {Item, ItemStatus} from '../../api/itemsApi';
 import {screens} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
 import useLocale from '../../hooks/useLocale';
-import {ITEM_SEARCH_SCREEN} from '../../screens/ItemSearchScreen';
 import theme from '../../styles/theme';
 import {
   Document,
-  Filter,
   Location,
   Operation,
   QueryBuilder,
 } from '../../types/DataTypes';
 import {Text} from '../core';
-import PressableObacity from '../core/PressableObacity';
 import DataList from './DataList';
 import ItemCard from './ItemCard';
 import NoDataFound from './NoDataFound';
@@ -33,15 +29,8 @@ interface NearByItemsProps {
   userId?: string;
   title?: string;
   style?: StyleProp<ViewStyle>;
-  filters?: Filter<Item>[];
 }
-const NearByItems = ({
-  location,
-  userId,
-  title,
-  filters,
-  style,
-}: NearByItemsProps) => {
+const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
   const navigation = useNavigation();
   const {user} = useAuth();
 
@@ -56,31 +45,27 @@ const NearByItems = ({
   const listData = useMemo(
     () => async (doc: Document<Item>) => {
       try {
-        let updatedFilter: Filter<Item>[];
-        if (!filters) {
-          updatedFilter = [
-            {field: 'location.city', value: location?.city!},
-            {
-              field: 'status',
-              value: 'online' as ItemStatus,
-            },
-          ];
+        const filters = [
+          {field: 'location.city', value: location?.city!},
+          {field: 'status', value: 'online' as ItemStatus},
+          {
+            field: 'status',
+            value: 'online' as ItemStatus,
+          },
+        ];
 
-          if (userId) {
-            updatedFilter.push({field: 'userId', value: userId});
-          } else {
-            updatedFilter.push({
-              field: 'userId',
-              value: user.id,
-              operation: Operation.NOT_EQUAL,
-            });
-          }
+        if (userId) {
+          filters.push({field: 'userId', value: userId});
         } else {
-          updatedFilter = [...filters];
+          filters.push({
+            field: 'userId',
+            value: user.id,
+            operation: Operation.NOT_EQUAL,
+          });
         }
 
         const query = new QueryBuilder<Item>()
-          .filters(updatedFilter)
+          .filters(filters)
           // .filter('timestamp', new Date(2021, 6, 1), Operation.GREATER_THAN)
           .after(doc)
           .limit(20)
@@ -96,7 +81,7 @@ const NearByItems = ({
         console.error(error);
       }
     },
-    [filters, location?.city, user.id, userId],
+    [location?.city, user.id, userId],
   );
 
   const listEmptyComponent = (

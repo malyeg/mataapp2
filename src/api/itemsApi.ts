@@ -8,7 +8,7 @@ import Config from 'react-native-config';
 import {Category} from './categoriesApi';
 import {APIOptions} from './Api';
 
-export type ItemStatus = 'draft' | 'online' | 'pending';
+export type ItemStatus = 'draft' | 'online';
 export type ConditionType = 'new' | 'goodAsNew' | 'used' | 'usedWithIssues';
 export type SwapType = 'free' | 'swapWithAnother' | 'swapWithAny';
 

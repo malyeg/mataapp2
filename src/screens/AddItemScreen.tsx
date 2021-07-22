@@ -10,7 +10,8 @@ import itemsApi, {
 } from '../api/itemsApi';
 import {Button} from '../components/core';
 import PressableScreen from '../components/core/PressableScreen';
-import {Picker, TextInput} from '../components/form';
+import {CheckBox, Picker, TextInput} from '../components/form';
+
 import ItemConditionPicker from '../components/widgets/ItemConditionPicker';
 import ItemImages from '../components/widgets/ItemImages';
 import LocationSelector from '../components/widgets/LocationSelector';
@@ -31,6 +32,8 @@ type AddItemFormValues = {
   location?: Location;
   images: ImageSource[];
   swapType: SwapType;
+  swapCategory: string;
+  status: boolean;
 };
 
 const AddItemScreen = () => {
@@ -43,15 +46,19 @@ const AddItemScreen = () => {
   const {user} = useAuth();
   const {showToast, hideToast} = useToast();
 
-  const {control, handleSubmit} = useForm<AddItemFormValues>({
+  const {control, reset, handleSubmit} = useForm<AddItemFormValues>({
     name: yup.string().trim().max(50).required(t('name.required')),
     category: yup.string().trim().required(t('category.required')),
     conditionType: yup.string().trim().required(t('status.required')),
-    images: yup.array().required(t('images.required')),
+    images: yup
+      .array()
+      .required(t('images.required'))
+      .min(1, t('images.required')),
     description: yup.string().max(200),
     location: yup.object().required(t('location.required')),
     usedWithIssuesDesc: yup.string().max(200),
-    swapType: yup.string().required(),
+    swapType: yup.boolean(),
+    // status: yup.string().required(t('status.required')),
     swapCategory: yup
       .string()
       .test('swapCategory', t('swapCategory.required'), function (value) {
@@ -65,6 +72,7 @@ const AddItemScreen = () => {
   const onFormError = async (data: any) => {
     console.log('onFormError', data);
   };
+
   const onFormSuccess = async (data: AddItemFormValues) => {
     try {
       hideToast();
@@ -86,15 +94,13 @@ const AddItemScreen = () => {
           defaultImage.current?.downloadURL ?? data.images[0].downloadURL,
         location: data.location,
         userId: user.id,
-        status: 'online',
+        status: data.status === true ? 'draft' : 'online',
         swapOption: {
           type: data.swapType,
         },
       };
       !!data.usedWithIssuesDesc &&
         (item.condition.desc = data.usedWithIssuesDesc);
-      console.log('item default url', item.defaultImageURL);
-      console.log('item images', item.images);
       const evict = `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`;
 
       await request<Item>(() =>
@@ -105,7 +111,7 @@ const AddItemScreen = () => {
           },
         }),
       );
-      // reset();
+      reset();
       showToast({
         type: 'success',
         message: t('addItemSuccess'),
@@ -161,7 +167,7 @@ const AddItemScreen = () => {
   const categories = useMemo(() => categoriesApi.getAll(), []);
 
   return (
-    <PressableScreen style={styles.screen}>
+    <PressableScreen style={styles.screen} scrollable>
       <ItemImages
         name="images"
         onChange={onItemImagesChange}
@@ -218,6 +224,25 @@ const AddItemScreen = () => {
 
       <LocationSelector style={styles.location} control={control} />
 
+      {/* <RadioGroup
+        options={[
+          {id: 'online', label: t('status.online')},
+          {id: 'draft', label: t('status.draft')},
+        ]}
+        control={control}
+        name="status"
+        defaultValue="online"
+        horizontal
+        groupStyle={styles.radioGroup}
+        label={t('status.label')}
+      /> */}
+      <CheckBox
+        style={styles.draftCheckBox}
+        control={control}
+        name="status"
+        label={t('status.saveAsDraftLabel')}
+      />
+
       <Button
         title={t('submitBtnTitle')}
         style={styles.submit}
@@ -237,6 +262,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
     // backgroundColor: 'grey',
+    paddingBottom: 10,
   },
   form: {
     flex: 1,
@@ -254,5 +280,17 @@ const styles = StyleSheet.create({
   },
   location: {
     // flex: 1,
+    marginTop: 5,
+  },
+  radioGroup: {
+    // flexGrow: 0.5,
+    // flexShrink: 1,
+    // flex: 0.5,
+    justifyContent: 'space-between',
+    paddingRight: '20%',
+    // backgroundColor: 'grey',
+  },
+  draftCheckBox: {
+    marginVertical: 5,
   },
 });

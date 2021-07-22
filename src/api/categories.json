@@ -57,12 +57,20 @@
     "level": -1
   },
   {
+    "id": "garage tools long name",
+    "group": "Garage",
+    "name": "Garage Tools long nameeeeee eeeeeeee eeeee eeeeeeee",
+    "parent": "garden",
+    "level": -1
+  },
+  {
     "id": "garage tools",
     "group": "Garage",
     "name": "Garage Tools",
     "parent": "garden",
     "level": -1
   },
+
   {
     "id": "miscellaneous",
     "group": "Miscellaneous",
