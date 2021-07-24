@@ -17,7 +17,7 @@ const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
   if (focusedOptions.tabBarVisible === false) {
     return null;
   }
-
+  // props.
   const addItemPressHandler = () => {
     props.navigation.navigate(ADD_ITEM_SCREEN);
   };
@@ -36,15 +36,20 @@ const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
             />
           </PressableObacity>
         </View>
-        {props.state.routes.map((route, index) => (
-          <TabBarItem
-            key={index}
-            {...props}
-            name={route.name}
-            label={(route.params as any).title}
-            icon={(route.params as any).icon}
-          />
-        ))}
+        {props.state.routes.map((route, index) => {
+          const {options} = props.descriptors[route.key];
+          return (
+            <TabBarItem
+              key={index}
+              {...props}
+              name={route.name}
+              style={index > 0 && index < 3 ? styles.middleItem : {}}
+              label={(route.params as any).title}
+              icon={(route.params as any).icon}
+              badge={options?.tabBarBadge as number}
+            />
+          );
+        })}
       </View>
     </View>
   );
@@ -75,6 +80,7 @@ const styles = StyleSheet.create({
         elevation: 3,
       },
     }),
+    paddingHorizontal: 20,
   },
   addItemContainer: {
     // flex: 0,
@@ -94,5 +100,9 @@ const styles = StyleSheet.create({
   },
   addItemIcon: {
     color: theme.colors.white,
+  },
+  middleItem: {
+    marginHorizontal: 40,
+    // backgroundColor: 'grey',
   },
 });

@@ -50,6 +50,11 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>allowing the user to select and add location to his new items in order to be searchable by others</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
 	<key>UIRequiredDeviceCapabilities</key>

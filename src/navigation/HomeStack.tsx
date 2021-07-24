@@ -1,6 +1,10 @@
-import {RouteProp} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
 import React, {useCallback} from 'react';
+import {
+  getFocusedRouteNameFromRoute,
+  RouteProp,
+} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
 import {screens} from '../config/constants';
 import useLocale from '../hooks/useLocale';
 import AddItemScreen from '../screens/AddItemScreen';
@@ -46,18 +50,39 @@ const stack = createStackNavigator<StackParams>();
 const HomeStack = () => {
   const {t} = useLocale('common');
 
+  function getHeaderTitle(route: any) {
+    // If the focused route is not found, we need to assume it's the initial screen
+    // This can happen during if there hasn't been any navigation inside the screen
+    // In our case, it's "Feed" as that's the first screen inside the navigator
+    const routeName = getFocusedRouteNameFromRoute(route);
+    console.log('routeName', routeName);
+    switch (routeName) {
+      case screens.DEALS_TABS:
+        return t('tabBar.dealsTitle');
+      case screens.NOTIFICATIONS:
+        return t('tabBar.notificationsTitle');
+      case screens.MY_ITEMS_SCREEN:
+        return t('tabBar.myItemsTitle');
+    }
+  }
+
   const detailsOptions = useCallback(
     ({route}: {route: ItemDetailsRouteProp}) => ({
       headerTitle: route.params?.title ?? t('screens.itemDetails'),
     }),
     [t],
   );
+
   return (
     <stack.Navigator screenOptions={screenOptions}>
       <stack.Screen
         name={HOME_TABS}
         component={HomeTabs}
-        options={{headerShown: false}}
+        // options={{headerShown: false}}
+        options={({route}) => ({
+          headerTitle: getHeaderTitle(route),
+          headerShown: getFocusedRouteNameFromRoute(route) !== screens.HOME,
+        })}
       />
       <stack.Screen
         name="ProfileScreen"

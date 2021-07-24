@@ -52,12 +52,16 @@ export const cart = {
 };
 
 export const screens = {
+  HOME_TABS: 'HomeTabs' as 'HomeTabs',
+  HOME: 'HomeScreen' as 'HomeScreen',
   ITEMS: 'ItemsScreen' as 'ItemsScreen',
   ITEM_DETAILS: 'ItemDetailsScreen' as 'ItemDetailsScreen',
   DEALS_SCREEN: 'DealsScreen' as 'DealsScreen',
   MY_DEALS_SCREEN: 'MyDealsScreen' as 'MyDealsScreen',
   DEALS_TABS: 'DealsTabs' as 'DealsTabs',
   DEAL_DETAILS_SCREEN: 'DealDetailsScreen' as 'DealDetailsScreen',
+  MY_ITEMS_SCREEN: 'MyItemsScreen' as 'MyItemsScreen',
+  NOTIFICATIONS: 'NotificationsScreen' as 'NotificationsScreen',
 };
 
 const constants = {

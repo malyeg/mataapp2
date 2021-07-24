@@ -41,7 +41,9 @@
       "profileTitle" : "Profile",
       "settingsTitle" : "Settings",
       "notificationsTitle" : "Notifications",
-      "wishListTitle" : "Wishlist"
+      "wishListTitle" : "Wishlist",
+      "myItemsTitle": "My Items",
+      "dealsTitle": "Deals"
     },
     "screens": {
       "profile": "Profile",
