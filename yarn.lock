@@ -1809,6 +1809,13 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
 
+"@types/react-native-restart@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@types/react-native-restart/-/react-native-restart-0.0.14.tgz#e694e7b92c413a1e95e1cfa299946763bde2ca38"
+  integrity sha512-scqrU+LZy05HsOOk0OgxoSBkxtoGhUmZ7CGNkn5/9XaTGGW+/Is7WPs6UCxu4SLiWBs3R7gkC1WZRY5LGAqJNA==
+  dependencies:
+    react-native-restart "*"
+
 "@types/react-native-snap-carousel@^3.8.3":
   version "3.8.3"
   resolved "https://registry.yarnpkg.com/@types/react-native-snap-carousel/-/react-native-snap-carousel-3.8.3.tgz#f3005e6ac7e84865ea9cfa9210e6056cea2f1041"
@@ -6567,7 +6574,7 @@ react-native-reanimated@^2.2.0:
     mockdate "^3.0.2"
     string-hash-64 "^1.0.3"
 
-react-native-restart@^0.0.22:
+react-native-restart@*, react-native-restart@^0.0.22:
   version "0.0.22"
   resolved "https://registry.yarnpkg.com/react-native-restart/-/react-native-restart-0.0.22.tgz#81fcb7f31e35951d85410c68b9556acf3ab88705"
   integrity sha512-XwCqAMAKsO8yCM3xACPFKvkDQZe41lcavOuO0gUEu803IuTLtciualCq/qs83ryRDCDh1jkXYRqFjsGjLMCN3Q==

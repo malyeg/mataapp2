@@ -1,0 +1,127 @@
+import {useNavigation} from '@react-navigation/core';
+import React, {useCallback} from 'react';
+import {Dimensions, Pressable, StyleSheet, View, ViewProps} from 'react-native';
+import FreeIcon from '../../assets/svgs/free.svg';
+import {Item} from '../../api/itemsApi';
+import theme from '../../styles/theme';
+import {Image, Text} from '../core';
+import SwapIcon from './SwapIcon';
+import Icon from '../core/Icon';
+import categoriesApi from '../../api/categoriesApi';
+
+const CARD_BORDER = 2;
+const CARD_HEIGHT = 200;
+export const ITEM_CARD_HEIGHT = CARD_HEIGHT + CARD_BORDER;
+
+interface ItemCardProps extends ViewProps {
+  item: Item;
+  showActivityStatus?: boolean;
+  onSwap?: (item: Item) => void;
+  showSwapIcon?: boolean;
+}
+
+const windowWidth = Dimensions.get('window').width * 0.8;
+
+const RecommendedCard = ({item, style}: ItemCardProps) => {
+  const navigtion = useNavigation();
+
+  const openItemDetails = useCallback(() => {
+    // TODO refactor to constant
+    navigtion.navigate('ItemDetailsScreen', {
+      id: item.id,
+    });
+  }, [item, navigtion]);
+
+  const imageUrl = item.defaultImageURL
+    ? item.defaultImageURL
+    : item.images[0].downloadURL;
+
+  // console.log(item.status);
+
+  const category = categoriesApi.getAll().find(c => c.id === item.category.id);
+
+  return (
+    <Pressable style={[styles.card, style]} onPress={openItemDetails}>
+      <Image uri={imageUrl!} style={styles.image} />
+      {item?.swapOption?.type === 'free' && (
+        <FreeIcon
+          width={35}
+          height={35}
+          fill={theme.colors.salmon}
+          style={styles.freeImage}
+        />
+      )}
+
+      <View style={styles.contentContainer}>
+        <View>
+          <Text style={styles.categoryText}>{item.category?.name}</Text>
+          <Text numberOfLines={1} style={styles.nameText}>
+            {item.name}
+          </Text>
+        </View>
+        <SwapIcon item={item} style={styles.swapIcon} />
+      </View>
+      <Icon
+        name={
+          item.category?.style?.iconName ??
+          category?.style?.iconName ??
+          'home-outline'
+        }
+        size={40}
+        color={theme.colors.grey}
+        style={styles.categoryIcon}
+      />
+    </Pressable>
+  );
+};
+
+export default React.memo(RecommendedCard);
+
+const styles = StyleSheet.create({
+  card: {
+    flexDirection: 'row',
+    borderRadius: 10,
+    borderColor: theme.colors.lightGrey,
+    borderWidth: 2,
+    width: windowWidth,
+    padding: 5,
+  },
+  image: {
+    width: 125,
+    height: 125,
+    borderRadius: 10,
+  },
+  contentContainer: {
+    alignItems: 'flex-start',
+    padding: 10,
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  categoryText: {
+    ...theme.styles.scale.body2,
+    color: theme.colors.grey,
+  },
+  nameText: {
+    ...theme.styles.scale.body2,
+    fontWeight: theme.fontWeight.semiBold,
+    paddingBottom: 3,
+  },
+  freeImage: {
+    position: 'absolute',
+    marginRight: 'auto',
+    // width: 70,
+    // height: 70,
+    transform: [{rotate: '-10deg'}],
+  },
+  swapIcon: {
+    // marginBottom: 'auto',
+    // flexGrow: 1,
+    // flex: 1,
+    // alignSelf: 'flex-end',
+  },
+  categoryIcon: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+  },
+});

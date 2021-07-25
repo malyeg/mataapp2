@@ -115,6 +115,7 @@ const styles = create({
   },
   viewContainer: {
     paddingHorizontal: theme.defaults.SCREEN_PADDING,
+    paddingBottom: 20,
     // flex: 1,
     // justifyContent: 'flex-start',
   },

@@ -15,7 +15,7 @@ const ITEM_HEIGHT = CARD_HEIGHT + CARD_BORDER;
 interface ItemListProps {
   item: Item;
 }
-const OwnerItemList = ({item}: ItemListProps) => {
+const OwnerItems = ({item}: ItemListProps) => {
   const {t} = useLocale('itemDetailsScreen');
   const listHeaderComponent = useMemo(
     () => <Text style={styles.ownerHeaderText}>{t('ownerItemsTitle')}</Text>,
@@ -48,7 +48,7 @@ const OwnerItemList = ({item}: ItemListProps) => {
   );
 
   const renderItem = useCallback(
-    ({item}) => <ItemCard item={item as Item} />,
+    ({item}) => <ItemCard item={item} showSwapIcon />,
     [],
   );
 
@@ -74,7 +74,7 @@ const OwnerItemList = ({item}: ItemListProps) => {
   );
 };
 
-export default React.memo(OwnerItemList);
+export default React.memo(OwnerItems);
 
 const styles = StyleSheet.create({
   container: {},

@@ -14,7 +14,7 @@ import Carousel from '../components/widgets/Carousel';
 import ItemActivity from '../components/widgets/ItemActivity';
 import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
 import LocationView from '../components/widgets/LocationView';
-import OwnerItemList from '../components/widgets/OwnerItemList';
+import OwnerItems from '../components/widgets/OwnerItems';
 import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
 import TextDescription from '../components/widgets/TextDescription';
@@ -230,7 +230,7 @@ const ItemDetailsScreen = () => {
       <LocationView location={item.location!} style={styles.location} />
 
       {!!item && item.userId !== user.id && route.params?.id === item.id && (
-        <OwnerItemList item={item} />
+        <OwnerItems item={item} />
       )}
       {/* {ConfirmSheet} */}
       <Sheet ref={sheetRef} />

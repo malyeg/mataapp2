@@ -1,46 +1,40 @@
 import React, {FC, useEffect} from 'react';
-import {Image, View, ViewProps} from 'react-native';
+import {Image, ImageStyle, StyleProp} from 'react-native';
 import create from '../../styles/EStyleSheet';
 import theme from '../../styles/theme';
 
 const logo = require('../../assets/images/logo.png');
 
-interface LogoProps extends ViewProps {
+interface LogoProps {
   size?: number;
   backgroundColor?: string;
   title?: string;
   showTitle?: boolean;
   lastRefresh?: Date;
+  style: StyleProp<ImageStyle>;
 }
 
 const Logo: FC<LogoProps> = ({
-  size = 150,
-  backgroundColor = '',
+  size = 100,
+  // backgroundColor = '',
   lastRefresh,
   style,
 }) => {
   useEffect(() => {}, [lastRefresh]);
 
   return (
-    <View
+    <Image
       style={[
-        styles.container,
+        styles.logoContainer,
         {
-          backgroundColor,
+          width: size,
+          height: size,
         },
         style,
-      ]}>
-      <View
-        style={[
-          styles.logoContainer,
-          {
-            width: size,
-            height: size,
-          },
-        ]}>
-        <Image resizeMode={'contain'} source={logo} style={styles.image} />
-      </View>
-    </View>
+      ]}
+      resizeMode={'contain'}
+      source={logo}
+    />
   );
 };
 
@@ -51,19 +45,8 @@ const styles = create({
     backgroundColor: theme.colors.white,
   },
   logoContainer: {
-    // overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
-    borderRadius: 5.6,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    // margin: 10,
-  },
-  title: {
-    paddingTop: 5,
   },
 });
 

@@ -59,7 +59,7 @@ export default React.memo(TabBar);
 
 const styles = StyleSheet.create({
   container: {
-    height: 85,
+    height: 70,
     backgroundColor: theme.colors.white,
   },
   itemsContainer: {
@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderTopLeftRadius: 38,
-    borderTopRightRadius: 38,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     ...Platform.select({
       ios: {
         borderColor: theme.colors.lightGrey,

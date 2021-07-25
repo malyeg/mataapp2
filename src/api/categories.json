@@ -2,17 +2,32 @@
   {
     "id": "home",
     "name": "Home",
-    "level": 0
+    "level": 0,
+    "style": {
+      "iconName": "home-outline",
+      "bgColor": "#ff7f78",
+      "textColor": "white"
+    }
   },
   {
     "id": "office",
     "name": "Office",
-    "level": 0
+    "level": 0,
+    "style": {
+      "iconName": "office-building",
+      "bgColor": "#83D2C8",
+      "textColor": "white"
+    }
   },
   {
     "id": "garden",
     "name": "Garden",
-    "level": 0
+    "level": 0,
+    "style": {
+      "iconName": "shovel",
+      "bgColor": "#727272",
+      "textColor": "white"
+    }
   },
   {
     "id": "home furnitures",

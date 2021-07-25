@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     width: 150,
     height: 200,
-    paddingHorizontal: 7,
+    paddingHorizontal: 5,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -91,12 +91,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 2,
     // backgroundColor: 'grey',
-  },
-  viewsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    // marginBottom: 6,
+    // flex: 1,
+    height: 30,
   },
   actvityStatusContainer: {
     // position: 'absolute',
@@ -125,10 +121,11 @@ const styles = StyleSheet.create({
   cardCategory: {
     justifyContent: 'center',
     alignItems: 'flex-start',
-    flex: 1,
+    // flex: 1,
     width: '100%',
     borderTopColor: theme.colors.lightGrey,
     borderTopWidth: 2,
+    paddingVertical: 3,
   },
   categoryText: {
     ...theme.styles.scale.body2,
@@ -136,13 +133,10 @@ const styles = StyleSheet.create({
   nameText: {
     ...theme.styles.scale.body2,
     fontWeight: theme.fontWeight.semiBold,
+    paddingBottom: 3,
   },
   freeImage: {
-    // position: 'absolute',
-    // alignSelf: 'flex-start',
     marginRight: 'auto',
-    // top: -10,
-    // left: -10,
     width: 35,
     height: 35,
     transform: [{rotate: '-10deg'}],

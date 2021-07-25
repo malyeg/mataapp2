@@ -7,10 +7,15 @@ export interface Category extends Entity {
   group?: string;
   parent?: string;
   level?: number;
+  style?: {
+    iconName?: string;
+    bgColor?: string;
+    textColor?: string;
+  };
 }
 class CategoriesApi {
   getAll = () => {
-    return categories;
+    return categories as Category[];
   };
 
   getById = (id: string) => {

@@ -4,6 +4,8 @@ import {Screen} from '../components/core';
 import Logo from '../components/core/Logo';
 import NearByItems from '../components/widgets/NearByItems';
 import ProfileIcon from '../components/widgets/ProfileIcon';
+import RecommendedItems from '../components/widgets/RecommendedItems';
+import TopCategories from '../components/widgets/TopCategories';
 import useLocation from '../hooks/useLocation';
 
 export const HOME_SCREEN = 'HomeScreen';
@@ -27,15 +29,24 @@ const HomeScreen = () => {
       scrollable={true}>
       <View style={styles.header}>
         <ProfileIcon style={styles.profile} size={30} />
-        <Logo size={100} />
+        <Logo size={75} style={styles.logo} />
       </View>
       {location && location.city && (
-        <NearByItems
-          key={lastRefresh.getTime()}
-          location={location}
-          // lastRefresh={lastRefresh}
-        />
+        <>
+          <RecommendedItems
+            style={styles.recommendedItems}
+            location={location}
+            title="Recommended for you"
+          />
+          <NearByItems
+            key={lastRefresh.getTime()}
+            location={location}
+            // lastRefresh={lastRefresh}
+            style={styles.nearByItems}
+          />
+        </>
       )}
+      <TopCategories style={styles.categories} />
     </Screen>
   );
 };
@@ -50,8 +61,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  logo: {
+    height: 60,
+  },
+  nearByItems: {
+    marginBottom: 10,
+  },
   profile: {
     position: 'absolute',
     right: 0,
+  },
+  recommendedItems: {
+    marginBottom: 10,
+  },
+  categories: {
+    marginVertical: 10,
   },
 });

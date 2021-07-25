@@ -14,8 +14,8 @@ import {
 } from '../../types/DataTypes';
 import {Text} from '../core';
 import DataList from './DataList';
-import ItemCard from './ItemCard';
 import NoDataFound from './NoDataFound';
+import RecommendedCard from './RecommendedCard';
 
 const CARD_BORDER = 2;
 const CARD_HEIGHT = 200;
@@ -30,77 +30,52 @@ interface NearByItemsProps {
   title?: string;
   style?: StyleProp<ViewStyle>;
 }
-const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
+const RecommendedItems = ({location, title, style}: NearByItemsProps) => {
   const navigation = useNavigation();
   const {user} = useAuth();
 
   const {t} = useLocale('widgets');
 
-  console.log('nearbyItems render');
-
-  // useEffect(() => {
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   const listData = useMemo(
     () => async (doc: Document<Item>) => {
       try {
-        const filters = [
-          {field: 'location.city', value: location?.city!},
-          {field: 'status', value: 'online' as ItemStatus},
-        ];
-
-        if (userId) {
-          filters.push({field: 'userId', value: userId});
-        } else {
-          filters.push({
-            field: 'userId',
-            value: user.id,
-            operation: Operation.NOT_EQUAL,
-          });
-        }
-
         const query = new QueryBuilder<Item>()
-          .filters(filters)
-          // .filter('timestamp', new Date(2021, 6, 1), Operation.GREATER_THAN)
-          .after(doc)
-          .limit(20)
-          // .orderBy('timestamp', 'desc')
-          .orderBy('userId')
+          .filters([
+            {field: 'location.city', value: location?.city!},
+            {field: 'status', value: 'online' as ItemStatus},
+            {
+              field: 'category.id',
+              operation: Operation.IN,
+              value: ['home appliances', 'office appliances', 'garage tools'],
+            },
+          ])
+          .limit(10)
           .build();
 
         const response = await itemsApi.getAll(query, {
-          cache: {enabled: true, key: `nearBy_${location?.city}_${user.id}`},
+          // TODO enable cache
+          cache: {enabled: false, key: 'recommended'},
         });
         return response;
       } catch (error) {
         console.error(error);
       }
     },
-    [location?.city, user.id, userId],
+    [location?.city],
   );
 
   const listEmptyComponent = (
-    <NoDataFound body={'no items found in ' + location.city} icon="">
-      {/* <PressableObacity
-        onPress={() => navigation.navigate(ITEM_SEARCH_SCREEN)}
-        hitSlop={{left: 20, right: 20, top: 20, bottom: 5}}>
-        <Text style={styles.anotherAreaLink}>try another area</Text>
-      </PressableObacity> */}
-    </NoDataFound>
+    <NoDataFound body={'no items found in ' + location.city} icon="" />
   );
 
-  // const onSwap = useCallback():
-
   const renderItem = useCallback(
-    ({item}) => <ItemCard showSwapIcon item={item as Item} />,
+    ({item}) => <RecommendedCard showSwapIcon item={item as Item} />,
     [],
   );
   const onEndReached = (info: any, length: number) => {
     if (length > 20) {
       navigation.navigate(screens.ITEMS);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
   return (
@@ -131,7 +106,7 @@ const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
   );
 };
 
-export default React.memo(NearByItems);
+export default React.memo(RecommendedItems);
 
 const styles = StyleSheet.create({
   container: {},
