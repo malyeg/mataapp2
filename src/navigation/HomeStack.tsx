@@ -30,7 +30,7 @@ export type StackParams = {
   EditProfileScreen: undefined;
   ChangePasswordScreen: undefined;
   AddItemScreen: undefined;
-  ItemsScreen: undefined;
+  [screens.ITEMS]: {categoryId: string; lastRefresh: number} | undefined;
   ItemDetailsScreen: {id: string; title: string} | undefined;
   [screens.DEAL_DETAILS_SCREEN]: {id: string; toastType: string} | undefined;
   [screens.DEALS_TABS]: undefined;
@@ -44,6 +44,7 @@ export type DealDetailsRouteProp = RouteProp<
   typeof screens.DEAL_DETAILS_SCREEN
 >;
 export type MyItemsRouteProp = RouteProp<StackParams, 'MyItemsScreen'>;
+export type ItemsRouteProp = RouteProp<StackParams, 'ItemsScreen'>;
 
 const stack = createStackNavigator<StackParams>();
 

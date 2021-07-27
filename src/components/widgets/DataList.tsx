@@ -11,17 +11,19 @@ import {useImmerReducer} from 'use-immer';
 import {ApiResponse} from '../../api/Api';
 import theme from '../../styles/theme';
 import {Document, Entity} from '../../types/DataTypes';
-import dataListReducer, {initialState} from './dataListReducer';
+import dataListReducer, {DataListInitState} from './dataListReducer';
 import ListLoader from './ListLoader';
 import NoDataFound from './NoDataFound';
-export interface DataListProps<T> extends Omit<FlatListProps<T>, 'data'> {
-  // extends FlatListProps<T> {
-  itemsFunc: (lastDoc?: any) => Promise<ApiResponse<T> | undefined>;
+
+export interface DataListProps<T>
+  extends Omit<FlatListProps<T>, 'data' | 'onEndReached'> {
+  data:
+    | ApiResponse<T>
+    | ((lastDoc?: any) => Promise<ApiResponse<T> | undefined>);
   itemSize?: number | undefined;
   pageable?: boolean;
   refreshable?: boolean;
-  lastDoc?: Document<T>;
-  onLoadMore?: () => Promise<{data: T[]; doc: Document<T>}>;
+  onLoadMore?: () => Promise<ApiResponse<T>>;
   loaderStyle?: ViewStyle;
   // ListEmptyComponent?: React.ReactElement;
   hideNoDataFoundComponent?: boolean;
@@ -32,7 +34,7 @@ export interface DataListProps<T> extends Omit<FlatListProps<T>, 'data'> {
 }
 
 function DataList<T extends Entity>({
-  itemsFunc,
+  data,
   itemSize,
   keyExtractor,
   pageable = false,
@@ -43,33 +45,43 @@ function DataList<T extends Entity>({
   listStyle,
   showsVerticalScrollIndicator = false,
   showsHorizontalScrollIndicator = false,
-  // hideNoDataFoundComponent = false,
   onEndReached,
   ...props
 }: DataListProps<T>) {
   console.log('DataList render');
+  const initialState: DataListInitState = {
+    loading: true,
+    reloading: false,
+    items: [],
+    hasMore: false,
+    lastDoc: undefined,
+  };
   const [state, dispatch] = useImmerReducer(dataListReducer, initialState);
   const {loading, reloading, items, lastDoc, hasMore} = state;
 
   useEffect(() => {
     const initData = async () => {
-      dispatch({
-        type: 'RESET',
-        loading: true,
-      });
-      const response = await itemsFunc();
-      dispatch({
-        type: 'SET_ITEMS',
-        items: response?.items,
-        lastDoc:
-          response?.items?.length === response?.query?.limit
-            ? response?.lastDoc
-            : undefined,
-      });
+      if (data instanceof Function) {
+        const response = await data();
+        dispatch({
+          type: 'SET_ITEMS',
+          items: response?.items,
+          lastDoc:
+            response?.items?.length === response?.query?.limit
+              ? response?.lastDoc
+              : undefined,
+        });
+      } else {
+        dispatch({
+          type: 'SET_ITEMS',
+          items: data.items,
+          lastDoc: data.lastDoc,
+        });
+      }
     };
     initData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemsFunc]);
+  }, [data]);
 
   const getItemLayout = useCallback(
     (data: T[] | null | undefined, index: number) => {
@@ -97,7 +109,7 @@ function DataList<T extends Entity>({
           type: 'SET_RELOADING',
           reloading: true,
         });
-        const response = await itemsFunc(lastDoc);
+        const response = await (data as Function)(lastDoc);
         if (response) {
           const hasMoreData =
             !!response?.query?.limit &&
@@ -116,7 +128,7 @@ function DataList<T extends Entity>({
         }
       }
     },
-    [dispatch, items, itemsFunc, lastDoc, onEndReached, pageable, reloading],
+    [dispatch, items, data, lastDoc, onEndReached, pageable, reloading],
   );
 
   const ListFooter = useCallback(() => {
@@ -153,11 +165,6 @@ function DataList<T extends Entity>({
           {...props}
           style={[styles.flatList, listStyle]}
           horizontal={horizontal}
-          // refreshing={false}
-          // onRefresh={undefined}
-          // refreshControl={
-          //   <RefreshControl refreshing={refreshing} onRefresh={_onRefresh} />
-          // }
           data={items}
           contentContainerStyle={
             !!items && items?.length === 0 ? styles.noData : undefined

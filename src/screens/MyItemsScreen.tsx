@@ -70,7 +70,7 @@ const MyItemsScreen = () => {
           listStyle={styles.datalist}
           // key={lastRefresh}
           showsVerticalScrollIndicator={false}
-          itemsFunc={loadItems}
+          data={loadItems}
           columnWrapperStyle={styles.columnWrapper}
           numColumns={2}
           // pageable

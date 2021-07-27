@@ -1,68 +1,66 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+
+import {ApiResponse} from '../../api/Api';
+import categoriesApi from '../../api/categoriesApi';
 import itemsApi, {Item, ItemStatus} from '../../api/itemsApi';
 import {screens} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
-import {
-  Document,
-  Location,
-  Operation,
-  QueryBuilder,
-} from '../../types/DataTypes';
-import {Text} from '../core';
+import {Location, Operation, QueryBuilder} from '../../types/DataTypes';
+import {Loader, Text} from '../core';
 import DataList from './DataList';
 import NoDataFound from './NoDataFound';
-import RecommendedCard from './RecommendedCard';
+import RecommendedCard, {RecommendedCardSkeleton} from './RecommendedCard';
 
 const CARD_BORDER = 2;
 const CARD_HEIGHT = 200;
 const ITEM_HEIGHT = CARD_HEIGHT + CARD_BORDER;
 
-interface NearByItemsProps {
-  // items: Item[];
-  // city: string;
+interface RecommendedItemsProps {
   location: Location;
-  // lastRefresh?: Date;
-  userId?: string;
   title?: string;
   style?: StyleProp<ViewStyle>;
 }
-const RecommendedItems = ({location, title, style}: NearByItemsProps) => {
+
+// const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
+
+const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
   const navigation = useNavigation();
-  const {user} = useAuth();
+  const {profile} = useAuth();
+  const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
 
   const {t} = useLocale('widgets');
 
-  const listData = useMemo(
-    () => async (doc: Document<Item>) => {
-      try {
-        const query = new QueryBuilder<Item>()
-          .filters([
-            {field: 'location.city', value: location?.city!},
-            {field: 'status', value: 'online' as ItemStatus},
-            {
-              field: 'category.id',
-              operation: Operation.IN,
-              value: ['home appliances', 'office appliances', 'garage tools'],
-            },
-          ])
-          .limit(10)
-          .build();
+  useEffect(() => {
+    const targetCategories = profile?.targetCategories;
+    const query = new QueryBuilder<Item>()
+      .filters([
+        {field: 'location.city', value: location?.city!},
+        {field: 'status', value: 'online' as ItemStatus},
+        {
+          field: 'category.id',
+          operation: Operation.IN,
+          value: targetCategories,
+        },
+      ])
+      .limit(10)
+      .build();
 
-        const response = await itemsApi.getAll(query, {
-          // TODO enable cache
-          cache: {enabled: false, key: 'recommended'},
-        });
-        return response;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [location?.city],
-  );
+    const unsubscribe = itemsApi.onQuerySnapshot(
+      snapshot => {
+        setItemsResponse({items: snapshot.data});
+      },
+      error => {
+        console.log(error);
+      },
+      query,
+    );
+
+    return unsubscribe;
+  }, [location?.city, profile?.targetCategories]);
 
   const listEmptyComponent = (
     <NoDataFound body={'no items found in ' + location.city} icon="" />
@@ -78,32 +76,28 @@ const RecommendedItems = ({location, title, style}: NearByItemsProps) => {
     }
   };
 
-  return (
+  return itemsResponse ? (
+    // return false ? (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
         <Text style={styles.title}>
-          {title ?? t('nearByItems.title', {params: {city: location?.city!}})}
+          {title ??
+            t('recommendedItems.title', {params: {city: location?.city!}})}
         </Text>
-        {/* <Link
-          body1
-          textStyle={styles.title}
-          onPress={() => navigtion.navigate(ITEMS_SCREEN)}>
-          {t('nearByItems.itemsLink')}
-        </Link> */}
       </View>
       <DataList
         loaderStyle={styles.dataListHeight}
         refreshing={false}
         onRefresh={undefined}
         horizontal
-        itemsFunc={listData}
+        data={itemsResponse!}
         renderItem={renderItem}
         ListEmptyComponent={listEmptyComponent}
         itemSize={ITEM_HEIGHT}
         onEndReached={onEndReached}
       />
     </View>
-  );
+  ) : null;
 };
 
 export default React.memo(RecommendedItems);

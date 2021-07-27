@@ -71,6 +71,10 @@
       "title": "Items Nearby ({{city}})",
       "itemsLink": "View All"
     },
+    "recommendedItems": {
+      "title": "Recommended",
+      "itemsLink": "View All"
+    },
     "sheet": {
       "header": "Confirm",
       "confirmationTitle": "Confirm",

@@ -66,7 +66,7 @@ const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
           .after(doc)
           .limit(20)
           // .orderBy('timestamp', 'desc')
-          .orderBy('userId')
+          .orderBy('userId', 'asc')
           .build();
 
         const response = await itemsApi.getAll(query, {
@@ -121,7 +121,7 @@ const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
         refreshing={false}
         onRefresh={undefined}
         horizontal
-        itemsFunc={listData}
+        data={listData}
         renderItem={renderItem}
         ListEmptyComponent={listEmptyComponent}
         itemSize={ITEM_HEIGHT}

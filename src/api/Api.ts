@@ -8,7 +8,7 @@ import {LoggerFactory} from '../utils/logger';
 
 export interface ApiResponse<T> {
   items: T[];
-  query: Query<T> | undefined;
+  query?: Query<T>;
   lastDoc?: FirebaseFirestoreTypes.QueryDocumentSnapshot<T>;
 }
 export interface APIOptions {

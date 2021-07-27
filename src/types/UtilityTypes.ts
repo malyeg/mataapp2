@@ -33,7 +33,10 @@ type ActionMap<M extends {[index: string]: any}> = {
       };
 };
 
-export type QuerySnapshot<T> = FirebaseFirestoreTypes.QuerySnapshot<T>;
+export interface QuerySnapshot<T>
+  extends FirebaseFirestoreTypes.QuerySnapshot<T> {
+  data: T[];
+}
 export type DocumentSnapshot<T> = FirebaseFirestoreTypes.DocumentSnapshot<T>;
 
 // export type NavigationRoute<

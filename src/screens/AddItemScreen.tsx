@@ -8,6 +8,7 @@ import itemsApi, {
   Item,
   SwapType,
 } from '../api/itemsApi';
+import profilesApi from '../api/profileApi';
 import {Button} from '../components/core';
 import PressableScreen from '../components/core/PressableScreen';
 import {CheckBox, Picker, TextInput} from '../components/form';
@@ -43,7 +44,7 @@ const AddItemScreen = () => {
   const [uploading, setUploading] = useState<boolean>(false);
   const uploadSet = useRef(new Set()).current;
   const {loader, request} = useApi();
-  const {user} = useAuth();
+  const {user, profile, addTargetCategory} = useAuth();
   const {showToast, hideToast} = useToast();
 
   const {control, reset, handleSubmit} = useForm<AddItemFormValues>({
@@ -57,7 +58,7 @@ const AddItemScreen = () => {
     description: yup.string().max(200),
     location: yup.object().required(t('location.required')),
     usedWithIssuesDesc: yup.string().max(200),
-    swapType: yup.boolean(),
+    swapType: yup.string(),
     // status: yup.string().required(t('status.required')),
     swapCategory: yup
       .string()
@@ -103,6 +104,7 @@ const AddItemScreen = () => {
         (item.condition.desc = data.usedWithIssuesDesc);
       const evict = `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`;
 
+      console.log('item', item);
       await request<Item>(() =>
         itemsApi.add(item, {
           cache: {
@@ -111,6 +113,14 @@ const AddItemScreen = () => {
           },
         }),
       );
+      if (profile && profile.targetCategories && item.swapOption.category) {
+        const found = profile.targetCategories.find(
+          c => c === item.swapOption.category,
+        );
+        if (!found) {
+          // addTargetCategory(item.swapOption.category);
+        }
+      }
       reset();
       showToast({
         type: 'success',
@@ -120,6 +130,7 @@ const AddItemScreen = () => {
         },
       });
     } catch (err) {
+      console.error(err);
       showToast({
         code: err.code,
         message: err.message,

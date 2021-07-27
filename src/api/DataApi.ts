@@ -9,6 +9,7 @@ import {
   Operation,
   Query,
 } from '../types/DataTypes';
+import {QuerySnapshot} from '../types/UtilityTypes';
 // import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
 import cache, {CacheConfig} from '../utils/cache/cacheManager';
 import {allCombinations} from '../utils/CommonUtils';
@@ -18,6 +19,8 @@ const DEFAULT_LIMIT = 100;
 
 // TODO transform firebase errors
 
+// type cb<T> = FirebaseFirestoreTypes.Query.onSnapshot;
+
 export class DataApi<T extends DataSearchable & Entity> extends Api {
   constructor(
     readonly collection: DataCollection<T>,
@@ -25,6 +28,34 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   ) {
     super();
   }
+
+  onQuerySnapshot = (
+    observerCallback: (snapshot: QuerySnapshot<T>) => void,
+    onError?: ((error: Error) => void) | undefined,
+    query?: Query<T>,
+  ) => {
+    try {
+      let collectionQuery = query
+        ? this.fromQuery(query, this.collection)
+        : this.collection;
+
+      return collectionQuery.onSnapshot(snapshot => {
+        const data: T[] = snapshot.docs.map(doc => {
+          const timestamp = (doc.data()?.timestamp as any)?.toDate();
+          const item: T = {
+            ...doc.data(),
+            id: doc.id,
+            timestamp,
+          };
+          return item;
+        });
+        observerCallback({...snapshot, data});
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  };
 
   getAll = async (query?: Query<T>, options?: APIOptions) => {
     try {
@@ -187,7 +218,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     }
   };
 
-  delete = async (doc: Entity, options?: APIOptions) => {
+  delete = async (doc: T, options?: APIOptions) => {
     try {
       this.logger.debug('delete:', doc);
       await this.collection.doc(doc.id).delete();

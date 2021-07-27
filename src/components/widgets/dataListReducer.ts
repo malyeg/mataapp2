@@ -1,11 +1,3 @@
-export const initialState: DataListInitState = {
-  loading: true,
-  reloading: false,
-  items: [],
-  hasMore: false,
-  lastDoc: undefined,
-};
-
 export type DataListInitState = {
   loading: boolean;
   reloading: boolean;

@@ -16,6 +16,7 @@ export interface Profile extends DataSearchable, Entity {
   acceptMarketingFlag?: boolean;
   acceptTermsFlag?: boolean;
   interests?: string[];
+  targetCategories?: string[];
   token?: string;
 }
 
@@ -47,6 +48,12 @@ class ProfilesApi extends DataApi<Profile> {
     await this.update(profile.id, {token});
     await this.saveToStorage(newProfile);
     return newProfile;
+  };
+
+  addTargetCategory = async (userId: string, categoryId: string) => {
+    this.collection.doc(userId).update({
+      targetCategories: firestore.FieldValue.arrayUnion(categoryId),
+    });
   };
 }
 

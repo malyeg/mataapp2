@@ -31,15 +31,17 @@ export type Page<T> = {
 export interface Query<T> {
   filters?: Filter<T>[];
   limit?: number;
-  orderBy?: Sort<T>[];
+  orderBy?: Sort[];
   page?: Page<T>;
   afterDoc?: FirebaseFirestoreTypes.QueryDocumentSnapshot<T>;
 }
 
-export type Sort<T> = {
+export type Sort = {
   field: string;
-  direction?: 'asc' | 'desc';
+  direction?: SortDirection;
 };
+
+export type SortDirection = 'asc' | 'desc' | undefined;
 
 export class QueryBuilder<T> {
   private readonly _query: Query<T>;
@@ -83,11 +85,13 @@ export class QueryBuilder<T> {
     }
     return this;
   }
-  orderBy(field: string, direction: 'asc' | 'desc' = 'asc'): QueryBuilder<T> {
+  orderBy(field: string, direction: SortDirection): QueryBuilder<T> {
     if (!this._query.orderBy) {
       this._query.orderBy = [];
     }
-    this._query.orderBy.push({field, direction});
+    if (direction) {
+      this._query.orderBy.push({field, direction});
+    }
     return this;
   }
 
@@ -105,7 +109,7 @@ export class QueryBuilder<T> {
   static queryFrom = <T>(
     filters: Filter<T>[],
     limit: number = 100,
-    orderBy?: Sort<T>[],
+    orderBy?: Sort[],
   ) => {
     return {filters, limit, orderBy};
   };

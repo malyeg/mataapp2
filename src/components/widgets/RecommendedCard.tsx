@@ -1,6 +1,9 @@
 import {useNavigation} from '@react-navigation/core';
 import React, {useCallback} from 'react';
 import {Dimensions, Pressable, StyleSheet, View, ViewProps} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+
 import FreeIcon from '../../assets/svgs/free.svg';
 import {Item} from '../../api/itemsApi';
 import theme from '../../styles/theme';
@@ -8,10 +11,6 @@ import {Image, Text} from '../core';
 import SwapIcon from './SwapIcon';
 import Icon from '../core/Icon';
 import categoriesApi from '../../api/categoriesApi';
-
-const CARD_BORDER = 2;
-const CARD_HEIGHT = 200;
-export const ITEM_CARD_HEIGHT = CARD_HEIGHT + CARD_BORDER;
 
 interface ItemCardProps extends ViewProps {
   item: Item;
@@ -32,9 +31,7 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
     });
   }, [item, navigtion]);
 
-  const imageUrl = item.defaultImageURL
-    ? item.defaultImageURL
-    : item.images[0].downloadURL;
+  const imageUrl = item.defaultImageURL ?? item.images[0].downloadURL;
 
   // console.log(item.status);
 
@@ -74,6 +71,21 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
     </Pressable>
   );
 };
+
+export const RecommendedCardSkeleton = () => (
+  <View style={styles.shimmerContainer}>
+    <ShimmerPlaceHolder
+      LinearGradient={LinearGradient}
+      style={styles.shimmerImage}
+    />
+    <View>
+      <ShimmerPlaceHolder
+        LinearGradient={LinearGradient}
+        style={styles.categoryText}
+      />
+    </View>
+  </View>
+);
 
 export default React.memo(RecommendedCard);
 
@@ -123,5 +135,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10,
+  },
+
+  shimmerContainer: {
+    flexDirection: 'row',
+    borderRadius: 10,
+    borderColor: theme.colors.lightGrey,
+    borderWidth: 2,
+    width: windowWidth,
+    padding: 5,
+  },
+  shimmerImage: {
+    width: 125,
+    height: 125,
+    borderRadius: 10,
   },
 });

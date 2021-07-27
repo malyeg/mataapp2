@@ -6,11 +6,13 @@ import NearByItems from '../components/widgets/NearByItems';
 import ProfileIcon from '../components/widgets/ProfileIcon';
 import RecommendedItems from '../components/widgets/RecommendedItems';
 import TopCategories from '../components/widgets/TopCategories';
+import useAuth from '../hooks/useAuth';
 import useLocation from '../hooks/useLocation';
 
 export const HOME_SCREEN = 'HomeScreen';
 const HomeScreen = () => {
   // const navigation = useNavigation();
+  const {profile} = useAuth();
   const {location} = useLocation();
   const [lastRefresh, setlastRefresh] = useState(new Date());
 
@@ -33,11 +35,12 @@ const HomeScreen = () => {
       </View>
       {location && location.city && (
         <>
-          <RecommendedItems
-            style={styles.recommendedItems}
-            location={location}
-            title="Recommended for you"
-          />
+          {profile?.targetCategories && (
+            <RecommendedItems
+              style={styles.recommendedItems}
+              location={location}
+            />
+          )}
           <NearByItems
             key={lastRefresh.getTime()}
             location={location}

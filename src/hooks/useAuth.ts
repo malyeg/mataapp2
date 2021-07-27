@@ -42,6 +42,21 @@ const useAuth = () => {
     });
   };
 
+  const addTargetCategory = async (categoryId: string) => {
+    if (authContext.state.profile) {
+      await profilesApi.addTargetCategory(
+        authContext.state.profile?.id!,
+        categoryId,
+      );
+      const targetCategories = authContext.state.profile.targetCategories ?? [];
+      targetCategories.push(categoryId);
+      authContext.dispatch({
+        type: AuthActionType.SET_PROFILE,
+        payload: {profile: {...authContext.state.profile, targetCategories}},
+      });
+    }
+  };
+
   const loadProfile = async () => {
     const profile = await profilesApi.getById(authContext.state.user?.id!);
     if (profile) {
@@ -62,6 +77,7 @@ const useAuth = () => {
     updateProfile,
     changePassword,
     loadProfile,
+    addTargetCategory,
   };
 };
 

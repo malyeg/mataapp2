@@ -63,7 +63,7 @@ const OwnerItems = ({item}: ItemListProps) => {
           onRefresh={undefined}
           horizontal
           pageable
-          itemsFunc={loadData}
+          data={loadData}
           renderItem={renderItem}
           itemSize={ITEM_HEIGHT}
           ListEmptyComponent={<View />}
