@@ -1,6 +1,8 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Screen} from '../components/core';
+import Icon from '../components/core/Icon';
 import Logo from '../components/core/Logo';
 import NearByItems from '../components/widgets/NearByItems';
 import ProfileIcon from '../components/widgets/ProfileIcon';
@@ -8,10 +10,11 @@ import RecommendedItems from '../components/widgets/RecommendedItems';
 import TopCategories from '../components/widgets/TopCategories';
 import useAuth from '../hooks/useAuth';
 import useLocation from '../hooks/useLocation';
+import theme from '../styles/theme';
 
 export const HOME_SCREEN = 'HomeScreen';
 const HomeScreen = () => {
-  // const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const {profile} = useAuth();
   const {location} = useLocation();
   const [lastRefresh, setlastRefresh] = useState(new Date());
@@ -22,7 +25,10 @@ const HomeScreen = () => {
     setlastRefresh(new Date());
   }, []);
 
-  console.log('HomeScreen render');
+  const toggleDrawer = () => {
+    navigation.toggleDrawer();
+  };
+
   return (
     <Screen
       style={styles.container}
@@ -30,8 +36,14 @@ const HomeScreen = () => {
       onRefresh={onRefresh}
       scrollable={true}>
       <View style={styles.header}>
-        <ProfileIcon style={styles.profile} size={30} />
+        <Icon
+          name="menu"
+          size={30}
+          color={theme.colors.dark}
+          onPress={toggleDrawer}
+        />
         <Logo size={75} style={styles.logo} />
+        <ProfileIcon style={styles.profile} size={30} />
       </View>
       {location && location.city && (
         <>
@@ -61,7 +73,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   logo: {
@@ -71,8 +84,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   profile: {
-    position: 'absolute',
-    right: 0,
+    // position: 'absolute',
+    // right: 0,
   },
   recommendedItems: {
     marginBottom: 10,

@@ -82,7 +82,6 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
           response.lastDoc = snapshot.docs.slice(-1)[0];
         }
         if (options?.cache?.enabled && !response.lastDoc) {
-          JSON.stringify({items, query});
           cache.store(cacheKey, response);
         }
         return response;
@@ -269,22 +268,15 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       for (const filter of query.filters) {
         const idField = filter.field === 'id' ? '__name__' : filter.field;
         const newFilter: Filter<T> = {...filter, field: idField};
-        if (filter.operation === Operation.CONTAINS) {
-          collectionQuery = collectionQuery.where(
-            'searchArray',
-            Operation.CONTAINS,
-            newFilter.value,
-          );
-        } else {
-          const operation: Operation = newFilter.operation
-            ? newFilter.operation
-            : Operation.EQUAL;
-          collectionQuery = collectionQuery.where(
-            newFilter.field as any,
-            operation,
-            newFilter.value,
-          );
-        }
+        const operation: Operation = newFilter.operation
+          ? newFilter.operation
+          : Operation.EQUAL;
+        console.log('operation.toString()', operation.toString());
+        collectionQuery = collectionQuery.where(
+          newFilter.field as any,
+          operation.toString() as FirebaseFirestoreTypes.WhereFilterOp,
+          newFilter.value,
+        );
       }
     }
     if (query.orderBy && query.orderBy.length > 0) {

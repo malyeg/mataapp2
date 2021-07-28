@@ -12,6 +12,7 @@ import {
   SafeAreaView,
   SafeAreaViewProps,
 } from 'react-native-safe-area-context';
+import {screens} from '../../config/constants';
 import create from '../../styles/EStyleSheet';
 import theme from '../../styles/theme';
 
@@ -41,8 +42,8 @@ const Screen: FC<ScreenProps> = ({
   useEffect(() => {
     const backAction = () => {
       if (!navigation.canGoBack()) {
-        if (route.name !== 'homeScreen') {
-          navigation.navigate('homeScreen');
+        if (route.name !== screens.HOME_TABS) {
+          navigation.navigate(screens.HOME_TABS);
           return true;
         }
         // TODO show toaster

@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/core';
 import React, {FC} from 'react';
 import {StyleSheet, ViewProps} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import PressableObacity from '../core/PressableObacity';
 
@@ -14,7 +15,7 @@ const ProfileIcon: FC<ProfileIconProps> = ({style, size = 25}) => {
     <PressableObacity
       hitSlop={10}
       style={[styles.container, style]}
-      onPress={() => navigation.navigate('ProfileScreen')}>
+      onPress={() => navigation.navigate(screens.PROFILE)}>
       <Icon
         name="account-edit-outline"
         size={size}

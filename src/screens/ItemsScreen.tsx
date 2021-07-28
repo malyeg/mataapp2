@@ -1,45 +1,48 @@
-import {useFocusEffect, useRoute} from '@react-navigation/native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useRoute} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import itemsApi, {Item} from '../api/itemsApi';
-import {Loader, Screen, Text} from '../components/core';
+import {Loader, Screen} from '../components/core';
 import ItemsFilter from '../components/widgets/data/ItemsFilter';
-import Sort from '../components/widgets/data/Sort';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
-import useLoader from '../hooks/useLoader';
-import {ItemsRouteProp} from '../navigation/HomeStack';
-import {Query, QueryBuilder, SortDirection} from '../types/DataTypes';
+import {ItemsRouteProp} from '../navigation/DrawerStack';
+import {Operation, Query, QueryBuilder} from '../types/DataTypes';
 
 const ItemsScreen = () => {
   const route = useRoute<ItemsRouteProp>();
-  // const [lastRefresh, setLastRefresh] = useState<number>(Date.now());
-  const {loader, loading, hideLoader} = useLoader(true);
-  const [sort, setSort] = useState<SortDirection>();
   const [query, setQuery] = useState<Query<Item>>();
 
   useEffect(() => {
     const getQuery = () => {
-      const categoryId = route.params?.categoryId;
-      const builder = new QueryBuilder<Item>()
-        // .filters(filters)
-        // .orderBy('nameLC', 'asc')
-        .orderBy('name', sort)
-        .limit(100);
-      if (categoryId) {
-        // builder.filter('category.id', categoryId);
-      }
+      const {categoryId, userId, swapType, status, conditionType, city} =
+        route.params;
+      const builder = new QueryBuilder<Item>().limit(100);
 
+      !!categoryId &&
+        builder.filter('category.path', categoryId, Operation.CONTAINS);
+
+      !!swapType && builder.filter('swapOption.type', swapType);
+      !!status && builder.filter('status', status);
+      !!conditionType && builder.filter('condition.type', conditionType);
+
+      if (userId) {
+        builder.filter('userId', userId);
+        // TODO change title
+      }
+      if (city) {
+        builder.filter('location.city', city);
+        // TODO change title
+      }
       const newQuery = builder.build();
+      console.log('newQuery', newQuery);
       return newQuery;
     };
     setQuery(getQuery());
-  }, [route.params?.categoryId, sort]);
+  }, [route.params]);
 
   const loadItems = useCallback(async () => {
     try {
-      // const filters: Filter<Item>[] = [{field: 'userId', value: user.id}];
-
       const response = await itemsApi.getAll(query);
       return response;
     } catch (error) {
@@ -54,28 +57,20 @@ const ItemsScreen = () => {
     [],
   );
 
-  const onSortChange = useCallback((value: SortDirection) => {
-    console.log('value', value);
-    setSort(value);
-  }, []);
-
   return (
     <Screen scrollable={false} style={styles.screen}>
       <View style={styles.header}>
-        <Sort onChange={onSortChange} />
         <ItemsFilter style={styles.filter} />
       </View>
       {query ? (
         <DataList
           containerStyle={styles.datalist}
           listStyle={styles.datalist}
-          // key={lastRefresh}
           showsVerticalScrollIndicator={false}
           data={loadItems}
           columnWrapperStyle={styles.columnWrapper}
           numColumns={2}
           // pageable
-          refreshable
           renderItem={renderItem}
           itemSize={ITEM_CARD_HEIGHT}
           // LoaderComponent={<Text>asdf</Text>}

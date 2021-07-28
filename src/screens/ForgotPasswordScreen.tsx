@@ -6,7 +6,7 @@ import {Button, Link, Text} from '../components/core';
 import Logo from '../components/core/Logo';
 import {FormView, KeyboardView} from '../components/form';
 import TextInput from '../components/form/TextInput';
-import constants from '../config/constants';
+import constants, {screens} from '../config/constants';
 import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
 import useLocale from '../hooks/useLocale';
@@ -28,7 +28,7 @@ const ForgotPasswordScreen = () => {
   const onFormError = (data: any) => {};
 
   const signInLinkHandler = () => {
-    navigation.navigate('SignInScreen');
+    navigation.navigate(screens.SIGN_IN);
   };
 
   const onFormSuccess = async (data: {username: string}) => {

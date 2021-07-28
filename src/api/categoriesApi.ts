@@ -1,5 +1,5 @@
 import {Entity} from '../types/DataTypes';
-import categories from './categories.json';
+import categories from '../data/categories';
 
 export interface Category extends Entity {
   id: string;

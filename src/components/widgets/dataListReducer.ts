@@ -77,7 +77,7 @@ function dataListReducer<T>(
       draftState.loading = false;
       return draftState;
     case 'LOAD_MORE_ITEMS':
-      draftState.items.push(...action.items);
+      draftState.items = [...draftState.items, ...action.items];
       draftState.lastDoc = action.lastDoc;
       if (action.lastDoc) {
         draftState.hasMore = true;

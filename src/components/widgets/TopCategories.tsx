@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import categoriesApi from '../../api/categoriesApi';
 import {screens} from '../../config/constants';
@@ -17,13 +18,41 @@ const TopCategories = ({style}: TopCategoriesProps) => {
   const navigation = useNavigation();
   const onPress = useCallback(
     (categoryId: string) => {
-      navigation.navigate(screens.ITEMS, {categoryId});
+      navigation.navigate(screens.ITEMS, {
+        categoryId,
+      });
     },
     [navigation],
   );
+
+  const renderItem = useCallback(
+    ({item}) => (
+      <PressableObacity
+        onPress={() => onPress(item.id)}
+        key={item.id}
+        style={styles.categoryContainer}>
+        <View style={[styles.category, {backgroundColor: item.style?.bgColor}]}>
+          <Icon
+            name={item.style?.iconName ?? 'home'}
+            // color="#F2A39C"
+            color="white"
+            size={35}
+          />
+        </View>
+        <Text style={styles.name}>{item.name}</Text>
+      </PressableObacity>
+    ),
+    [onPress],
+  );
   return (
     <View style={[styles.container, style]}>
-      {categories.map(category => (
+      <FlatList
+        data={categories}
+        renderItem={renderItem}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      />
+      {/* {categories.map(category => (
         <PressableObacity
           onPress={() => onPress(category.id)}
           key={category.id}
@@ -42,7 +71,7 @@ const TopCategories = ({style}: TopCategoriesProps) => {
           </View>
           <Text style={styles.name}>{category.name}</Text>
         </PressableObacity>
-      ))}
+      ))} */}
     </View>
   );
 };

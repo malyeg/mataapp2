@@ -30,6 +30,7 @@ const TabBarItem: FC<TabBarItemProps> = ({
   state,
   descriptors,
   badge,
+  iconStyle,
   ...props
 }) => {
   // const route: any = state.routes.find(() => route.name === name);
@@ -74,7 +75,7 @@ const TabBarItem: FC<TabBarItemProps> = ({
           name={icon}
           color={isFocused ? theme.colors.green : theme.colors.dark}
           size={24}
-          style={[styles.icon, props.iconStyle]}
+          style={[styles.icon, iconStyle]}
         />
       )}
       {!!label && (

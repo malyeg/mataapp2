@@ -3,6 +3,7 @@ import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import {Item} from '../../api/itemsApi';
 import FreeIcon from '../../assets/svgs/free.svg';
+import {screens} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
@@ -28,7 +29,7 @@ const ItemCard = ({
 
   const openItemDetails = useCallback(() => {
     // TODO refactor to constant
-    navigtion.navigate('ItemDetailsScreen', {
+    navigtion.navigate(screens.ITEM_DETAILS, {
       id: item.id,
     });
   }, [item, navigtion]);

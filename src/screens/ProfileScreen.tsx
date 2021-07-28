@@ -9,8 +9,6 @@ import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 // import useSocial from '../hooks/useSocial';
 import theme from '../styles/theme';
-import {EDIT_PROFILE_SCREEN_NAME} from './EditProfileScreen';
-import {MY_ITEMS_SCREEN} from './MyItemsScreen';
 
 const ProfileScreen = () => {
   const {signOut} = useAuth();
@@ -30,19 +28,19 @@ const ProfileScreen = () => {
       <ProfileHeader />
       <ProfileItem
         title={t('editProfileLink')}
-        onPress={() => navigation.navigate(EDIT_PROFILE_SCREEN_NAME)}
+        onPress={() => navigation.navigate(screens.EDIT_PROFILE)}
       />
       <ProfileItem
         title={t('changePasswordLink')}
-        onPress={() => navigation.navigate('ChangePasswordScreen')}
+        onPress={() => navigation.navigate(screens.CHANGE_PASSWORD)}
       />
       <ProfileItem
-        title={t('myItemsLink')}
-        onPress={() => navigation.navigate(MY_ITEMS_SCREEN)}
+        title={t('myInterestsLink')}
+        onPress={() => navigation.navigate(screens.INTERESTS)}
       />
       <ProfileItem
-        title={t('dealsLink')}
-        onPress={() => navigation.navigate(screens.DEALS_TABS)}
+        title={t('inviteFriendLink')}
+        onPress={() => navigation.navigate(screens.INVITE_FRIEND)}
       />
 
       <ProfileItem

@@ -14,7 +14,7 @@ import {
   Picker,
 } from '../components/form';
 import TextInput from '../components/form/TextInput';
-import constants from '../config/constants';
+import constants, {screens} from '../config/constants';
 import {ICredentials} from '../contexts/AuthReducer';
 import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
@@ -87,7 +87,7 @@ const SignUpScreen = () => {
   // }, [selectedCountry, setValue]);
 
   const signInLinkHandler = () => {
-    navigation.navigate('SignInScreen');
+    navigation.navigate(screens.SIGN_IN);
   };
 
   const onCountryChange = useCallback(

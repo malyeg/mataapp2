@@ -4,9 +4,8 @@ import {StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
 import {Button, Link, Text} from '../components/core';
 import Logo from '../components/core/Logo';
-import {KeyboardView} from '../components/form';
 import TextInput from '../components/form/TextInput';
-import constants from '../config/constants';
+import constants, {screens} from '../config/constants';
 import {ICredentials} from '../contexts/AuthReducer';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
@@ -40,10 +39,10 @@ const SignInScreen = () => {
   });
 
   const signUpLinkHandler = () => {
-    navigation.navigate('SignUpScreen');
+    navigation.navigate(screens.SIGN_UP);
   };
   const forgotPasswordLinkHandler = () => {
-    navigation.navigate('ForgotPasswordScreen');
+    navigation.navigate(screens.FORGOT_PASSWORD);
   };
 
   const onFormSuccess = async (data: SignInFormValues) => {

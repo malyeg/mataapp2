@@ -3,6 +3,7 @@ import {StackHeaderLeftButtonProps} from '@react-navigation/stack';
 import React, {FC, useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import PressableObacity from '../core/PressableObacity';
 
@@ -15,9 +16,13 @@ const HeaderNav: FC<StackHeaderLeftButtonProps> = (
   const navigation = useNavigation();
   const onPressHandler = useCallback(() => {
     if (navigation.canGoBack()) {
+      console.log('canGoBack');
       navigation.goBack();
     } else {
-      navigation.navigate('HomeTabs');
+      console.log('cannot GoBack');
+      navigation.navigate(screens.HOME_TABS, {
+        screen: screens.HOME,
+      });
     }
   }, [navigation]);
   return (

@@ -20,6 +20,7 @@ import theme from '../styles/theme';
 import Analytics from '../utils/Analytics';
 import {LoggerFactory} from '../utils/logger';
 import AuthStack from './AuthStack';
+import DrawerStack from './DrawerStack';
 import HomeStack from './HomeStack';
 
 const logger = LoggerFactory.getLogger('Routes');
@@ -158,7 +159,8 @@ const Routes = () => {
           logger.error(error);
         }
       }}>
-      {user ? <HomeStack /> : <AuthStack />}
+      {/* {user ? <HomeStack /> : <AuthStack />} */}
+      {user ? <DrawerStack /> : <AuthStack />}
       <Toast ref={ref => Toast.setRef(ref)} config={toastConfig} />
       <Sheet ref={sheetRef} />
     </NavigationContainer>

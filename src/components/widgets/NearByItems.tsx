@@ -36,12 +36,6 @@ const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
 
   const {t} = useLocale('widgets');
 
-  console.log('nearbyItems render');
-
-  // useEffect(() => {
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   const listData = useMemo(
     () => async (doc: Document<Item>) => {
       try {
@@ -81,13 +75,7 @@ const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
   );
 
   const listEmptyComponent = (
-    <NoDataFound body={'no items found in ' + location.city} icon="">
-      {/* <PressableObacity
-        onPress={() => navigation.navigate(ITEM_SEARCH_SCREEN)}
-        hitSlop={{left: 20, right: 20, top: 20, bottom: 5}}>
-        <Text style={styles.anotherAreaLink}>try another area</Text>
-      </PressableObacity> */}
-    </NoDataFound>
+    <NoDataFound body={'no items found in ' + location.city} icon="" />
   );
 
   // const onSwap = useCallback():

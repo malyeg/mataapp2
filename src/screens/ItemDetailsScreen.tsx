@@ -44,6 +44,7 @@ const ItemDetailsScreen = () => {
   const refreshItem = useRef(false);
 
   const loadData = async () => {
+    console.log('route.params', route.params);
     const itemId = route.params?.id;
 
     if (itemId) {
@@ -106,12 +107,12 @@ const ItemDetailsScreen = () => {
         if (navigation.canGoBack()) {
           const routes = state.routes;
           if (routes[routes.length - 2]?.name === MY_ITEMS_SCREEN) {
-            navigation.navigate(MY_ITEMS_SCREEN, {lastRefresh: Date.now()});
+            navigation.navigate(screens.MY_ITEMS, {lastRefresh: Date.now()});
           } else {
             navigation.goBack();
           }
         } else {
-          navigation.navigate(HOME_SCREEN);
+          navigation.navigate(screens.HOME_TABS);
         }
       } catch (error) {
         console.error(error);
@@ -156,7 +157,7 @@ const ItemDetailsScreen = () => {
             dealsApi.createOffer(user.id, item!),
           );
           refreshItem.current = true;
-          navigation.navigate(screens.DEAL_DETAILS_SCREEN, {
+          navigation.navigate(screens.DEAL_DETAILS, {
             id: offer.id,
             toastType: 'newOffer',
           });

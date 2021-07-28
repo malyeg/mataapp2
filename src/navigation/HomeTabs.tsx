@@ -41,7 +41,7 @@ const HomeTabs = () => {
         // options={{header}}
       />
       <Tab.Screen
-        name={screens.MY_ITEMS_SCREEN}
+        name={screens.MY_ITEMS}
         component={MyItemsScreen}
         initialParams={{
           title: t('tabBar.myItemsTitle'),

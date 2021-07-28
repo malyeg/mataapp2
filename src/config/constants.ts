@@ -52,16 +52,34 @@ export const cart = {
 };
 
 export const screens = {
+  SIGN_IN: 'SignInScreen' as 'SignInScreen',
+  SIGN_UP: 'SignUpScreen' as 'SignUpScreen',
+  FORGOT_PASSWORD: 'ForgotPasswordScreen' as 'ForgotPasswordScreen',
+
   HOME_TABS: 'HomeTabs' as 'HomeTabs',
   HOME: 'HomeScreen' as 'HomeScreen',
+
   ITEMS: 'ItemsScreen' as 'ItemsScreen',
   ITEM_DETAILS: 'ItemDetailsScreen' as 'ItemDetailsScreen',
-  DEALS_SCREEN: 'DealsScreen' as 'DealsScreen',
-  MY_DEALS_SCREEN: 'MyDealsScreen' as 'MyDealsScreen',
+  MY_ITEMS: 'MyItemsScreen' as 'MyItemsScreen',
+  ADD_ITEM: 'AddItemScreen' as 'AddItemScreen',
+
+  DEALS: 'DealsScreen' as 'DealsScreen',
+  MY_DEALS: 'MyDealsScreen' as 'MyDealsScreen',
+  DEALS_STACK: 'DealsStack' as 'DealsStack',
   DEALS_TABS: 'DealsTabs' as 'DealsTabs',
-  DEAL_DETAILS_SCREEN: 'DealDetailsScreen' as 'DealDetailsScreen',
-  MY_ITEMS_SCREEN: 'MyItemsScreen' as 'MyItemsScreen',
+  DEAL_DETAILS: 'DealDetailsScreen' as 'DealDetailsScreen',
+
   NOTIFICATIONS: 'NotificationsScreen' as 'NotificationsScreen',
+
+  PROFILE: 'ProfileScreen' as 'ProfileScreen',
+  EDIT_PROFILE: 'EditProfileScreen' as 'EditProfileScreen',
+  CHANGE_PASSWORD: 'ChangePasswordScreen' as 'ChangePasswordScreen',
+  INTERESTS: 'MyInterestsScreen' as 'MyInterestsScreen',
+  INVITE_FRIEND: 'InviteFriendScreen' as 'InviteFriendScreen',
+
+  SETTINGS: 'SettingsScreen' as 'SettingsScreen',
+  FAQ: 'FAQScreen' as 'FAQScreen',
 };
 
 const constants = {

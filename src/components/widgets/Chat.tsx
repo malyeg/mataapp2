@@ -91,7 +91,16 @@ const Chat = ({deal, disableComposer, alwaysShowSend}: ChatProps) => {
   );
 
   const renderComposer = useCallback(
-    props => (disableComposer ? <></> : <Composer {...props} />),
+    props =>
+      disableComposer ? (
+        <></>
+      ) : (
+        <Composer
+          {...props}
+          textInputStyle={styles.textInput}
+          multiline={false}
+        />
+      ),
     [disableComposer],
   );
 
@@ -109,7 +118,7 @@ const Chat = ({deal, disableComposer, alwaysShowSend}: ChatProps) => {
         }}
         disableComposer={disableComposer}
         alwaysShowSend={alwaysShowSend}
-        // renderComposer={renderComposer}
+        renderComposer={renderComposer}
       />
     </View>
   );
@@ -147,5 +156,8 @@ const styles = StyleSheet.create({
   },
   day: {
     color: 'red',
+  },
+  textInput: {
+    color: theme.colors.dark,
   },
 });

@@ -13,7 +13,7 @@ interface DealCardProps {
 const DealCard = ({deal}: DealCardProps) => {
   const navigation = useNavigation();
   const onPress = useCallback(() => {
-    navigation.navigate(screens.DEAL_DETAILS_SCREEN, {id: deal.id});
+    navigation.navigate(screens.DEAL_DETAILS, {id: deal.id});
   }, [deal.id, navigation]);
   const imageUrl = deal.item.defaultImageURL
     ? deal.item.defaultImageURL

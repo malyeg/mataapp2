@@ -48,7 +48,6 @@ function DataList<T extends Entity>({
   onEndReached,
   ...props
 }: DataListProps<T>) {
-  console.log('DataList render');
   const initialState: DataListInitState = {
     loading: true,
     reloading: false,
@@ -100,6 +99,7 @@ function DataList<T extends Entity>({
 
   const loadMoreHandler = useMemo(
     () => async (info: {distanceFromEnd: number}) => {
+      console.log('loadMoreHandler');
       if (!pageable && onEndReached) {
         onEndReached(info, items?.length);
         return;
@@ -109,7 +109,8 @@ function DataList<T extends Entity>({
           type: 'SET_RELOADING',
           reloading: true,
         });
-        const response = await (data as Function)(lastDoc);
+        const response: ApiResponse<T> = await (data as Function)(lastDoc);
+
         if (response) {
           const hasMoreData =
             !!response?.query?.limit &&
@@ -132,6 +133,7 @@ function DataList<T extends Entity>({
   );
 
   const ListFooter = useCallback(() => {
+    console.log('state', {hasMore, loading, reloading});
     return pageable && hasMore && !loading ? (
       <View
         style={[
@@ -141,7 +143,7 @@ function DataList<T extends Entity>({
         <ActivityIndicator color={theme.colors.salmon} size="large" />
       </View>
     ) : null;
-  }, [hasMore, horizontal, loading, pageable]);
+  }, [hasMore, horizontal, loading, pageable, reloading]);
 
   const NoDataHandler = useCallback(() => {
     if (props.ListEmptyComponent) {

@@ -5,6 +5,7 @@ import {
 import React, {FC} from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import PressableObacity from '../core/PressableObacity';
 import TabBarItem from './TabBarItem';
@@ -19,7 +20,7 @@ const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
   }
   // props.
   const addItemPressHandler = () => {
-    props.navigation.navigate(ADD_ITEM_SCREEN);
+    props.navigation.navigate(screens.ADD_ITEM);
   };
   return (
     // TODO replace icons from zeplin
@@ -38,12 +39,14 @@ const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
         </View>
         {props.state.routes.map((route, index) => {
           const {options} = props.descriptors[route.key];
+          console.log(route.name);
           return (
             <TabBarItem
               key={index}
               {...props}
               name={route.name}
               style={index > 0 && index < 3 ? styles.middleItem : {}}
+              iconStyle={route.name === 'DealsTabs' ? styles.dealsIcon : {}}
               label={(route.params as any).title}
               icon={(route.params as any).icon}
               badge={options?.tabBarBadge as number}
@@ -96,7 +99,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    top: -10,
   },
   addItemIcon: {
     color: theme.colors.white,
@@ -104,5 +106,8 @@ const styles = StyleSheet.create({
   middleItem: {
     marginHorizontal: 40,
     // backgroundColor: 'grey',
+  },
+  dealsIcon: {
+    transform: [{rotate: '40deg'}],
   },
 });

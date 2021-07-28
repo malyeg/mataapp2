@@ -45,6 +45,18 @@
       "myItemsTitle": "My Items",
       "dealsTitle": "Deals"
     },
+    "drawer" : {
+      "homeLabel" : "Home",
+      "profileLabel" : "Profile",
+      "changePasswordLabel" : "Change password",
+      "settingsLabel" : "Settings",
+      "notificationsLabel" : "Notifications",
+      "wishListLabel" : "Wishlist",
+      "itemsLabel": "Items",
+      "myItemsLabel": "My Items",
+      "dealsLabel": "Deals",
+      "faqLabel": "FAQ"
+    },
     "screens": {
       "profile": "Profile",
       "settings": "Settings",
@@ -56,7 +68,8 @@
       "items":"{{name}} Items",
       "itemDetails":"Item details",
       "deals":"Deals",
-      "dealDetails":"Deal details"
+      "dealDetails":"Deal details",
+      "faq": "FAQ"
     },
     "location": {
       "title": "Select location",
@@ -72,7 +85,7 @@
       "itemsLink": "View All"
     },
     "recommendedItems": {
-      "title": "Recommended",
+      "title": "Recommended for you",
       "itemsLink": "View All"
     },
     "sheet": {
@@ -194,13 +207,14 @@
     "location": {
       "required": "Item location is required"
     },
-    "submitBtnTitle": "Add",
+    "submitBtnTitle": "Add"
   },
   "profileScreen": {
     "myItemsLink": "My Items",
     "dealsLink": "Deals",
     "editProfileLink": "Edit profile",
     "changePasswordLink": "Change password",
+    "myInterestsLink": "My interests",
     "logout": {
       "logoutLink": "Logout",
       "confirmLogoutTitle": "Confirm logout",

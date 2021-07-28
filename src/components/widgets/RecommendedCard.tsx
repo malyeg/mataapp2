@@ -11,6 +11,7 @@ import {Image, Text} from '../core';
 import SwapIcon from './SwapIcon';
 import Icon from '../core/Icon';
 import categoriesApi from '../../api/categoriesApi';
+import {screens} from '../../config/constants';
 
 interface ItemCardProps extends ViewProps {
   item: Item;
@@ -26,7 +27,7 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
 
   const openItemDetails = useCallback(() => {
     // TODO refactor to constant
-    navigtion.navigate('ItemDetailsScreen', {
+    navigtion.navigate(screens.ITEM_DETAILS, {
       id: item.id,
     });
   }, [item, navigtion]);
@@ -120,10 +121,11 @@ const styles = StyleSheet.create({
   },
   freeImage: {
     position: 'absolute',
-    marginRight: 'auto',
+    // marginRight: 'auto',
+    right: 10,
     // width: 70,
     // height: 70,
-    transform: [{rotate: '-10deg'}],
+    // transform: [{rotate: '-10deg'}],
   },
   swapIcon: {
     // marginBottom: 'auto',
