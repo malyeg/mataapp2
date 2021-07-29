@@ -66,12 +66,12 @@ export const screens = {
 
   DEALS: 'DealsScreen' as 'DealsScreen',
   MY_DEALS: 'MyDealsScreen' as 'MyDealsScreen',
-  DEALS_STACK: 'DealsStack' as 'DealsStack',
   DEALS_TABS: 'DealsTabs' as 'DealsTabs',
   DEAL_DETAILS: 'DealDetailsScreen' as 'DealDetailsScreen',
 
   NOTIFICATIONS: 'NotificationsScreen' as 'NotificationsScreen',
 
+  PROFILE_STACK: 'ProfileStack' as 'ProfileStack',
   PROFILE: 'ProfileScreen' as 'ProfileScreen',
   EDIT_PROFILE: 'EditProfileScreen' as 'EditProfileScreen',
   CHANGE_PASSWORD: 'ChangePasswordScreen' as 'ChangePasswordScreen',

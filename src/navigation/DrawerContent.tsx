@@ -2,42 +2,59 @@ import {
   DrawerContentComponentProps,
   DrawerContentOptions,
   DrawerContentScrollView,
-  DrawerItem,
-  DrawerItemList,
 } from '@react-navigation/drawer';
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import Icon from '../components/core/Icon';
+import {StyleSheet, View} from 'react-native';
+import DrawerItem from './DrawerItem';
 import ProfileHeader from '../components/widgets/ProfileHeader';
+import {screens} from '../config/constants';
 import theme from '../styles/theme';
+import useLocale from '../hooks/useLocale';
+import DrawerSection from './DrawerSection';
 
-const DrawerContent = (
-  props: DrawerContentComponentProps<DrawerContentOptions>,
-) => {
+const DrawerContent = ({
+  navigation,
+  ...props
+}: DrawerContentComponentProps<DrawerContentOptions>) => {
+  const {t} = useLocale('common');
+
   return (
     <DrawerContentScrollView {...props}>
       <ProfileHeader style={styles.header} userNameStyle={styles.profileName} />
-      <DrawerItemList
-        {...props}
-        labelStyle={styles.itemText}
-        itemStyle={styles.drawerItem}
-        activeBackgroundColor={theme.colors.white}
+
+      <DrawerItem
+        label={t('drawer.dealsLabel')}
+        icon="handshake"
+        iconStyle={styles.dealsIcon}
+        onPress={() => navigation.navigate(screens.DEALS_TABS)}
+      />
+      <DrawerItem
+        label={t('drawer.nearByItemsLabel')}
+        icon="table-search"
+        onPress={() => navigation.navigate(screens.ITEMS)}
       />
 
-      {/* <DrawerItem
-        label="FAQ"
-        // icon={({size, color}) => (
-        //   <Icon
-        //     name="help"
-        //     size={size}
-        //     color={color ?? theme.colors.white}
-        //     style={styles.icon}
-        //   />
-        // )}
-        onPress={() => console.log('help link')}
-        style={styles.drawerItem}
-        labelStyle={styles.itemText}
-      /> */}
+      <DrawerItem
+        label={t('drawer.profileLabel')}
+        icon="account-outline"
+        onPress={() => navigation.navigate(screens.PROFILE_STACK)}
+      />
+      <DrawerItem
+        label={t('drawer.settingsLabel')}
+        icon="cog-outline"
+        onPress={() => navigation.navigate(screens.SETTINGS)}
+      />
+      <DrawerItem
+        label={t('drawer.notificationsLabel')}
+        icon="bell-outline"
+        onPress={() => navigation.navigate(screens.NOTIFICATIONS)}
+      />
+      <DrawerItem
+        label={t('drawer.faqLabel')}
+        icon="help"
+        onPress={() => navigation.navigate(screens.FAQ)}
+        style={styles.lastItem}
+      />
     </DrawerContentScrollView>
   );
 };
@@ -51,17 +68,14 @@ const styles = StyleSheet.create({
   profileName: {
     ...theme.styles.scale.h6,
   },
-  drawerItem: {
-    borderBottomColor: theme.colors.lightGrey,
-    borderBottomWidth: 2,
+  lastItem: {
+    borderBottomWidth: 0,
   },
-  itemText: {
-    color: theme.colors.dark,
-    ...theme.styles.scale.body1,
-    fontWeight: theme.fontWeight.semiBold,
-    // marginLeft: -30,
+  dealsIcon: {
+    transform: [{rotate: '40deg'}],
   },
-  icon: {
-    // backgroundColor: 'grey',
+  separator: {borderTopWidth: 2, borderColor: theme.colors.lightGrey},
+  section: {
+    paddingVertical: 5,
   },
 });

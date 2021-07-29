@@ -23,9 +23,10 @@ const TextDescription = ({children, maxLines = 2}: TextDescriptionProps) => {
   const showLinks = numLines > maxLines;
 
   return (
-    <Pressable>
-      <Text onTextLayout={onTextLayout}>{children}</Text>
-
+    <Pressable style={styles.container}>
+      <Text onTextLayout={onTextLayout} numberOfLines={5}>
+        {children}
+      </Text>
       {/* {!showAll ? (
         <Text style={styles.moreText} onPress={() => setShowAll(true)}>
           view more
@@ -42,6 +43,9 @@ const TextDescription = ({children, maxLines = 2}: TextDescriptionProps) => {
 export default TextDescription;
 
 const styles = StyleSheet.create({
+  container: {
+    flexWrap: 'wrap',
+  },
   moreText: {
     color: 'red',
     // backgroundColor: 'grey',

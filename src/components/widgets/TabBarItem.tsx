@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../styles/theme';
-import PressableObacity from '../core/PressableObacity';
+import PressableOpacity from '../core/PressableOpacity';
 
 interface TabBarItemProps extends BottomTabBarProps<BottomTabBarOptions> {
   name: string;
@@ -57,7 +57,7 @@ const TabBarItem: FC<TabBarItemProps> = ({
     });
   };
   return (
-    <PressableObacity
+    <PressableOpacity
       accessibilityRole="button"
       accessibilityState={isFocused ? {selected: true} : {}}
       accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -83,7 +83,7 @@ const TabBarItem: FC<TabBarItemProps> = ({
           {label}
         </Text>
       )}
-    </PressableObacity>
+    </PressableOpacity>
   );
 };
 

@@ -7,7 +7,7 @@ import {Platform, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
-import PressableObacity from '../core/PressableObacity';
+import PressableOpacity from '../core/PressableOpacity';
 import TabBarItem from './TabBarItem';
 
 export const ADD_ITEM_SCREEN = 'AddItemScreen';
@@ -23,11 +23,10 @@ const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
     props.navigation.navigate(screens.ADD_ITEM);
   };
   return (
-    // TODO replace icons from zeplin
     <View style={styles.container}>
       <View style={styles.itemsContainer}>
         <View style={styles.addItemContainer}>
-          <PressableObacity
+          <PressableOpacity
             style={styles.addItem}
             onPress={addItemPressHandler}>
             <Icon
@@ -35,7 +34,7 @@ const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
               size={24}
               style={[styles.addItemIcon, props.iconStyle]}
             />
-          </PressableObacity>
+          </PressableOpacity>
         </View>
         {props.state.routes.map((route, index) => {
           const {options} = props.descriptors[route.key];

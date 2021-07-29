@@ -26,7 +26,7 @@ export interface PressableOpacityProps extends PressableProps {
 export type StyleType = (
   state: PressableStateCallbackType,
 ) => StyleProp<ViewStyle>;
-const PressableObacity = ({
+const PressableOpacity = ({
   children,
   style,
   disabled = false,
@@ -71,6 +71,6 @@ const PressableObacity = ({
   );
 };
 
-export default React.memo(PressableObacity);
+export default React.memo(PressableOpacity);
 
 // const styles = StyleSheet.create({});

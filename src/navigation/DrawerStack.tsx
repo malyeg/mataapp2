@@ -12,18 +12,17 @@ import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import ItemsScreen from '../screens/ItemsScreen';
 import MyItemsScreen from '../screens/MyItemsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import DealsTabs from './DealsTabs';
 import DrawerContent from './DrawerContent';
 import HomeTabs from './HomeTabs';
 import {drawerOptions} from './Nav';
+import ProfileStack from './ProfileStack';
 
 export type StackParams = {
   [screens.HOME_TABS]: undefined;
 
-  [screens.PROFILE]: undefined;
-  [screens.EDIT_PROFILE]: undefined;
+  [screens.PROFILE_STACK]: undefined;
   [screens.CHANGE_PASSWORD]: undefined;
 
   [screens.ADD_ITEM]: undefined;
@@ -82,6 +81,7 @@ const DrawerStack = () => {
     <Drawer.Navigator
       drawerType="slide"
       screenOptions={drawerOptions}
+      // initialRouteName={screens.HOME_TABS}
       drawerContent={props => <DrawerContent {...props} />}>
       <Drawer.Screen
         name={screens.HOME_TABS}
@@ -94,13 +94,13 @@ const DrawerStack = () => {
         })}
       />
       <Drawer.Screen
-        name={screens.PROFILE}
-        component={ProfileScreen}
+        name={screens.PROFILE_STACK}
+        component={ProfileStack}
         options={{
-          headerTitle: t('screens.profile'),
-          drawerLabel: t('drawer.profileLabel'),
+          headerShown: false,
         }}
       />
+
       <Drawer.Screen
         name={screens.ITEMS}
         component={ItemsScreen}

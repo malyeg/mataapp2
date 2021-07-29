@@ -21,7 +21,7 @@ import {Separator, Text} from '../core';
 import ListItem from '../core/ListItem';
 import useLocale from '../../hooks/useLocale';
 import useController from '../../hooks/userController';
-import PressableObacity from '../core/PressableObacity';
+import PressableOpacity from '../core/PressableOpacity';
 
 interface ItemImageProps extends ViewProps {
   name: string;
@@ -193,7 +193,7 @@ const ImagePicker: FC<ItemImageProps> = ({
 
   return (
     <>
-      <PressableObacity
+      <PressableOpacity
         activeOpacity={disabled ? 1 : undefined}
         onPress={uploadHandler}
         style={[styles.container, props.style]}>
@@ -211,7 +211,7 @@ const ImagePicker: FC<ItemImageProps> = ({
             <ActivityIndicator size="large" color={theme.colors.dark} />
           </View>
         )}
-      </PressableObacity>
+      </PressableOpacity>
 
       <Modal
         // {...props}

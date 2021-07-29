@@ -7,7 +7,7 @@ import categoriesApi from '../../api/categoriesApi';
 import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import {Text} from '../core';
-import PressableObacity from '../core/PressableObacity';
+import PressableOpacity from '../core/PressableOpacity';
 
 interface TopCategoriesProps extends ViewProps {}
 const categories = categoriesApi
@@ -27,7 +27,7 @@ const TopCategories = ({style}: TopCategoriesProps) => {
 
   const renderItem = useCallback(
     ({item}) => (
-      <PressableObacity
+      <PressableOpacity
         onPress={() => onPress(item.id)}
         key={item.id}
         style={styles.categoryContainer}>
@@ -40,7 +40,7 @@ const TopCategories = ({style}: TopCategoriesProps) => {
           />
         </View>
         <Text style={styles.name}>{item.name}</Text>
-      </PressableObacity>
+      </PressableOpacity>
     ),
     [onPress],
   );

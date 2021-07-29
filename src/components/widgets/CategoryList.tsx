@@ -3,7 +3,7 @@ import {FlatList, StyleSheet, View, ViewStyle} from 'react-native';
 import categoriesApi, {Category} from '../../api/categoriesApi';
 import theme from '../../styles/theme';
 import {Text} from '../core';
-import PressableObacity from '../core/PressableObacity';
+import PressableOpacity from '../core/PressableOpacity';
 
 interface CategoryListProps {
   horizontal: boolean;
@@ -27,7 +27,7 @@ const CategoryList = ({horizontal, onChange, style}: CategoryListProps) => {
   // console.log(categories);
 
   const renderItem = ({item}: {item: Category}) => (
-    <PressableObacity
+    <PressableOpacity
       onPress={() => onSelect(item)}
       style={[
         styles.itemContainer,
@@ -42,7 +42,7 @@ const CategoryList = ({horizontal, onChange, style}: CategoryListProps) => {
         ]}>
         {item.name}
       </Text>
-    </PressableObacity>
+    </PressableOpacity>
   );
   return (
     <View style={[styles.container, style]}>

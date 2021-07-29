@@ -35,12 +35,8 @@ const ProfileScreen = () => {
         onPress={() => navigation.navigate(screens.CHANGE_PASSWORD)}
       />
       <ProfileItem
-        title={t('myInterestsLink')}
-        onPress={() => navigation.navigate(screens.INTERESTS)}
-      />
-      <ProfileItem
-        title={t('inviteFriendLink')}
-        onPress={() => navigation.navigate(screens.INVITE_FRIEND)}
+        title={t('myItemsLink')}
+        onPress={() => navigation.navigate(screens.MY_ITEMS)}
       />
 
       <ProfileItem

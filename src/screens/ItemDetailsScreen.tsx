@@ -204,9 +204,12 @@ const ItemDetailsScreen = () => {
         )}
       </View>
       {!!item.description && (
-        <View style={styles.row}>
-          <Text style={styles.statusTitle}>{t('itemDescriptionTitle')}</Text>
-          <TextDescription>{item.description}</TextDescription>
+        <View style={styles.descriptionContainer}>
+          <View>
+            <Text style={styles.statusTitle}>{t('itemDescriptionTitle')}</Text>
+          </View>
+          {/* <TextDescription>{item.description}</TextDescription> */}
+          <Text>{item.description}</Text>
         </View>
       )}
       <View style={styles.statusContainer}>
@@ -277,6 +280,10 @@ const styles = StyleSheet.create({
   statusContainer: {
     flexDirection: 'row',
     marginTop: 10,
+  },
+  descriptionContainer: {
+    flexDirection: 'row',
+    // marginTop: 10,
   },
   statusTitle: {
     color: theme.colors.salmon,

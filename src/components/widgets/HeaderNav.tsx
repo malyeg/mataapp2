@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
-import PressableObacity from '../core/PressableObacity';
+import PressableOpacity from '../core/PressableOpacity';
 
 const HeaderNav: FC<StackHeaderLeftButtonProps> = (
   {
@@ -26,9 +26,9 @@ const HeaderNav: FC<StackHeaderLeftButtonProps> = (
     }
   }, [navigation]);
   return (
-    <PressableObacity onPress={onPressHandler} style={styles.container}>
+    <PressableOpacity onPress={onPressHandler} style={styles.container}>
       <Icon name="chevron-left" color={theme.colors.grey} size={35} />
-    </PressableObacity>
+    </PressableOpacity>
   );
 };
 

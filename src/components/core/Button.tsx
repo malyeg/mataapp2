@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {GestureResponderEvent, StyleSheet, TextStyle} from 'react-native';
 import theme, {ColorProps} from '../../styles/theme';
-import PressableObacity, {PressableOpacityProps} from './PressableObacity';
+import PressableOpacity, {PressableOpacityProps} from './PressableOpacity';
 import Text from './Text';
 
 // interface AppButtonProps extends ButtonProps {}
@@ -32,7 +32,7 @@ const AppButton = ({disabled, textStyle, onPress, ...props}: ButtonProps) => {
   ];
   const styleTextList = [styles.text, textStyle];
   return (
-    <PressableObacity
+    <PressableOpacity
       {...props}
       onPress={onPressHandler}
       disabled={disabled}
@@ -40,7 +40,7 @@ const AppButton = ({disabled, textStyle, onPress, ...props}: ButtonProps) => {
       <Text button style={styleTextList}>
         {title}
       </Text>
-    </PressableObacity>
+    </PressableOpacity>
   );
 };
 

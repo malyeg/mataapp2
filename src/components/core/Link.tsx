@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import {StyleSheet} from 'react-native';
 import theme, {LinkProps} from '../../styles/theme';
-import PressableObacity from './PressableObacity';
+import PressableOpacity from './PressableOpacity';
 import Text from './Text';
 
 const Link: FC<LinkProps> = ({onPress, style, textStyle, scale, ...props}) => {
   return (
-    <PressableObacity {...props} style={[styles.container, style]}>
+    <PressableOpacity {...props} style={[styles.container, style]}>
       <Text
         {...props}
         scale={scale}
@@ -14,7 +14,7 @@ const Link: FC<LinkProps> = ({onPress, style, textStyle, scale, ...props}) => {
         style={[styles.text, textStyle]}>
         {props.children}
       </Text>
-    </PressableObacity>
+    </PressableOpacity>
   );
 };
 

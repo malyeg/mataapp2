@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../../styles/theme';
-import PressableObacity from '../../core/PressableObacity';
+import PressableOpacity from '../../core/PressableOpacity';
 
 interface ItemEditIconProps {
   onDelete?: () => void;
@@ -25,7 +25,7 @@ const ItemEditIcon = ({onDelete}: ItemEditIconProps) => {
           size={25}
         />
       </PressableObacity> */}
-      <PressableObacity onPress={onDeleteHandler}>
+      <PressableOpacity onPress={onDeleteHandler}>
         <Icon
           // style={styles.errorIcon}
           name="trash-can-outline"
@@ -33,7 +33,7 @@ const ItemEditIcon = ({onDelete}: ItemEditIconProps) => {
           color={theme.colors.grey}
           size={25}
         />
-      </PressableObacity>
+      </PressableOpacity>
     </View>
   );
 };

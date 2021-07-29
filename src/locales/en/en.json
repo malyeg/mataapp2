@@ -14,7 +14,7 @@
     },
     "noData": {
       "title": "No result found",
-      "subTitle": "We found no result , try another suggetstion"
+      "subTitle": "We found no result , try another suggestion"
     },
     "picker": {
       "pickerPlaceholder": "Select",
@@ -48,12 +48,15 @@
     "drawer" : {
       "homeLabel" : "Home",
       "profileLabel" : "Profile",
+      "editProfileLabel" : "Edit profile",
       "changePasswordLabel" : "Change password",
       "settingsLabel" : "Settings",
       "notificationsLabel" : "Notifications",
       "wishListLabel" : "Wishlist",
       "itemsLabel": "Items",
       "myItemsLabel": "My Items",
+      "nearByItemsLabel": "Nearby items",
+      "searchItemsLabel": "Search items",
       "dealsLabel": "Deals",
       "faqLabel": "FAQ"
     },
@@ -178,7 +181,7 @@
   },
   "addItemScreen": {
     "title": "Add Item",
-    "addItemSuccess": "Item added succesfully 👋",
+    "addItemSuccess": "Item added successfully 👋",
     "name": {
       "placeholder": "Item name",
       "required": "Name is required",
@@ -190,7 +193,7 @@
     "category": {
       "placeholder": "Category",
       "required": "Category is required",
-      "invalid": "Invalid Catgory"
+      "invalid": "Invalid Category"
     },
     "status": {
       "placeholder": "Status",
@@ -269,7 +272,7 @@
       "invalid": "Invalid Status"
     },
     "submitBtnTitle": "Update",
-    "changeSuccess": "Profile updated succesfully 👋"
+    "changeSuccess": "Profile updated successfully 👋"
   },
   "changePasswordScreen": {
     "oldPasswordtitleText": "Please enter your old password.",
@@ -291,7 +294,7 @@
       "match": "Passwords must match",
       "history": "Password can't be same as the old one"
     },
-    "submitSuccess": "Password changed succesfully 👋"
+    "submitSuccess": "Password changed successfully 👋"
   },
   "itemDetailsScreen": {
     "ownerItemsTitle": "Owner other items",
@@ -302,7 +305,7 @@
     "deleteConfirmationBody": "Are you sure?",
     "swapHeader": "New Offer",
     "swapBody": "Confirm sending new offer for item {{item}}",
-    "newOfferSuccess": "New offer sent succesfully 👋",
+    "newOfferSuccess": "New offer sent successfully 👋",
     "alreadyHasDealError": "you already has a deal for this item"
   },
 

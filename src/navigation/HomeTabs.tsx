@@ -52,7 +52,7 @@ const HomeTabs = () => {
         name={screens.DEALS_TABS}
         component={DealsTabs}
         initialParams={{title: t('tabBar.dealsTitle'), icon: 'handshake'}}
-        options={{title: 'asdfadsf'}}
+        // options={{title: 'asdfadsf'}}
       />
     </Tab.Navigator>
   );

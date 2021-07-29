@@ -4,7 +4,7 @@ import useController from '../../hooks/userController';
 import theme from '../../styles/theme';
 import {FormProps} from '../../types/DataTypes';
 import {Text} from '../core';
-import PressableObacity from '../core/PressableObacity';
+import PressableOpacity from '../core/PressableOpacity';
 import Error from './Error';
 
 interface RadioProps extends FormProps {
@@ -57,7 +57,7 @@ const RadioGroup = ({
           horizontal ? styles.horizontal : {},
         ]}>
         {options.map(item => (
-          <PressableObacity
+          <PressableOpacity
             style={styles.radioContainer}
             key={item.id}
             onPress={() => onPressHandler(item.id)}>
@@ -83,7 +83,7 @@ const RadioGroup = ({
               />
             </View>
             <Text>{item.label}</Text>
-          </PressableObacity>
+          </PressableOpacity>
         ))}
       </View>
       <Error error={formState.errors[name]} />

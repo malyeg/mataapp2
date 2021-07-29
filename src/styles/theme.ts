@@ -1,5 +1,5 @@
 import {TextProps, TextStyle} from 'react-native';
-import {PressableOpacityProps} from '../components/core/PressableObacity';
+import {PressableOpacityProps} from '../components/core/PressableOpacity';
 import {AtLeastOne} from '../types/UtilityTypes';
 
 // Definitions
