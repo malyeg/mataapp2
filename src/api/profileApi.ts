@@ -4,13 +4,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {DataSearchable, Entity} from '../types/DataTypes';
 import {DataApi} from './DataApi';
 import {Country, State} from './countriesApi';
+import {City} from './citiesApi';
 
 export interface Profile extends DataSearchable, Entity {
   id: string;
   mobile: string;
   email: string;
-  state?: State;
   country?: Country;
+  state?: State;
+  city?: City;
   firstName?: string;
   lastName?: string;
   acceptMarketingFlag?: boolean;
@@ -22,10 +24,7 @@ export interface Profile extends DataSearchable, Entity {
 
 class ProfilesApi extends DataApi<Profile> {
   constructor() {
-    super(
-      firestore().collection<Profile>(Config.SCHEMA_PREFIX + 'profiles'),
-      'profiles',
-    );
+    super('profiles');
   }
 
   saveToStorage = (profile: Profile) => {

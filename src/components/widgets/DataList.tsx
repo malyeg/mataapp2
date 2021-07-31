@@ -133,7 +133,6 @@ function DataList<T extends Entity>({
   );
 
   const ListFooter = useCallback(() => {
-    console.log('state', {hasMore, loading, reloading});
     return pageable && hasMore && !loading ? (
       <View
         style={[

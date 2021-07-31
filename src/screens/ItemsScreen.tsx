@@ -15,23 +15,29 @@ const ItemsScreen = () => {
 
   useEffect(() => {
     const getQuery = () => {
-      const {categoryId, userId, swapType, status, conditionType, city} =
-        route.params;
+      // const {categoryId, userId, swapType, status, conditionType, city} =
+      //   route.params;
       const builder = new QueryBuilder<Item>().limit(100);
 
-      !!categoryId &&
-        builder.filter('category.path', categoryId, Operation.CONTAINS);
+      !!route.params?.categoryId &&
+        builder.filter(
+          'category.path',
+          route.params?.categoryId,
+          Operation.CONTAINS,
+        );
 
-      !!swapType && builder.filter('swapOption.type', swapType);
-      !!status && builder.filter('status', status);
-      !!conditionType && builder.filter('condition.type', conditionType);
+      !!route.params?.swapType &&
+        builder.filter('swapOption.type', route.params?.swapType);
+      !!route.params?.status && builder.filter('status', route.params?.status);
+      !!route.params?.conditionType &&
+        builder.filter('condition.type', route.params?.conditionType);
 
-      if (userId) {
-        builder.filter('userId', userId);
+      if (route.params?.userId) {
+        builder.filter('userId', route.params?.userId);
         // TODO change title
       }
-      if (city) {
-        builder.filter('location.city', city);
+      if (route.params?.city) {
+        builder.filter('location.city', route.params?.city);
         // TODO change title
       }
       const newQuery = builder.build();

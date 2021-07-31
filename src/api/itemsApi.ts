@@ -74,10 +74,7 @@ export interface Item extends DataSearchable, Entity {
 }
 class ItemsApi extends DataApi<Item> {
   constructor() {
-    super(
-      firestore().collection<Item>(Config.SCHEMA_PREFIX + 'items'),
-      'items',
-    );
+    super('items');
   }
 
   add = async (doc: Omit<Item, 'id'>, options?: APIOptions) => {

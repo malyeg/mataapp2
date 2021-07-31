@@ -1,6 +1,7 @@
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
+import Config from 'react-native-config';
 import {
   DataCollection,
   DataSearchable,
@@ -14,19 +15,21 @@ import {QuerySnapshot} from '../types/UtilityTypes';
 import cache, {CacheConfig} from '../utils/cache/cacheManager';
 import {allCombinations} from '../utils/CommonUtils';
 import {Api, APIOptions, ApiResponse} from './Api';
-
-const DEFAULT_LIMIT = 100;
-
-// TODO transform firebase errors
-
-// type cb<T> = FirebaseFirestoreTypes.Query.onSnapshot;
-
 export class DataApi<T extends DataSearchable & Entity> extends Api {
-  constructor(
-    readonly collection: DataCollection<T>,
-    readonly cacheStore: string,
-  ) {
+  // constructor(
+  //   readonly collection: DataCollection<T>,
+  //   readonly cacheStore: string,
+  // ) {
+  //   super();
+  // }
+  collection: DataCollection<T>;
+  cacheStore: string;
+  constructor(readonly collectionName: string) {
     super();
+    this.collection = firestore().collection<T>(
+      Config.SCHEMA_PREFIX + collectionName,
+    );
+    this.cacheStore = collectionName;
   }
 
   onQuerySnapshot = (
@@ -105,11 +108,12 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       const doc = {
         ...snapshot.data(),
         timestamp: (snapshot?.data()?.timestamp as any)?.toDate(),
+        // timestamp: new Date(),
         id,
       } as T;
       !!options?.cache?.enabled &&
         (await cache.store(id, doc, options.cache.expireInSeconds));
-
+      console.log('finish getbyid');
       return doc;
     }
   };
@@ -248,8 +252,8 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     if (searchable && searchable.keywords.length > 0) {
       let searchArray = [];
       for (const field of searchable.keywords) {
-        const compinations = allCombinations(field);
-        searchArray.push(...compinations);
+        const combinations = allCombinations(field);
+        searchArray.push(...combinations);
       }
       return [...new Set(searchArray)];
     }
@@ -271,7 +275,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         const operation: Operation = newFilter.operation
           ? newFilter.operation
           : Operation.EQUAL;
-        console.log('operation.toString()', operation.toString());
+
         collectionQuery = collectionQuery.where(
           newFilter.field as any,
           operation.toString() as FirebaseFirestoreTypes.WhereFilterOp,

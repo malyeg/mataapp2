@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     color: theme.colors.grey,
   },
   label: {
-    // color: theme.colors.grey,
+    color: theme.colors.grey,
   },
 
   searchInput: {

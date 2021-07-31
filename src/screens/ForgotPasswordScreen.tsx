@@ -7,6 +7,7 @@ import Logo from '../components/core/Logo';
 import {FormView, KeyboardView} from '../components/form';
 import TextInput from '../components/form/TextInput';
 import constants, {screens} from '../config/constants';
+import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
 import useLocale from '../hooks/useLocale';
@@ -17,7 +18,7 @@ import BackgroundScreen from './BackgroundScreen';
 const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
   const {t} = useLocale('forgotPasswordScreen');
-
+  const {request, loader} = useApi();
   const {sendPasswordResetEmail} = useAuth();
   const {showToast, hideToast} = useToast();
 
@@ -34,7 +35,7 @@ const ForgotPasswordScreen = () => {
   const onFormSuccess = async (data: {username: string}) => {
     hideToast();
     try {
-      await sendPasswordResetEmail(data.username);
+      await request(() => sendPasswordResetEmail(data.username));
       showToast({
         type: 'info',
         code: 'emailSent',
@@ -56,7 +57,9 @@ const ForgotPasswordScreen = () => {
     <BackgroundScreen
       style={styles.screen}
       imageBackground={constants.AuthBgImage}>
-      <Logo />
+      <View style={styles.logoContainer}>
+        <Logo style={styles.logo} />
+      </View>
 
       <View style={styles.content}>
         <Text h4 style={styles.contentTitle}>
@@ -80,12 +83,13 @@ const ForgotPasswordScreen = () => {
         />
         {/* </View> */}
       </FormView>
-      <KeyboardView style={styles.footer}>
+      <View style={styles.footer}>
         <Text body1>{t('haveAccountText')}</Text>
         <Link body1 onPress={signInLinkHandler}>
           {t('LoginLink')}
         </Link>
-      </KeyboardView>
+      </View>
+      {loader}
     </BackgroundScreen>
   );
 };
@@ -97,10 +101,21 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   header: {
-    flex: 3,
+    flex: 1,
+  },
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    // flex: 1.5,
+    flexShrink: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'grey',
   },
   content: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
   },
   contentTitle: {
@@ -113,11 +128,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   form: {
-    flex: 2,
+    flex: 1,
+    justifyContent: 'space-around',
   },
   confirmButton: {},
   footer: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

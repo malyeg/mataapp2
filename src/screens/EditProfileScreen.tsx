@@ -2,8 +2,9 @@ import produce from 'immer';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
-import countriesApi, {Country} from '../api/countriesApi';
-import profilesApi, {Profile} from '../api/profileApi';
+import citiesApi, {City} from '../api/citiesApi';
+import countriesApi, {Country, State} from '../api/countriesApi';
+import {Profile} from '../api/profileApi';
 import {Button, Loader} from '../components/core';
 import PressableScreen from '../components/core/PressableScreen';
 import {CheckBox, Error, FormView, Picker, TextInput} from '../components/form';
@@ -23,19 +24,22 @@ type EditProfileFormValues = {
   phone: string;
   phoneCode: string;
   state: string;
+  city: string;
   interests: string;
   acceptMarketingFlag: boolean;
 };
 const EditProfileScreen = () => {
   const {user, profile, loadProfile, updateProfile} = useAuth();
+  const [cities, setCities] = useState<City[]>([]);
+
   const [selectedCountry, setSelectedCountry] = useState<Country | undefined>(
     profile?.country,
   );
+
   const {t} = useLocale('editProfileScreen');
   const {showToast, hideToast} = useToast();
 
   const {loader, request} = useApi();
-  // const {loader, showLoader, hideLoader, loading} = useLoader();
 
   const {control, formState, handleSubmit, reset, setValue} =
     useForm<EditProfileFormValues>({
@@ -50,12 +54,12 @@ const EditProfileScreen = () => {
         .required(t('phone.required'))
         .matches(/\d{7,}/, t('phone.pattern')),
       state: yup.string().trim().required(t('state.required')),
+      city: yup.string().trim().required(t('city.required')),
       interests: yup.string().trim(),
       acceptMarketingFlag: yup.boolean(),
     });
 
   useEffect(() => {
-    // showLoader();
     loadData().then();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -71,6 +75,15 @@ const EditProfileScreen = () => {
       if (!profile) {
         await request<Profile>(() => loadProfile());
       }
+      if (profile?.state) {
+        const newCities = await citiesApi.getByStateId(profile.state.id);
+        if (newCities) {
+          setCities(newCities.items);
+          if (newCities.items.length === 1) {
+            setValue('city', newCities.items[0].id);
+          }
+        }
+      }
     } catch (error) {
       console.error(error);
     }
@@ -79,10 +92,11 @@ const EditProfileScreen = () => {
   const countries = useMemo(() => countriesApi.getCountries(), []);
 
   const states = useMemo(() => {
+    setCities([]);
     return selectedCountry?.id
       ? countriesApi.getStates(selectedCountry.id)
       : [];
-  }, [selectedCountry]);
+  }, [selectedCountry?.id]);
 
   const onCountryChange = useCallback((value: string) => {
     const selectedCounty = countriesApi
@@ -93,6 +107,19 @@ const EditProfileScreen = () => {
       setSelectedCountry(selectedCounty);
     }
   }, []);
+  const onStateChange = useCallback(
+    async (value: string) => {
+      const newCities = await citiesApi.getByStateId(value);
+      if (newCities) {
+        setCities(newCities.items);
+        if (newCities.items.length === 1) {
+          setValue('city', newCities.items[0].id);
+        }
+      }
+      setValue('city', '');
+    },
+    [setValue],
+  );
 
   const onFormSuccess = async (data: EditProfileFormValues) => {
     //
@@ -107,7 +134,7 @@ const EditProfileScreen = () => {
             .getStates(selectedCountry?.id.toString() ?? profile?.country?.id!)
             .find(s => s.id.toString() === data.state.toString())
         : profile?.state!;
-
+      const city = cities.find(c => c.id === data.city);
       const newProfile = produce(profile, draft => {
         if (draft) {
           draft.id = user.id;
@@ -118,12 +145,12 @@ const EditProfileScreen = () => {
           //   (draft.interests = data.interests.split(','));
           draft.country = country;
           draft.state = state;
+          !!city && (draft.city = city);
           draft.acceptMarketingFlag = data.acceptMarketingFlag ?? true;
         }
       });
-
       await request<Profile>(() => updateProfile(newProfile!));
-      // setProfile(updatedProfile);
+
       reset(undefined, {keepValues: true});
       showToast({
         type: 'success',
@@ -173,25 +200,35 @@ const EditProfileScreen = () => {
           returnKeyType="next"
           control={control}
         />
+        <Picker
+          style={styles.location}
+          searchable
+          placeholder={t('country.placeholder')}
+          name="country"
+          items={countries}
+          defaultValue={profile?.country?.id.toString()}
+          onChange={onCountryChange}
+          control={control}
+        />
         <View style={styles.rowContainer}>
-          <Picker
-            style={styles.location}
-            searchable
-            placeholder={t('country.placeholder')}
-            name="country"
-            items={countries}
-            defaultValue={profile?.country?.id.toString()}
-            onChange={onCountryChange}
-            control={control}
-          />
           <Picker
             style={styles.location}
             searchable
             // disabled={!!states && states.length > 0}
             placeholder={t('state.placeholder')}
             defaultValue={profile?.state?.id.toString()}
+            onChange={onStateChange}
             name="state"
             items={states}
+            control={control}
+          />
+          <Picker
+            style={styles.location}
+            searchable
+            placeholder={t('city.placeholder')}
+            defaultValue={profile?.city?.id.toString()}
+            name="city"
+            items={cities}
             control={control}
           />
         </View>

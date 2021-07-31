@@ -16,7 +16,10 @@ const IncomingDealsScreen = () => {
   useEffect(() => {
     const loadData = async () => {
       const filter = QueryBuilder.filterFrom('item.userId', user.id);
-      const query = QueryBuilder.queryFrom<Deal>([filter]);
+      const query = new QueryBuilder<Deal>()
+        .filters([filter])
+        .orderBy('timestamp', 'desc')
+        .build();
       const dealsResponse = await request<ApiResponse<Deal>>(() =>
         dealsApi.getAll(query),
       );

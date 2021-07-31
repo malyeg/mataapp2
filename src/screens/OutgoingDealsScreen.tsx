@@ -15,13 +15,20 @@ const OutgoingDealsScreen = () => {
   const {user} = useAuth();
   useEffect(() => {
     const loadData = async () => {
-      const filter = QueryBuilder.filterFrom('userId', user.id);
-      const query = QueryBuilder.queryFrom<Deal>([filter]);
-      const dealsResponse = await request<ApiResponse<Deal>>(() =>
-        dealsApi.getAll(query),
-      );
-      if (dealsResponse) {
-        setDeals(dealsResponse.items);
+      try {
+        const filter = QueryBuilder.filterFrom('userId', user.id);
+        const query = new QueryBuilder<Deal>()
+          .filters([filter])
+          .orderBy('timestamp', 'desc')
+          .build();
+        const dealsResponse = await request<ApiResponse<Deal>>(() =>
+          dealsApi.getAll(query),
+        );
+        if (dealsResponse) {
+          setDeals(dealsResponse.items);
+        }
+      } catch (error) {
+        console.error(error);
       }
     };
     loadData();

@@ -66,7 +66,9 @@ const SignInScreen = () => {
     <BackgroundScreen
       style={styles.screen}
       imageBackground={constants.AuthBgImage}>
-      <Logo style={[styles.header]} />
+      <View style={styles.logoContainer}>
+        <Logo style={styles.logo} />
+      </View>
       <View style={[styles.form]}>
         <TextInput
           keyboardType="email-address"
@@ -117,8 +119,19 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    paddingTop: 0,
+    paddingTop: 50,
     // justifyContent: 'space-around',
+  },
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    // flex: 1.5,
+    flexShrink: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'grey',
   },
   header: {
     flex: 2,

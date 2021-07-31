@@ -22,7 +22,7 @@ const HomeTabs = () => {
   const {t} = useLocale('common');
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName={screens.HOME}
       tabBar={props => <TabBar {...props} />}>
       <Tab.Screen
         name={screens.HOME}
@@ -37,8 +37,6 @@ const HomeTabs = () => {
           title: t('tabBar.notificationsTitle'),
           icon: 'bell-outline',
         }}
-        // options={{tabBarBadge: 3}}
-        // options={{header}}
       />
       <Tab.Screen
         name={screens.MY_ITEMS}
@@ -52,7 +50,6 @@ const HomeTabs = () => {
         name={screens.DEALS_TABS}
         component={DealsTabs}
         initialParams={{title: t('tabBar.dealsTitle'), icon: 'handshake'}}
-        // options={{title: 'asdfadsf'}}
       />
     </Tab.Navigator>
   );

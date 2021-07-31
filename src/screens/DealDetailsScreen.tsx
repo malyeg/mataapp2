@@ -8,7 +8,7 @@ import SwapIcon from '../components/widgets/SwapIcon';
 import {screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
-import {DealDetailsRouteProp} from '../navigation/HomeStack';
+import {DealDetailsRouteProp} from '../navigation/DrawerStack';
 import theme from '../styles/theme';
 
 const DealDetailsScreen = () => {
@@ -82,7 +82,7 @@ const DealDetailsScreen = () => {
           </View>
         </View>
       </Pressable>
-      {isOpen &&
+      {/* {isOpen &&
         (deal.userId === user.id ? (
           <View />
         ) : (
@@ -108,7 +108,7 @@ const DealDetailsScreen = () => {
               />
             )}
           </View>
-        ))}
+        ))} */}
       <Chat deal={deal} disableComposer={!isOpen} />
       {loader}
     </Screen>

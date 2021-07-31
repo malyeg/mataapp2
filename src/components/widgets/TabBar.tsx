@@ -46,8 +46,8 @@ const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
               name={route.name}
               style={index > 0 && index < 3 ? styles.middleItem : {}}
               iconStyle={route.name === 'DealsTabs' ? styles.dealsIcon : {}}
-              label={(route.params as any).title}
-              icon={(route.params as any).icon}
+              label={(route.params as any)?.title}
+              icon={(route.params as any)?.icon}
               badge={options?.tabBarBadge as number}
             />
           );

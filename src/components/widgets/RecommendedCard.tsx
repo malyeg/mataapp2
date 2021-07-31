@@ -59,16 +59,18 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
         </View>
         <SwapIcon item={item} style={styles.swapIcon} />
       </View>
-      <Icon
-        name={
-          item.category?.style?.iconName ??
-          category?.style?.iconName ??
-          'home-outline'
-        }
-        size={40}
-        color={theme.colors.grey}
-        style={styles.categoryIcon}
-      />
+      {(!!item.category?.style?.iconName || !!category?.style?.iconName) && (
+        <Icon
+          name={
+            item.category?.style?.iconName ??
+            category?.style?.iconName ??
+            'home-outline'
+          }
+          size={40}
+          color={theme.colors.grey}
+          style={styles.categoryIcon}
+        />
+      )}
     </Pressable>
   );
 };

@@ -58,7 +58,8 @@
       "nearByItemsLabel": "Nearby items",
       "searchItemsLabel": "Search items",
       "dealsLabel": "Deals",
-      "faqLabel": "FAQ"
+      "faqLabel": "FAQ",
+      "contactUsLabel": "Contact us"
     },
     "screens": {
       "profile": "Profile",
@@ -121,8 +122,12 @@
       "required": "Country is required"
     },
     "state": {
-      "placeholder": "State/City",
-      "required": "State/City is required"
+      "placeholder": "State",
+      "required": "State is required"
+    },
+    "city": {
+      "placeholder": "City",
+      "required": "City is required"
     },
     "phone": {
       "label": " ",
@@ -245,8 +250,12 @@
       "required": "Country is required"
     },
     "state": {
-      "placeholder": "State/City",
-      "required": "State/City is required"
+      "placeholder": "State",
+      "required": "State is required"
+    },
+    "city": {
+      "placeholder": "City",
+      "required": "City is required"
     },
     "phonePrefix": {
       "label": "Phone",

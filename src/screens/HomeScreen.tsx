@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useEffect, useState} from 'react';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Screen} from '../components/core';
 import Icon from '../components/core/Icon';
@@ -14,19 +14,24 @@ import theme from '../styles/theme';
 
 export const HOME_SCREEN = 'HomeScreen';
 const HomeScreen = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
   const {profile} = useAuth();
   const {location} = useLocation();
   const [lastRefresh, setlastRefresh] = useState(new Date());
 
-  useEffect(() => {}, [location]);
+  // useEffect(() => {}, [location]);
+  // useLayoutEffect(() => {
+  //   navigation.dangerouslyGetParent()?.setOptions({
+  //     headerShown: false,
+  //   });
+  // }, [navigation]);
 
   const onRefresh = useCallback(() => {
     setlastRefresh(new Date());
   }, []);
 
   const toggleDrawer = () => {
-    navigation.toggleDrawer();
+    (navigation as any).toggleDrawer();
   };
 
   return (

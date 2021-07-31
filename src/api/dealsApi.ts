@@ -21,10 +21,7 @@ export interface Deal extends DataSearchable, Entity {
 }
 class DealsApi extends DataApi<Deal> {
   constructor() {
-    super(
-      firestore().collection<Deal>(Config.SCHEMA_PREFIX + 'deals'),
-      'items',
-    );
+    super('deals');
   }
 
   createOffer = async (userId: string, item: Item) => {

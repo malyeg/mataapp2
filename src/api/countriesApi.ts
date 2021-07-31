@@ -1,7 +1,7 @@
 import {Query} from '../types/DataTypes';
 import countryCodes from './countryCodes.json';
-import countries from '../data/countries.json';
-import states from '../data/states.json';
+import countries from '../data/countries';
+import states from '../data/states';
 
 export interface Country {
   id: string;

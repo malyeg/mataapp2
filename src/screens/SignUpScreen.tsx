@@ -2,6 +2,7 @@ import {useNavigation} from '@react-navigation/core';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
+import citiesApi, {City} from '../api/citiesApi';
 import countriesApi, {Country, State} from '../api/countriesApi';
 import {Profile} from '../api/profileApi';
 import {Button, Link, Text} from '../components/core';
@@ -16,6 +17,7 @@ import {
 import TextInput from '../components/form/TextInput';
 import constants, {screens} from '../config/constants';
 import {ICredentials} from '../contexts/AuthReducer';
+import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
 import useLocale from '../hooks/useLocale';
@@ -29,13 +31,16 @@ type SignupFormValues = {
   phone: string;
   country: string;
   state: string;
+  city: string;
 };
 const SignUpScreen = () => {
   const navigation = useNavigation();
   const {t} = useLocale('signUpScreen');
+  const {loader, request} = useApi();
   const [agreeOnTerms, setAgreeOnTerms] = useState(false);
   const {signUp} = useAuth();
   const {showToast, hideToast} = useToast();
+  const [cities, setCities] = useState<City[]>([]);
 
   const countries = useMemo(() => countriesApi.getCountries(), []);
   const [selectedCountry, setSelectedCountry] = useState<Country>(
@@ -52,6 +57,7 @@ const SignUpScreen = () => {
         .max(100)
         .required(t('username.required')),
       state: yup.string().trim().required(t('state.required')),
+      city: yup.string().trim().required(t('city.required')),
       phone: yup
         .string()
         .trim()
@@ -75,17 +81,6 @@ const SignUpScreen = () => {
       terms: yup.boolean().oneOf([true], t('terms.required')),
     });
 
-  useEffect(() => {
-    // setSelectedCountry(countries.find(c => c.id.toString() === '158'));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // useEffect(() => {
-  //   if (selectedCountry) {
-  //     setValue('state', '');
-  //   }
-  // }, [selectedCountry, setValue]);
-
   const signInLinkHandler = () => {
     navigation.navigate(screens.SIGN_IN);
   };
@@ -101,6 +96,19 @@ const SignUpScreen = () => {
         setValue('state', '');
         updateStates(selectedCounty?.id!);
       }
+    },
+    [setValue],
+  );
+  const onStateChange = useCallback(
+    async (value: string) => {
+      const newCities = await citiesApi.getByStateId(value);
+      if (newCities) {
+        setCities(newCities.items);
+        if (newCities.items.length === 1) {
+          setValue('city', newCities.items[0].id);
+        }
+      }
+      setValue('city', '');
     },
     [setValue],
   );
@@ -122,14 +130,16 @@ const SignUpScreen = () => {
     };
     try {
       const state = states.find(s => s.id.toString() === data.state.toString());
+      const city = cities.find(c => c.id === data.city);
       const profile: Omit<Profile, 'id'> = {
         email: data.username,
         country: selectedCountry,
         mobile: data.phone,
         state,
+        city,
         acceptTermsFlag: data.terms ? true : false,
       };
-      await signUp(credentials, profile);
+      await request<Profile>(() => signUp(credentials, profile));
     } catch (err) {
       showToast({
         type: 'error',
@@ -143,7 +153,9 @@ const SignUpScreen = () => {
     <BackgroundScreen
       style={styles.screen}
       imageBackground={constants.AuthBgImage}>
-      <Logo style={[styles.header]} />
+      <View style={styles.logoContainer}>
+        <Logo style={[styles.logo]} />
+      </View>
       <FormView style={[styles.form]}>
         <TextInput
           keyboardType="email-address"
@@ -152,24 +164,32 @@ const SignUpScreen = () => {
           returnKeyType="next"
           control={control}
         />
+        <Picker
+          style={styles.location}
+          searchable
+          placeholder={t('country.placeholder')}
+          defaultValue={selectedCountry?.id}
+          name="country"
+          items={countries}
+          onChange={onCountryChange}
+          control={control}
+        />
         <View style={styles.rowContainer}>
           <Picker
             style={styles.location}
             searchable
-            placeholder={t('country.placeholder')}
-            defaultValue={selectedCountry?.id}
-            name="country"
-            items={countries}
-            onChange={onCountryChange}
+            placeholder={t('state.placeholder')}
+            onChange={onStateChange}
+            name="state"
+            items={states!}
             control={control}
           />
           <Picker
             style={styles.location}
             searchable
-            placeholder={t('state.placeholder')}
-            // defaultValue={states}
-            name="state"
-            items={states!}
+            placeholder={t('city.placeholder')}
+            name="city"
+            items={cities}
             control={control}
           />
         </View>
@@ -229,6 +249,7 @@ const SignUpScreen = () => {
           {t('LoginLink')}
         </Link>
       </KeyboardView>
+      {loader}
     </BackgroundScreen>
   );
 };
@@ -237,9 +258,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: 'space-around',
-    paddingTop: 0,
-    // alignItems: 'center',
-    // ...sharedStyles.redBox,
   },
   rowContainer: {
     flexDirection: 'row',
@@ -247,13 +265,20 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
     justifyContent: 'space-between',
   },
-  header: {
-    flex: 1.5,
+  logoContainer: {
     flexShrink: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    flexShrink: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'grey',
   },
   form: {
-    flex: 4,
-    flexShrink: 1,
+    flex: 6,
+    flexShrink: 0,
     justifyContent: 'space-between',
   },
   phoneContainer: {

@@ -4,7 +4,7 @@ import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Linking, StyleSheet, View} from 'react-native';
 import DrawerItem from './DrawerItem';
 import ProfileHeader from '../components/widgets/ProfileHeader';
 import {screens} from '../config/constants';
@@ -23,15 +23,15 @@ const DrawerContent = ({
       <ProfileHeader style={styles.header} userNameStyle={styles.profileName} />
 
       <DrawerItem
+        label={t('drawer.nearByItemsLabel')}
+        icon="table-search"
+        onPress={() => navigation.navigate(screens.ITEMS)}
+      />
+      <DrawerItem
         label={t('drawer.dealsLabel')}
         icon="handshake"
         iconStyle={styles.dealsIcon}
         onPress={() => navigation.navigate(screens.DEALS_TABS)}
-      />
-      <DrawerItem
-        label={t('drawer.nearByItemsLabel')}
-        icon="table-search"
-        onPress={() => navigation.navigate(screens.ITEMS)}
       />
 
       <DrawerItem
@@ -48,11 +48,18 @@ const DrawerContent = ({
         label={t('drawer.notificationsLabel')}
         icon="bell-outline"
         onPress={() => navigation.navigate(screens.NOTIFICATIONS)}
+        badge={10}
       />
       <DrawerItem
         label={t('drawer.faqLabel')}
         icon="help"
         onPress={() => navigation.navigate(screens.FAQ)}
+        style={styles.lastItem}
+      />
+      <DrawerItem
+        label={t('drawer.contactUsLabel')}
+        icon="phone"
+        onPress={() => Linking.openURL('http://www.mataup.com/contact-us')}
         style={styles.lastItem}
       />
     </DrawerContentScrollView>

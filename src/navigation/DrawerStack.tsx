@@ -66,8 +66,11 @@ const DrawerStack = () => {
 
   function getHeaderTitle(route: any) {
     const routeName = getFocusedRouteNameFromRoute(route);
-    console.log('routeName', routeName);
     switch (routeName) {
+      case screens.HOME_TABS:
+        return t('tabBar.homeTitle');
+      case screens.HOME:
+        return t('tabBar.homeTitle');
       case screens.DEALS_TABS:
         return t('tabBar.dealsTitle');
       case screens.NOTIFICATIONS:
@@ -76,7 +79,6 @@ const DrawerStack = () => {
         return t('tabBar.myItemsTitle');
     }
   }
-
   return (
     <Drawer.Navigator
       drawerType="slide"
@@ -86,18 +88,12 @@ const DrawerStack = () => {
       <Drawer.Screen
         name={screens.HOME_TABS}
         component={HomeTabs}
-        options={({route}) => ({
-          headerTitle: getHeaderTitle(route),
-          headerShown: getFocusedRouteNameFromRoute(route) !== screens.HOME,
-          drawerLabel: t('drawer.homeLabel'),
-          // headerLeft: () => null,
-        })}
-      />
-      <Drawer.Screen
-        name={screens.PROFILE_STACK}
-        component={ProfileStack}
-        options={{
-          headerShown: false,
+        options={({route}) => {
+          console.log('route name', getFocusedRouteNameFromRoute(route));
+          return {
+            headerTitle: getHeaderTitle(route),
+            headerShown: getFocusedRouteNameFromRoute(route) !== screens.HOME,
+          };
         }}
       />
 
@@ -167,6 +163,13 @@ const DrawerStack = () => {
         options={{
           headerTitle: t('screens.faq'),
           drawerLabel: t('drawer.faqLabel'),
+        }}
+      />
+      <Drawer.Screen
+        name={screens.PROFILE_STACK}
+        component={ProfileStack}
+        options={{
+          headerShown: false,
         }}
       />
     </Drawer.Navigator>

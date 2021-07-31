@@ -24,10 +24,7 @@ export interface Message extends DataSearchable, Entity {
 
 class MessagesApi extends DataApi<Message> {
   constructor() {
-    super(
-      firestore().collection<Message>(Config.SCHEMA_PREFIX + 'messages'),
-      'items',
-    );
+    super('messages');
   }
 }
 

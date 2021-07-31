@@ -65,6 +65,7 @@ const useAuth = () => {
         payload: {profile},
       });
     }
+    return profile;
   };
 
   return {
