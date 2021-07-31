@@ -77,14 +77,6 @@ class ItemsApi extends DataApi<Item> {
     super('items');
   }
 
-  add = async (doc: Omit<Item, 'id'>, options?: APIOptions) => {
-    // WORKAROUND firebase doesn't support orderby case ins
-    (doc as any).nameLC = doc.name.toLowerCase();
-
-    const item = super.add(doc, options);
-    return item;
-  };
-
   uploadBatch = async (itemId: string, images: ImageSource[]) => {
     this.logger.debug('uploadBatch', images);
     const promises: any[] = [];

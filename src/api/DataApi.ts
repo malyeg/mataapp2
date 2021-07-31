@@ -132,8 +132,8 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       ) {
         let searchArray = [];
         for (const field of options.searchable.keywords) {
-          const compinations = allCombinations(field);
-          searchArray.push(...compinations);
+          const combinations = allCombinations(field);
+          searchArray.push(...combinations);
         }
         newDoc.searchArray = [...new Set(searchArray)];
       }
@@ -150,8 +150,8 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
       return createdDoc as T;
     } catch (error) {
-      options?.analyticsEvent &&
-        this.callAnalytics(options?.analyticsEvent, 'error')?.then();
+      // options?.analyticsEvent &&
+      //   this.callAnalytics(options?.analyticsEvent, 'error')?.then();
       throw error;
     }
   };

@@ -76,10 +76,10 @@ const DealDetailsScreen = () => {
         <View>
           <Text style={styles.categoryName}>{deal.item?.category?.name}</Text>
           <Text>{deal.item?.name}</Text>
-          <View style={styles.typeContainer}>
+          {/* <View style={styles.typeContainer}>
             <SwapIcon style={styles.swapIcon} />
             <Text>{deal.item?.swapOption?.type}</Text>
-          </View>
+          </View> */}
         </View>
       </Pressable>
       {/* {isOpen &&

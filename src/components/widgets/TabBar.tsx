@@ -61,25 +61,31 @@ export default React.memo(TabBar);
 
 const styles = StyleSheet.create({
   container: {
-    height: 70,
+    height: 75,
     backgroundColor: theme.colors.white,
+    zIndex: 10000,
   },
   itemsContainer: {
     flex: 1,
+    marginTop: 10,
+    // height: 70,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     ...Platform.select({
       ios: {
         borderColor: theme.colors.lightGrey,
         borderWidth: 2,
+        paddingBottom: 10,
       },
       android: {
         shadowColor: 'rgba(0, 0, 0, 0.5)',
         shadowOpacity: 1,
         elevation: 3,
+        paddingBottom: 5,
       },
     }),
     paddingHorizontal: 20,
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
     // flex: 0,
     ...StyleSheet.absoluteFillObject,
     position: 'absolute',
-    alignItems: 'center',
+    top: -10,
   },
   addItem: {
     backgroundColor: theme.colors.salmon,

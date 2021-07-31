@@ -104,7 +104,6 @@ const AddItemScreen = () => {
         (item.condition.desc = data.usedWithIssuesDesc);
       const evict = `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`;
 
-      console.log('item', item);
       await request<Item>(() =>
         itemsApi.add(item, {
           cache: {
