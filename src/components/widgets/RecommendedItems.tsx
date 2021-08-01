@@ -76,7 +76,7 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
     }
   };
 
-  return itemsResponse ? (
+  return itemsResponse && itemsResponse.items.length > 0 ? (
     // return false ? (
     <View style={[styles.container, style]}>
       <View style={styles.header}>

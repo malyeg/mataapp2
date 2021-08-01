@@ -8,7 +8,6 @@ import itemsApi, {
   Item,
   SwapType,
 } from '../api/itemsApi';
-import profilesApi from '../api/profileApi';
 import {Button} from '../components/core';
 import PressableScreen from '../components/core/PressableScreen';
 import {CheckBox, Picker, TextInput} from '../components/form';
@@ -47,7 +46,7 @@ const AddItemScreen = () => {
   const {user, profile, addTargetCategory} = useAuth();
   const {showToast, hideToast} = useToast();
 
-  const {control, reset, handleSubmit} = useForm<AddItemFormValues>({
+  const {control, reset, handleSubmit, setValue} = useForm<AddItemFormValues>({
     name: yup.string().trim().max(50).required(t('name.required')),
     category: yup.string().trim().required(t('category.required')),
     conditionType: yup.string().trim().required(t('status.required')),
@@ -59,7 +58,6 @@ const AddItemScreen = () => {
     location: yup.object().required(t('location.required')),
     usedWithIssuesDesc: yup.string().max(200),
     swapType: yup.string(),
-    // status: yup.string().required(t('status.required')),
     swapCategory: yup
       .string()
       .test('swapCategory', t('swapCategory.required'), function (value) {
@@ -117,7 +115,7 @@ const AddItemScreen = () => {
           c => c === item.swapOption.category,
         );
         if (!found) {
-          // addTargetCategory(item.swapOption.category);
+          addTargetCategory(item.swapOption.category);
         }
       }
       reset();
@@ -145,19 +143,15 @@ const AddItemScreen = () => {
     if (defaultImg) {
       defaultImage.current = defaultImg;
     }
-
-    console.log('setting default url', defaultImage?.current?.downloadURL);
   };
 
   const uploadHandler = useCallback(
     (image: ImageSource, status: 'started' | 'finished') => {
       console.log('size', uploadSet.size);
       if (status === 'started') {
-        console.log('started', image.name);
         uploadSet.add(image.name!);
         setUploading(true);
       } else {
-        console.log('finsihed', image.name);
         uploadSet.delete(image.name!);
         console.log('size after delete', uploadSet.size);
         if (uploadSet.size === 0) {
@@ -271,7 +265,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: 'space-evenly',
-    // backgroundColor: 'grey',
     paddingBottom: 10,
   },
   form: {

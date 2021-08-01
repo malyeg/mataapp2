@@ -23,14 +23,14 @@ interface ItemCardProps extends ViewProps {
 const windowWidth = Dimensions.get('window').width * 0.8;
 
 const RecommendedCard = ({item, style}: ItemCardProps) => {
-  const navigtion = useNavigation();
+  const navigation = useNavigation();
 
   const openItemDetails = useCallback(() => {
     // TODO refactor to constant
-    navigtion.navigate(screens.ITEM_DETAILS, {
+    navigation.navigate(screens.ITEM_DETAILS, {
       id: item.id,
     });
-  }, [item, navigtion]);
+  }, [item, navigation]);
 
   const imageUrl = item.defaultImageURL ?? item.images[0].downloadURL;
 

@@ -6,10 +6,6 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-interface ControllerProps extends UseControllerProps<FieldValues, any> {
-  onReset?: () => void;
-}
-
 const useController = (
   options: UseControllerProps<FieldValues, any>,
   onReset?: () => void,
