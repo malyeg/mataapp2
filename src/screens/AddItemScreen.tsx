@@ -228,18 +228,6 @@ const AddItemScreen = () => {
 
       <LocationSelector style={styles.location} control={control} />
 
-      {/* <RadioGroup
-        options={[
-          {id: 'online', label: t('status.online')},
-          {id: 'draft', label: t('status.draft')},
-        ]}
-        control={control}
-        name="status"
-        defaultValue="online"
-        horizontal
-        groupStyle={styles.radioGroup}
-        label={t('status.label')}
-      /> */}
       <CheckBox
         style={styles.draftCheckBox}
         control={control}
@@ -253,7 +241,6 @@ const AddItemScreen = () => {
         disabled={uploading}
         onPress={handleSubmit(onFormSuccess, onFormError)}
       />
-
       {loader}
     </PressableScreen>
   );

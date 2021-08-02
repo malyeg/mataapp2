@@ -1,4 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
+import {useFormContext} from 'react-hook-form';
 import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useLocale from '../../hooks/useLocale';
@@ -26,10 +27,13 @@ export interface PickerProps<T extends Entity> {
   onSelectClose?: boolean;
   disabled?: boolean;
   control: any;
+  showReset?: boolean;
+  onReset?: (name: string) => void;
   renderItem?: (info: {
     item: Entity;
     index: number;
     selectedValue?: string;
+
     onCloseModal: () => void;
     onItemChange: (value: Entity, selected?: boolean) => void;
   }) => React.ReactElement | null;
@@ -46,14 +50,16 @@ function Picker<T extends Entity>({
   disabled = false,
   control,
   modalTitle,
+  onReset,
   renderItem,
+  showReset,
   multiLevel = false,
   ...props
 }: PickerProps<T>) {
   const {t} = useLocale('common');
   const {field, formState} = useController({
     control,
-    defaultValue: defaultValue?.toString(),
+    defaultValue: defaultValue?.toString() ?? '',
     name,
   });
 
@@ -77,42 +83,65 @@ function Picker<T extends Entity>({
     setModalVisible(false);
   }, []);
 
+  const onResetHandler = useCallback(() => {
+    // field.onChange(defaultValue);
+    if (onReset) {
+      onReset(name);
+    }
+    // methods.reset({name});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const selectedItem = useMemo(
     () => items.find(i => i.id.toString() === field.value),
     [field.value, items],
   );
 
   return (
-    <Pressable onPress={openModal} style={[styles.container, props.style]}>
-      <Text body3 style={styles.label}>
-        {label ?? field.value ? placeholder : ''}
-      </Text>
-      <View
-        style={[
-          styles.inputContainer,
-          styles.textInputBorder,
-          formState.errors[name]
-            ? styles.textInputBorderError
-            : styles.textInputBorder,
-        ]}>
-        <Text
-          style={[
-            styles.inputText,
-            selectedItem?.name ? {} : styles.placeholderText,
-          ]}
-          numberOfLines={1}>
-          {selectedItem?.name ?? placeholder ?? t('picker.pickerPlaceholder')}
+    <>
+      <View style={[styles.container, props.style]}>
+        <Text body3 style={styles.label}>
+          {label ?? field.value ? placeholder : ''}
         </Text>
-        <Icon
-          name="chevron-down"
-          size={30}
-          color={theme.colors.green}
-          style={styles.pickerIcon}
-        />
+        <View
+          style={[
+            styles.pickerContainer,
+            styles.textInputBorder,
+            formState.errors[name]
+              ? styles.textInputBorderError
+              : styles.textInputBorder,
+          ]}>
+          <Pressable onPress={openModal} style={styles.inputContainer}>
+            <Text
+              style={[
+                styles.inputText,
+                selectedItem?.name ? {} : styles.placeholderText,
+              ]}
+              numberOfLines={1}>
+              {selectedItem?.name ??
+                placeholder ??
+                t('picker.pickerPlaceholder')}
+            </Text>
+            <Icon
+              name="chevron-down"
+              size={30}
+              color={theme.colors.green}
+              style={styles.pickerIcon}
+            />
+          </Pressable>
+          {showReset && !!field.value && (
+            <Icon
+              name="close"
+              size={20}
+              color={theme.colors.green}
+              style={styles.resetIcon}
+              onPress={onResetHandler}
+            />
+          )}
+        </View>
+
+        {!!formState.errors[name] && <Error error={formState.errors[name]} />}
       </View>
-
-      {!!formState.errors[name] && <Error error={formState.errors[name]} />}
-
       <PickerModal
         {...props}
         headerTitle={modalTitle}
@@ -124,20 +153,26 @@ function Picker<T extends Entity>({
         renderItem={renderItem}
         multiLevel={multiLevel}
       />
-    </Pressable>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    maxHeight: 60,
+    // maxHeight: 60,
+  },
+  pickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputContainer: {
+    flex: 1,
     flexDirection: 'row',
     height: 40,
     justifyContent: 'space-around',
     alignItems: 'center',
   },
+
   inputText: {
     flex: 1,
     // color: theme.colors.grey,
@@ -171,6 +206,9 @@ const styles = StyleSheet.create({
   },
   pickerIcon: {
     marginRight: -6,
+  },
+  resetIcon: {
+    marginLeft: 10,
   },
 });
 

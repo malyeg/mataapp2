@@ -22,11 +22,11 @@ const DrawerContent = ({
     <DrawerContentScrollView {...props}>
       <ProfileHeader style={styles.header} userNameStyle={styles.profileName} />
 
-      <DrawerItem
+      {/* <DrawerItem
         label={t('drawer.nearByItemsLabel')}
         icon="table-search"
         onPress={() => navigation.navigate(screens.ITEMS)}
-      />
+      /> */}
       <DrawerItem
         label={t('drawer.dealsLabel')}
         icon="handshake"

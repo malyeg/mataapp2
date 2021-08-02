@@ -8,10 +8,7 @@ import {Status} from '../../types/DataTypes';
 import {Error} from '../form';
 import ImagePicker from './ImagePicker';
 
-type TemplateImage = {
-  isTemplate: true;
-};
-const templateImage = {isTemplate: true, uri: ''};
+export const templateImage = {isTemplate: true, uri: ''};
 interface ItemImagesProps extends ViewProps {
   name: string;
   items?: ImageSource[];

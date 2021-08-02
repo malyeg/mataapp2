@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useCallback, useEffect} from 'react';
 import {
   Pressable,
   StatusBar,
@@ -23,7 +23,12 @@ const ModalView: FC<ModalViewProps> = ({
   children,
   onClose,
 }) => {
-  useEffect(() => {}, []);
+  const onBack = useCallback(() => {
+    console.log('onmodal bacck');
+    if (onClose) {
+      onClose();
+    }
+  }, [onClose]);
   return (
     <SafeAreaView
       style={[styles.container, style]}
@@ -35,12 +40,7 @@ const ModalView: FC<ModalViewProps> = ({
       />
       <View style={[styles.modalHeader]}>
         {showHeaderNav && (
-          <Pressable
-            onPress={() => {
-              if (onClose) {
-                onClose();
-              }
-            }}>
+          <Pressable onPress={onBack}>
             <Icon
               style={styles.modalNav}
               name="chevron-left"

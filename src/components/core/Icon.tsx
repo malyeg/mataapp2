@@ -22,24 +22,22 @@ const Icon = ({
   onPress,
 }: IconProps) => {
   const SvgIcon = SvgIcons[name];
-  return (
-    <Pressable onPress={onPress}>
-      {type === 'materialCommunity' ? (
-        <MaterialIcon
-          name={name}
-          style={[styles.icon, style]}
-          color={color}
-          size={size}
-        />
-      ) : (
-        <SvgIcon
-          width={size}
-          height={size}
-          fill={color}
-          style={[styles.icon, style]}
-        />
-      )}
-    </Pressable>
+  return type === 'materialCommunity' ? (
+    <MaterialIcon
+      name={name}
+      style={[styles.icon, style]}
+      color={color}
+      size={size}
+      onPress={onPress}
+    />
+  ) : (
+    <SvgIcon
+      width={size}
+      height={size}
+      fill={color}
+      style={[styles.icon, style]}
+      onPress={onPress}
+    />
   );
 };
 

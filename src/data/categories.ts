@@ -45,7 +45,7 @@ export default [
     name: 'Home Furnitures',
     parent: 'home',
     level: -1,
-    path: ['home'],
+    path: ['home', 'home furniture'],
   },
   {
     id: 'home appliances',
@@ -53,7 +53,7 @@ export default [
     name: 'Home Appliances',
     parent: 'home',
     level: -1,
-    path: ['home'],
+    path: ['home', 'home appliances'],
   },
   {
     id: 'office furnitures',
@@ -61,7 +61,7 @@ export default [
     name: 'Office Furnitures',
     parent: 'office',
     level: -1,
-    path: ['office'],
+    path: ['office', 'office furnitures'],
   },
   {
     id: 'office appliances',
@@ -69,7 +69,7 @@ export default [
     name: 'Office Appliances',
     parent: 'office',
     level: -1,
-    path: ['office'],
+    path: ['office', 'office appliances'],
   },
   {
     id: 'garden furnitures',
@@ -77,7 +77,7 @@ export default [
     name: 'Garden Furnitures',
     parent: 'garden',
     level: -1,
-    path: ['garden'],
+    path: ['garden', 'garden furnitures'],
   },
   {
     id: 'garden appliances',
@@ -85,7 +85,7 @@ export default [
     name: 'Garden Appliances',
     parent: 'garden',
     level: -1,
-    path: ['garden'],
+    path: ['garden', 'garden appliances'],
   },
   {
     id: 'garage tools long name',
@@ -93,7 +93,7 @@ export default [
     name: 'Garage Tools long nameeeeee eeeeeeee eeeee eeeeeeee',
     parent: 'garden',
     level: -1,
-    path: ['garden'],
+    path: ['garden', 'garage tools long name'],
   },
   {
     id: 'garage tools',
@@ -101,7 +101,7 @@ export default [
     name: 'Garage Tools',
     parent: 'garden',
     level: -1,
-    path: ['garden'],
+    path: ['garden', 'garage tools'],
   },
   {
     id: 'miscellaneous',

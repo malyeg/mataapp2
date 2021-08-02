@@ -97,6 +97,30 @@
       "confirmationTitle": "Confirm",
       "confirmBtnText": "Confirm",
       "cancelBtnText": "Cancel"
+    },
+    "itemsFilter": {
+      "showResultsBtnTitle": "Show results",
+      "clearBtnTitle": "Clear",
+      "city": {
+        "placeholder": "City",
+        "modalTitle": "City"
+      },
+      "category": {
+        "placeholder": "Category",
+        "modalTitle": "Category"
+      },
+      "swapType": {
+        "placeholder": "Swap type",
+        "modalTitle": "Swap type"
+      },
+      "swapCategory": {
+        "placeholder": "Swap Category",
+        "modalTitle": "Swap Category"
+      },
+      "status": {
+        "placeholder": "Status",
+        "modalTitle": "Status"
+      }
     }
   },
 
