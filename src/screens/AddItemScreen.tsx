@@ -97,6 +97,7 @@ const AddItemScreen = () => {
           type: data.swapType,
         },
       };
+      !!data.swapCategory && (item.swapOption.category = data.swapCategory);
       !!data.usedWithIssuesDesc &&
         (item.condition.desc = data.usedWithIssuesDesc);
       const evict = `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`;
@@ -109,11 +110,16 @@ const AddItemScreen = () => {
           },
         }),
       );
-      if (profile && profile.targetCategories && item.swapOption.category) {
-        const found = profile.targetCategories.find(
-          c => c === item.swapOption.category,
-        );
-        if (!found) {
+
+      if (profile && !!item.swapOption.category) {
+        if (profile.targetCategories && profile.targetCategories.length > 0) {
+          const found = profile.targetCategories.find(
+            c => c === item.swapOption.category,
+          );
+          if (!found) {
+            addTargetCategory(item.swapOption.category);
+          }
+        } else {
           addTargetCategory(item.swapOption.category);
         }
       }

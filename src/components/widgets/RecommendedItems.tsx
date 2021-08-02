@@ -46,9 +46,9 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
           value: targetCategories,
         },
       ])
-      .limit(10)
+      .limit(100)
       .build();
-
+    console.log('recommended', query);
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
         setItemsResponse({items: snapshot.data});

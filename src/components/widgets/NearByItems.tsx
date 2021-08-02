@@ -8,6 +8,7 @@ import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
 import {
   Document,
+  Filter,
   Location,
   Operation,
   QueryBuilder,
@@ -39,7 +40,7 @@ const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
   const listData = useMemo(
     () => async (doc: Document<Item>) => {
       try {
-        const filters = [
+        const filters: Filter<Item>[] = [
           {field: 'location.city', value: location?.city!},
           {field: 'status', value: 'online' as ItemStatus},
         ];

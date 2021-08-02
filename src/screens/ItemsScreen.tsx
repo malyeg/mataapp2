@@ -1,7 +1,7 @@
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import itemsApi, {Item} from '../api/itemsApi';
+import itemsApi, {Item, ItemStatus} from '../api/itemsApi';
 import {Loader, Screen} from '../components/core';
 import ItemsFilter from '../components/widgets/data/ItemsFilter';
 import DataList from '../components/widgets/DataList';
@@ -19,6 +19,7 @@ const ItemsScreen = () => {
     // const {categoryId, userId, swapType, status, conditionType, city} =
     //   route.params;
     const builder = new QueryBuilder<Item>().limit(100);
+    builder.filter('status', 'online' as ItemStatus);
 
     !!route.params?.categoryId &&
       builder.filter(
