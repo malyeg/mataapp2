@@ -140,6 +140,11 @@ const AuthProvider: React.FC = (props: any) => {
           await profilesApi.saveToStorage(profile);
           crashlytics.setUser(user);
           Analytics.setUser(user);
+          messaging.getToken().then(token => {
+            if (token) {
+              updateToken(token, profile);
+            }
+          });
           dispatch({
             type: AuthActionType.SIGNIN,
             payload: {user, profile},
@@ -155,6 +160,11 @@ const AuthProvider: React.FC = (props: any) => {
 
         if (response) {
           profilesApi.saveToStorage(response.profile);
+          messaging.getToken().then(token => {
+            if (token) {
+              updateToken(token, response.profile);
+            }
+          });
           Analytics.logSignUp(AuthMethod.CREDENTIALS, response.user);
           dispatch({
             type: AuthActionType.SIGNUP,
