@@ -67,7 +67,14 @@ const Modal: FC<ModalProps> = ({
           )}
         </View>
 
-        <View style={[styles.body, containerStyle]}>{children}</View>
+        <View
+          style={[
+            styles.body,
+            position === 'full' ? styles.positionFull : styles.positionBottom,
+            containerStyle,
+          ]}>
+          {children}
+        </View>
       </SafeAreaView>
     </ModalBase>
   );
@@ -83,7 +90,6 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'white',
-    // height: '100%',
   },
   fullStyle: {
     flex: 1,
@@ -94,9 +100,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
   },
   body: {
-    flex: 1,
     paddingHorizontal: 20,
     paddingTop: 30,
+  },
+  positionFull: {
+    flex: 1,
+    marginTop: 30,
+  },
+  positionBottom: {
+    // marginTop: 30,
   },
   modalHeader: {
     flexDirection: 'row',

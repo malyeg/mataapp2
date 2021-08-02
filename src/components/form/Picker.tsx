@@ -162,19 +162,24 @@ const styles = StyleSheet.create({
     // maxHeight: 60,
   },
   pickerContainer: {
+    // flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
+    // backgroundColor: 'grey',
+    // justifyContent: 'flex-start',
   },
   inputContainer: {
     flex: 1,
     flexDirection: 'row',
     height: 40,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    // backgroundColor: 'red',
   },
 
   inputText: {
-    flex: 1,
+    // flex: 1,
+    // flexGrow: 1,
     // color: theme.colors.grey,
   },
   placeholderText: {
@@ -186,9 +191,6 @@ const styles = StyleSheet.create({
 
   searchInput: {
     marginHorizontal: -15,
-  },
-  flatList: {
-    flex: 1,
   },
   noData: {
     flex: 0.75,
@@ -206,8 +208,12 @@ const styles = StyleSheet.create({
   },
   pickerIcon: {
     marginRight: -6,
+    flexShrink: 1,
+    flexGrow: 0,
   },
   resetIcon: {
+    flexGrow: 0,
+    flexShrink: 1,
     marginLeft: 10,
   },
 });

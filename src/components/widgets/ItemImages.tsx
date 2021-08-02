@@ -23,29 +23,45 @@ interface ItemImagesProps extends ViewProps {
 const ItemImages = ({
   name,
   items,
-  defaultImageURL,
+
   onUpload,
   onChange,
   control,
 }: ItemImagesProps) => {
-  const [images, setImages] = useState<ImageSource[]>([]);
+  const [images, setImages] = useState<ImageSource[]>([
+    {isTemplate: true, uri: ''},
+    {isTemplate: true, uri: ''},
+    {isTemplate: true, uri: ''},
+  ]);
   const [error, setError] = useState<Status>();
   const defaultImage = useRef<ImageSource | null>(null);
-  const {field, formState} = useController({
-    control,
-    defaultValue: undefined,
-    name,
-  });
+  const {field, formState} = useController(
+    {
+      control,
+      defaultValue: undefined,
+      name,
+    },
+    () => {
+      console.log('images reset');
+    },
+  );
 
   useEffect(() => {
-    if (items) {
-      setImages([...items]);
-      field.onChange([...items]);
-    } else {
-      setImages([templateImage, templateImage, templateImage]);
+    if (!field.value) {
+      setImages([
+        {isTemplate: true, uri: ''},
+        {isTemplate: true, uri: ''},
+        {isTemplate: true, uri: ''},
+      ]);
     }
+    // if (items) {
+    //   setImages([...items]);
+    //   field.onChange([...items]);
+    // } else {
+    //   setImages([templateImage, templateImage, templateImage]);
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, defaultImageURL]);
+  }, [field.value, items]);
 
   // const updateItemImages = () => {
   //   const filteredImages = images.filter(i => !i.isTemplate);
@@ -77,10 +93,10 @@ const ItemImages = ({
   };
 
   const onImageDelete = (image: ImageSource, index: number) => {
-    images[index] = templateImage;
+    // images[index] = {isTemplate: true, uri: ''};
 
     setImages(imageArray => {
-      imageArray[index] = templateImage;
+      imageArray[index] = {isTemplate: true, uri: ''};
       if (image.downloadURL === defaultImage.current?.downloadURL) {
         defaultImage.current = null;
       }
@@ -95,14 +111,14 @@ const ItemImages = ({
   };
 
   const onMaxSize = () => {
-    const maxSizeparam = `${
+    const maxSizeParam = `${
       constants.firebase.MAX_IMAGE_SIZE / 1000 / 1000
     } MB`;
     setError({
       code: 'storage/imageMaxSize',
       message: 'imageMaxSize reached',
       type: 'error',
-      params: {maxSize: maxSizeparam},
+      params: {maxSize: maxSizeParam},
     });
   };
 

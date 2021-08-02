@@ -201,7 +201,6 @@ const EditProfileScreen = () => {
           control={control}
         />
         <Picker
-          style={styles.location}
           searchable
           placeholder={t('country.placeholder')}
           name="country"
@@ -321,7 +320,6 @@ const styles = StyleSheet.create({
   },
   location: {
     flexBasis: '48%',
-    // backgroundColor: 'grey',
   },
   phone: {
     flexBasis: '70%',

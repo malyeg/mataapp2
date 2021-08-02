@@ -20,7 +20,7 @@ const HomeScreen = () => {
   const [lastRefresh, setlastRefresh] = useState(new Date());
 
   // useEffect(() => {}, [location]);
-  // useLayoutEffect(() => {
+  // useEffect(() => {
   //   navigation.dangerouslyGetParent()?.setOptions({
   //     headerShown: false,
   //   });

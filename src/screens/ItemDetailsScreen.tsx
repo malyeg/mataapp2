@@ -61,6 +61,7 @@ const ItemDetailsScreen = () => {
   useEffect(() => {
     loadData().then(i => {
       if (i) {
+        console.log('i', i);
         navigation.setOptions({
           headerRight: () => (
             <ItemDetailsNav

@@ -224,6 +224,16 @@
       "required": "Category is required",
       "invalid": "Invalid Category"
     },
+    "swapType": {
+      "placeholder": "Swap type",
+      "modalTitle": "Swap type",
+      "required": "Swap type is required"
+    },
+    "swapCategory": {
+      "placeholder": "Swap category",
+      "modalTitle": "Swap category",
+      "required": "Swap category is required"
+    },
     "status": {
       "placeholder": "Status",
       "required": "Status is required",

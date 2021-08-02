@@ -7,7 +7,8 @@ import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
 import useAuth from '../hooks/useAuth';
 import useLoader from '../hooks/useLoader';
-import {MyItemsRouteProp} from '../navigation/HomeStack';
+import {MyItemsRouteProp} from '../navigation/DrawerStack';
+
 import {Filter, QueryBuilder} from '../types/DataTypes';
 
 export const MY_ITEMS_SCREEN = 'MyItemsScreen';
@@ -42,7 +43,7 @@ const MyItemsScreen = () => {
         console.log('cacheEnabled', route.params?.lastRefresh, cacheEnabled);
         const response = await itemsApi.getAll(query, {
           cache: {
-            enabled: cacheEnabled,
+            enabled: false,
             key: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`,
           },
         });

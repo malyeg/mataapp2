@@ -49,25 +49,32 @@ const ProfileScreen = () => {
 
       {/* <Button title="Share" onPress={() => onShare()} /> */}
 
-      <Modal isVisible={logoutModalVisible} onClose={closeModal}>
-        <Text style={styles.confirmLogoutTitle}>
-          {t('logout.confirmLogoutTitle')}
-        </Text>
-        <Text style={styles.confirmLogoutText}>
-          {t('logout.confirmLogoutText')}
-        </Text>
-        <View style={styles.modalButtonContainer}>
-          <Button
-            title={t('logout.cancelBtnTitle')}
-            style={[styles.modalButton]}
-            onPress={closeModal}
-          />
-          <Button
-            title={t('logout.confirmLogoutBtnTitle')}
-            style={[styles.modalButton, styles.confirmButton]}
-            textStyle={styles.confirmText}
-            onPress={() => signOut()}
-          />
+      <Modal
+        isVisible={logoutModalVisible}
+        position="bottom"
+        onClose={closeModal}
+        // containerStyle={styles.modal}
+      >
+        <View style={styles.modalContainer}>
+          <Text style={styles.confirmLogoutTitle}>
+            {t('logout.confirmLogoutTitle')}
+          </Text>
+          <Text style={styles.confirmLogoutText}>
+            {t('logout.confirmLogoutText')}
+          </Text>
+          <View style={styles.modalButtonContainer}>
+            <Button
+              title={t('logout.cancelBtnTitle')}
+              style={[styles.modalButton]}
+              onPress={closeModal}
+            />
+            <Button
+              title={t('logout.confirmLogoutBtnTitle')}
+              style={[styles.modalButton, styles.confirmButton]}
+              textStyle={styles.confirmText}
+              onPress={() => signOut()}
+            />
+          </View>
         </View>
       </Modal>
     </Screen>
@@ -175,5 +182,13 @@ const styles = StyleSheet.create({
   },
   confirmLogoutText: {
     ...theme.styles.scale.h6,
+  },
+  modal: {
+    // flex: 1,
+    // height: 200,
+  },
+  modalContainer: {
+    // flex: 1,
+    // height: 200,
   },
 });

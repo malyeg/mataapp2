@@ -11,7 +11,6 @@ import itemsApi, {
 import {Button} from '../components/core';
 import PressableScreen from '../components/core/PressableScreen';
 import {CheckBox, Picker, TextInput} from '../components/form';
-
 import ItemConditionPicker from '../components/widgets/ItemConditionPicker';
 import ItemImages from '../components/widgets/ItemImages';
 import LocationSelector from '../components/widgets/LocationSelector';
@@ -46,7 +45,7 @@ const AddItemScreen = () => {
   const {user, profile, addTargetCategory} = useAuth();
   const {showToast, hideToast} = useToast();
 
-  const {control, reset, handleSubmit, setValue} = useForm<AddItemFormValues>({
+  const {control, reset, handleSubmit} = useForm<AddItemFormValues>({
     name: yup.string().trim().max(50).required(t('name.required')),
     category: yup.string().trim().required(t('category.required')),
     conditionType: yup.string().trim().required(t('status.required')),
@@ -57,7 +56,7 @@ const AddItemScreen = () => {
     description: yup.string().max(200),
     location: yup.object().required(t('location.required')),
     usedWithIssuesDesc: yup.string().max(200),
-    swapType: yup.string(),
+    swapType: yup.string().required(t('swapType.required')),
     swapCategory: yup
       .string()
       .test('swapCategory', t('swapCategory.required'), function (value) {
@@ -197,8 +196,8 @@ const AddItemScreen = () => {
       <Picker
         name="category"
         items={categories}
-        placeholder="Category"
-        modalTitle="Category"
+        placeholder={t('category.placeholder')}
+        modalTitle={t('category.modalTitle')}
         control={control}
         multiLevel
       />
@@ -207,10 +206,10 @@ const AddItemScreen = () => {
 
       <Picker
         position="bottom"
-        name={'swapType'}
+        name="swapType"
         items={swapTypes}
-        placeholder="Swap type"
-        modalTitle="Swap Type"
+        placeholder={t('swapType.placeholder')}
+        modalTitle={t('swapType.modalTitle')}
         control={control}
         onChange={onSwapChange}
       />
@@ -219,8 +218,8 @@ const AddItemScreen = () => {
         <Picker
           name="swapCategory"
           items={categories}
-          placeholder="Swap category"
-          modalTitle="Swap category"
+          placeholder={t('swapCategory.placeholder')}
+          modalTitle={t('swapCategory.modalTitle')}
           control={control}
           multiLevel
         />

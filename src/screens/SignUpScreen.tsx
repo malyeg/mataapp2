@@ -174,9 +174,9 @@ const SignUpScreen = () => {
           onChange={onCountryChange}
           control={control}
         />
-        <View style={styles.rowContainer}>
+        <View style={styles.locationContainer}>
           <Picker
-            style={styles.location}
+            style={styles.state}
             searchable
             placeholder={t('state.placeholder')}
             onChange={onStateChange}
@@ -185,7 +185,7 @@ const SignUpScreen = () => {
             control={control}
           />
           <Picker
-            style={styles.location}
+            style={styles.city}
             searchable
             placeholder={t('city.placeholder')}
             name="city"
@@ -259,6 +259,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
   },
+  locationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  state: {
+    flexBasis: '48%',
+  },
+  city: {
+    flexBasis: '48%',
+  },
   rowContainer: {
     flexDirection: 'row',
     // flexGrow: 0,
@@ -293,7 +303,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   location: {
-    flexBasis: '48%',
+    // flexBasis: '48%',
     // backgroundColor: 'grey',
   },
   phone: {

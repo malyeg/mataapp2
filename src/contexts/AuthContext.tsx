@@ -6,6 +6,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
+import RNRestart from 'react-native-restart';
 import auth from '../api/authApi';
 import profilesApi, {Profile} from '../api/profileApi';
 import useCrashlytics from '../hooks/useCrashlytics';
@@ -170,9 +171,10 @@ const AuthProvider: React.FC = (props: any) => {
           await profilesApi.removeFromStorage();
           await auth.signOut();
         } finally {
-          dispatch({
-            type: AuthActionType.SIGNOUT,
-          });
+          // dispatch({
+          //   type: AuthActionType.SIGNOUT,
+          // });
+          RNRestart.Restart();
         }
       },
     }),

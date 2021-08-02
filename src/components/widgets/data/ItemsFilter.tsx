@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modal: {
+    // flex: 1,
     // justifyContent: 'space-evenly',
     // alignItems: 'center',
   },
