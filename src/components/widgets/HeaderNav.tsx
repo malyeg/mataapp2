@@ -1,22 +1,29 @@
 import {useNavigation} from '@react-navigation/core';
+import {
+  DrawerHeaderProps,
+  DrawerNavigationHelpers,
+} from '@react-navigation/drawer/lib/typescript/src/types';
+import {NavigationHelpers} from '@react-navigation/native';
 import {StackHeaderLeftButtonProps} from '@react-navigation/stack';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {FC, useCallback} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import PressableOpacity from '../core/PressableOpacity';
 
-const HeaderNav: FC<StackHeaderLeftButtonProps> = (
-  {
-    // navigation,
-    // route,
-  },
-) => {
-  const navigation = useNavigation();
+interface HeaderNavProps {
+  style: ViewStyle;
+}
+const HeaderNav = ({style}: HeaderNavProps) => {
+  const navigation = useNavigation<
+    StackNavigationHelpers | DrawerNavigationHelpers
+  >();
   const onPressHandler = useCallback(() => {
     if (navigation.canGoBack()) {
-      console.log('canGoBack');
+      console.log('canGoBack', navigation.getState().history);
+
       navigation.goBack();
     } else {
       console.log('cannot GoBack');
@@ -26,7 +33,9 @@ const HeaderNav: FC<StackHeaderLeftButtonProps> = (
     }
   }, [navigation]);
   return (
-    <PressableOpacity onPress={onPressHandler} style={styles.container}>
+    <PressableOpacity
+      onPress={onPressHandler}
+      style={[styles.container, style]}>
       <Icon name="chevron-left" color={theme.colors.grey} size={35} />
     </PressableOpacity>
   );

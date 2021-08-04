@@ -759,43 +759,43 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.8)
     - SDWebImageWebPCoder (~> 0.6.1)
-  - RNFBAnalytics (12.3.0):
+  - RNFBAnalytics (12.4.0):
     - Firebase/Analytics (= 8.4.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (12.3.0):
+  - RNFBApp (12.4.0):
     - Firebase/CoreOnly (= 8.4.0)
     - React-Core
-  - RNFBAuth (12.3.0):
+  - RNFBAuth (12.4.0):
     - Firebase/Auth (= 8.4.0)
     - React-Core
     - RNFBApp
-  - RNFBCrashlytics (12.3.0):
+  - RNFBCrashlytics (12.4.0):
     - Firebase/Crashlytics (= 8.4.0)
     - React-Core
     - RNFBApp
-  - RNFBDynamicLinks (12.3.0):
+  - RNFBDynamicLinks (12.4.0):
     - Firebase/DynamicLinks (= 8.4.0)
     - GoogleUtilities/AppDelegateSwizzler
     - React-Core
     - RNFBApp
-  - RNFBFirestore (12.3.0):
+  - RNFBFirestore (12.4.0):
     - Firebase/Firestore (= 8.4.0)
     - React-Core
     - RNFBApp
-  - RNFBMessaging (12.3.0):
+  - RNFBMessaging (12.4.0):
     - Firebase/Messaging (= 8.4.0)
     - React-Core
     - RNFBApp
-  - RNFBPerf (12.3.0):
+  - RNFBPerf (12.4.0):
     - Firebase/Performance (= 8.4.0)
     - React-Core
     - RNFBApp
-  - RNFBRemoteConfig (12.3.0):
+  - RNFBRemoteConfig (12.4.0):
     - Firebase/RemoteConfig (= 8.4.0)
     - React-Core
     - RNFBApp
-  - RNFBStorage (12.3.0):
+  - RNFBStorage (12.4.0):
     - Firebase/Storage (= 8.4.0)
     - React-Core
     - RNFBApp
@@ -1148,16 +1148,16 @@ SPEC CHECKSUMS:
   RNCCheckbox: 6bd119c26c6eb8264a29d59ff66cb70a14de3349
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNFastImage: a7384db75df352500261e8e8f1ac2026def26102
-  RNFBAnalytics: 8ba84c2d31c64374d054c8621b998f25145ffddc
-  RNFBApp: 64c90ab78b6010ed5c3ade026dfe5ff6442c21fd
-  RNFBAuth: 59fe503707ab7bd2c2790ac5b7a11d4e14b44452
-  RNFBCrashlytics: 1de18b8cc36d9bcf86407c4a354399228cc84a61
-  RNFBDynamicLinks: acf1b6563e265e8726b22af772a3cd1b0d360c87
-  RNFBFirestore: 52169edf8775af42dd8c84f14a6ca963316b30d7
-  RNFBMessaging: 35a027803f202ecaf911e66a940ca0c5690cb6a0
-  RNFBPerf: e3a7269f573a4787810a32de51647cdcbe08dfb4
-  RNFBRemoteConfig: db17570dfcf25e12a56773ad8f8a4df90ffb1d0b
-  RNFBStorage: f61af0a8c39c38e828747af586f63d450e99866a
+  RNFBAnalytics: be6180b4a5b4c7675f54278d341a653cf3ac59ec
+  RNFBApp: 97b2da195d4606716b284a7c8a988dd8ed5cec41
+  RNFBAuth: 63a3ca8a290937f73fa90d3bf37766458ce03e17
+  RNFBCrashlytics: 347db4a99a802d41f58762bd9d4913d04970adf7
+  RNFBDynamicLinks: 1bac6e56f78061a2fee68fe39a93b7241b838993
+  RNFBFirestore: 9ff0a5bac2c5acddb8de7a64d4d8eb38c49604bf
+  RNFBMessaging: ee81245484ef7e835975d09c2cd4000dfa2ae5e7
+  RNFBPerf: 2324df28fc04b8b0510a92ada4b761e3a97bf220
+  RNFBRemoteConfig: e071357b547c640803871cf2863efa5f240d9f50
+  RNFBStorage: b1d69650fc4220804b082165c10023abc5efcca5
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
   RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce

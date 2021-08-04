@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     // flex: 1,
     flexDirection: 'row',
-    // alignItems: 'center',
+    alignItems: 'center',
     // backgroundColor: 'grey',
     // justifyContent: 'flex-start',
   },

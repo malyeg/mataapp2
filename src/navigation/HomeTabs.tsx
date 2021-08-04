@@ -1,12 +1,15 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import TabBar from '../components/widgets/TabBar';
-import {screens} from '../config/constants';
+import {screens, stacks} from '../config/constants';
 import useLocale from '../hooks/useLocale';
 import HomeScreen from '../screens/HomeScreen';
 import MyItemsScreen from '../screens/MyItemsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
-import DealsTabs from './DealsTabs';
+import DealsStack from './DealsStack';
 
 // import SystemScreen from '../screens/SystemScreen';
 export const HOME_TABS = 'HomeTabs';
@@ -14,8 +17,13 @@ export type BottomTabParams = {
   HomeScreen: {title: string; icon: string} | undefined;
   NotificationsScreen: {title: string; icon: string} | undefined;
   MyItemsScreen: {title: string; icon: string} | undefined;
-  DealsTabs: {title: string; icon: string} | undefined;
+  [stacks.DEALS_STACK]: {title: string; icon: string} | undefined;
 };
+
+const homeTabsOptions: BottomTabNavigationOptions = {
+  headerShown: false,
+};
+
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
 const HomeTabs = () => {
@@ -23,7 +31,8 @@ const HomeTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName={screens.HOME}
-      tabBar={props => <TabBar {...props} />}>
+      tabBar={props => <TabBar {...props} />}
+      screenOptions={homeTabsOptions}>
       <Tab.Screen
         name={screens.HOME}
         component={HomeScreen}
@@ -47,8 +56,8 @@ const HomeTabs = () => {
         }}
       />
       <Tab.Screen
-        name={screens.DEALS_TABS}
-        component={DealsTabs}
+        name={stacks.DEALS_STACK}
+        component={DealsStack}
         initialParams={{title: t('tabBar.dealsTitle'), icon: 'handshake'}}
       />
     </Tab.Navigator>

@@ -1,11 +1,21 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 import React from 'react';
+import Header from '../components/widgets/Header';
 import {screens} from '../config/constants';
 import useLocale from '../hooks/useLocale';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import {screenOptions} from './Nav';
+
+const screenOptions: StackNavigationOptions = {
+  headerShown: true,
+  header: props => (
+    <Header title={props.options.headerTitle as string} {...props} />
+  ),
+};
 
 const Stack = createStackNavigator();
 

@@ -1,17 +1,8 @@
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {FC, useEffect, useState} from 'react';
-import {
-  BackHandler,
-  RefreshControl,
-  ScrollView,
-  StatusBar,
-  View,
-} from 'react-native';
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-  SafeAreaViewProps,
-} from 'react-native-safe-area-context';
+import {BackHandler, RefreshControl, ScrollView, View} from 'react-native';
+import {SafeAreaViewProps} from 'react-native-safe-area-context';
 import {screens} from '../../config/constants';
 import create from '../../styles/EStyleSheet';
 import theme from '../../styles/theme';
@@ -29,7 +20,7 @@ const Screen: FC<ScreenProps> = ({
   onRefresh,
   children,
 }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<DrawerNavigationHelpers>();
   const route = useRoute();
   const refreshing = useState(false)[0];
 
@@ -41,9 +32,14 @@ const Screen: FC<ScreenProps> = ({
 
   useEffect(() => {
     const backAction = () => {
+      console.log('back handler');
       if (!navigation.canGoBack()) {
+        console.log('back handler: no nav');
         if (route.name !== screens.HOME_TABS) {
-          navigation.navigate(screens.HOME_TABS);
+          console.log('back handler: no nav, not home');
+          navigation.navigate(screens.HOME_TABS, {
+            Screen: screens.HOME,
+          });
           return true;
         }
         // TODO show toaster
@@ -66,54 +62,30 @@ const Screen: FC<ScreenProps> = ({
     );
 
     return () => backHandler.remove();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, route.name]);
 
-  return (
-    <SafeAreaProvider style={styles.providerContainer}>
-      <SafeAreaView style={styles.safeAreaContainer}>
-        <StatusBar
-          translucent
-          backgroundColor="transparent"
-          barStyle="dark-content"
-        />
-
-        {scrollable ? (
-          <ScrollView
-            // keyboardShouldPersistTaps="handled"
-            keyboardShouldPersistTaps="never"
-            contentContainerStyle={[styles.viewContainer, style]}
-            // scrollEnabled={true}
-            refreshControl={
-              refreshable ? (
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={onRefreshHandler}
-                />
-              ) : undefined
-            }>
-            {children}
-          </ScrollView>
-        ) : (
-          <View style={[styles.viewContainer, style]}>{children}</View>
-        )}
-      </SafeAreaView>
-    </SafeAreaProvider>
+  return scrollable ? (
+    <ScrollView
+      // keyboardShouldPersistTaps="handled"
+      keyboardShouldPersistTaps="never"
+      contentContainerStyle={[styles.viewContainer, style]}
+      // scrollEnabled={true}
+      refreshControl={
+        refreshable ? (
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefreshHandler}
+          />
+        ) : undefined
+      }>
+      {children}
+    </ScrollView>
+  ) : (
+    <View style={[styles.viewContainer, style]}>{children}</View>
   );
 };
 
 const styles = create({
-  providerContainer: {
-    flex: 1,
-  },
-  safeAreaContainer: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    backgroundColor: theme.colors.white,
-  },
-  imageContainer: {
-    flex: 1,
-  },
   viewContainer: {
     paddingHorizontal: theme.defaults.SCREEN_PADDING,
     paddingBottom: 5,

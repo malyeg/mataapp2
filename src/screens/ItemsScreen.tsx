@@ -1,6 +1,7 @@
 import {useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {ApiResponse} from '../api/Api';
 import itemsApi, {Item, ItemStatus} from '../api/itemsApi';
 import {Loader, Screen} from '../components/core';
 import ItemsFilter from '../components/widgets/data/ItemsFilter';
@@ -14,10 +15,10 @@ const ItemsScreen = () => {
   const route = useRoute<ItemsRouteProp>();
   const initialQueryRef = useRef<Query<Item> | undefined>();
   const [query, setQuery] = useState<Query<Item>>();
+  const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
   const {request, loader} = useApi();
+
   useEffect(() => {
-    // const {categoryId, userId, swapType, status, conditionType, city} =
-    //   route.params;
     const builder = new QueryBuilder<Item>().limit(100);
     builder.filter('status', 'online' as ItemStatus);
 
@@ -48,14 +49,19 @@ const ItemsScreen = () => {
     setQuery(newQuery);
   }, [route.params]);
 
-  const loadItems = useCallback(async () => {
-    try {
-      const response = await request(() => itemsApi.getAll(query));
-      return response;
-    } catch (error) {
-      console.error(error);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    console.log(query);
+    const unsubscribe = itemsApi.onQuerySnapshot(
+      snapshot => {
+        setItemsResponse({items: snapshot.data});
+      },
+      error => {
+        console.error(error);
+      },
+      query,
+    );
+
+    return unsubscribe;
   }, [query]);
 
   const renderItem = useCallback(
@@ -67,7 +73,14 @@ const ItemsScreen = () => {
 
   const onFilterChange = useCallback((filters?: Filter<Item>[]) => {
     if (filters && filters.length > 0) {
-      const newQuery = new QueryBuilder<Item>().filters(filters).build();
+      console.log('init', initialQueryRef.current);
+      const newFilters = initialQueryRef.current?.filters
+        ? [...initialQueryRef.current?.filters, ...filters]
+        : [...filters];
+      const newQuery = QueryBuilder.from({...initialQueryRef.current}!)
+        .filters(newFilters)
+        .build();
+
       setQuery(newQuery);
     } else {
       setQuery(initialQueryRef.current);
@@ -79,12 +92,12 @@ const ItemsScreen = () => {
       <View style={styles.header}>
         <ItemsFilter style={styles.filter} onChange={onFilterChange} />
       </View>
-      {query ? (
+      {query && itemsResponse ? (
         <DataList
           containerStyle={styles.datalist}
           listStyle={styles.datalist}
           showsVerticalScrollIndicator={false}
-          data={loadItems}
+          data={itemsResponse}
           columnWrapperStyle={styles.columnWrapper}
           numColumns={2}
           renderItem={renderItem}

@@ -1,8 +1,6 @@
-import {
-  BottomTabBarOptions,
-  BottomTabBarProps,
-} from '@react-navigation/bottom-tabs/lib/typescript/src/types';
-import React, {FC} from 'react';
+import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
+import React from 'react';
+
 import {
   StyleProp,
   StyleSheet,
@@ -15,14 +13,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../styles/theme';
 import PressableOpacity from '../core/PressableOpacity';
 
-interface TabBarItemProps extends BottomTabBarProps<BottomTabBarOptions> {
+interface TabBarItemProps extends BottomTabBarProps {
   name: string;
   label?: string;
   icon?: string;
   iconStyle?: StyleProp<TextStyle>;
   badge?: number;
+  style?: StyleProp<ViewStyle>;
 }
-const TabBarItem: FC<TabBarItemProps> = ({
+const TabBarItem = ({
   name,
   label,
   icon,
@@ -32,7 +31,7 @@ const TabBarItem: FC<TabBarItemProps> = ({
   badge,
   iconStyle,
   ...props
-}) => {
+}: TabBarItemProps) => {
   // const route: any = state.routes.find(() => route.name === name);
   const routeIndex = state.routes.findIndex(route => route.name === name);
   const route = state.routes[routeIndex];

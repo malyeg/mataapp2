@@ -96,16 +96,6 @@ const ItemsFilter = ({onChange, style}: ItemsFilterProps) => {
         containerStyle={styles.modal}
         onClose={() => setModalVisible(false)}>
         <View style={styles.form}>
-          {/* <Picker
-            name="city"
-            items={[profile?.city as Entity]}
-            placeholder={t('itemsFilter.city.placeholder')}
-            modalTitle={t('itemsFilter.city.modalTitle')}
-            disabled
-            defaultValue={profile?.city?.id.toString()}
-            control={control}
-            multiLevel
-          /> */}
           <Picker
             name="category"
             items={categories}

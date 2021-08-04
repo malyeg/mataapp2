@@ -1,19 +1,21 @@
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabNavigationOptions,
+} from '@react-navigation/material-top-tabs';
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import IncomingDealsScreen from '../screens/IncomingDealsScreen';
 import OutgoingDealsScreen from '../screens/OutgoingDealsScreen';
 import theme from '../styles/theme';
 
+const dealsTabsOptions: MaterialTopTabNavigationOptions = {
+  lazy: true,
+  tabBarIndicatorStyle: {backgroundColor: theme.colors.salmon},
+};
 const Tab = createMaterialTopTabNavigator();
 
 const DealsTabs = () => {
   return (
-    <Tab.Navigator
-      lazy
-      tabBarOptions={{
-        indicatorStyle: styles.indicatorStyle,
-      }}>
+    <Tab.Navigator screenOptions={dealsTabsOptions}>
       <Tab.Screen name="Outgoing" component={OutgoingDealsScreen} />
       <Tab.Screen name="Incoming" component={IncomingDealsScreen} />
     </Tab.Navigator>
@@ -21,9 +23,3 @@ const DealsTabs = () => {
 };
 
 export default DealsTabs;
-
-const styles = StyleSheet.create({
-  indicatorStyle: {
-    backgroundColor: theme.colors.salmon,
-  },
-});

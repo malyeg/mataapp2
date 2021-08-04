@@ -6,12 +6,13 @@ import theme from '../../styles/theme';
 import {Image, Text} from '../core';
 import {useNavigation} from '@react-navigation/native';
 import {screens} from '../../config/constants';
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 
 interface DealCardProps {
   deal: Deal;
 }
 const DealCard = ({deal}: DealCardProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<DrawerNavigationHelpers>();
   const onPress = useCallback(() => {
     navigation.navigate(screens.DEAL_DETAILS, {id: deal.id});
   }, [deal.id, navigation]);

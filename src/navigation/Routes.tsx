@@ -7,8 +7,9 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import React, {useMemo, useRef} from 'react';
-import {Linking} from 'react-native';
+import {Linking, StyleSheet} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../components/core/Toaster';
 import Sheet from '../components/widgets/Sheet';
@@ -21,7 +22,7 @@ import Analytics from '../utils/Analytics';
 import {LoggerFactory} from '../utils/logger';
 import AuthStack from './AuthStack';
 import DrawerStack from './DrawerStack';
-import HomeStack from './HomeStack';
+import LinkingConfig from './LinkingConfig';
 
 const logger = LoggerFactory.getLogger('Routes');
 
@@ -100,19 +101,7 @@ const Routes = () => {
           onMessageUnsubscribe();
         };
       },
-      config: {
-        screens: {
-          HomeTabs: {
-            screens: {
-              HomeScreen: 'home',
-            },
-          },
-          ItemDetailsScreen: 'items',
-          MyItemsScreen: 'myItems',
-          ThemeScreen: 'theme',
-          DealDetailsScreen: 'deals/:id',
-        },
-      },
+      config: LinkingConfig,
     }),
     [show],
   );
@@ -130,37 +119,40 @@ const Routes = () => {
     },
   };
 
+  const onStateChange = async () => {
+    try {
+      const route = navigationRef?.current?.getCurrentRoute()!;
+      const previousRouteName = routeNameRef.current;
+      const currentRouteName = route.name;
+      const currentRouteParams = route.params;
+      hideToast();
+      if (previousRouteName !== currentRouteName) {
+        logger.trace(
+          'changing route from to:',
+          previousRouteName,
+          currentRouteName,
+          currentRouteParams,
+        );
+        Analytics.trackScreen(currentRouteName);
+      } else {
+        logger.trace("route didn't change");
+      }
+      routeNameRef.current = currentRouteName;
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
   return (
     <NavigationContainer
       theme={MyTheme}
       ref={navigationRef}
       linking={linking}
       onReady={navigationOnReadyHandler}
-      onStateChange={async () => {
-        try {
-          const route = navigationRef?.current?.getCurrentRoute()!;
-          const previousRouteName = routeNameRef.current;
-          const currentRouteName = route.name;
-          const currentRouteParams = route.params;
-          hideToast();
-          if (previousRouteName !== currentRouteName) {
-            logger.trace(
-              'changing route from to:',
-              previousRouteName,
-              currentRouteName,
-              currentRouteParams,
-            );
-            Analytics.trackScreen(currentRouteName);
-          } else {
-            logger.trace("route didn't change");
-          }
-          routeNameRef.current = currentRouteName;
-        } catch (error) {
-          logger.error(error);
-        }
-      }}>
-      {/* {user ? <HomeStack /> : <AuthStack />} */}
-      {user ? <DrawerStack /> : <AuthStack />}
+      onStateChange={onStateChange}>
+      <SafeAreaView style={styles.safeAreaContainer}>
+        {user ? <DrawerStack /> : <AuthStack />}
+      </SafeAreaView>
       <Toast ref={ref => Toast.setRef(ref)} config={toastConfig} />
       <Sheet ref={sheetRef} />
     </NavigationContainer>
@@ -168,3 +160,14 @@ const Routes = () => {
 };
 
 export default Routes;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  safeAreaContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    backgroundColor: theme.colors.white,
+  },
+});

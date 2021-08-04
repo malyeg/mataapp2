@@ -1,9 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
+import {useLinkTo} from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import {Item} from '../../api/itemsApi';
 import FreeIcon from '../../assets/svgs/free.svg';
-import {screens} from '../../config/constants';
+import {screens, stacks} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
@@ -25,18 +27,14 @@ const ItemCard = ({
   showActivityStatus,
   showSwapIcon = false,
 }: ItemCardProps) => {
-  const navigtion = useNavigation();
+  const navigation = useNavigation<StackNavigationHelpers>();
+  const linkTo = useLinkTo();
 
   const openItemDetails = useCallback(() => {
-    // TODO refactor to constant
-    navigtion.navigate(screens.ITEM_DETAILS, {
-      id: item.id,
-    });
-  }, [item, navigtion]);
+    linkTo('/items/' + item.id);
+  }, [item.id, linkTo]);
 
-  const imageUrl = item.defaultImageURL
-    ? item.defaultImageURL
-    : item.images[0].downloadURL;
+  const imageUrl = item.defaultImageURL ?? item.images[0].downloadURL;
 
   // console.log(item.status);
 
@@ -55,10 +53,10 @@ const ItemCard = ({
         {showActivityStatus && (
           <View
             style={[
-              styles.actvityStatusContainer,
+              styles.activityStatusContainer,
               item.status === 'online' ? styles.onlineBackgroundColor : {},
             ]}>
-            <Text style={[styles.actvityStatusText]}>{item.status}</Text>
+            <Text style={[styles.activityStatusText]}>{item.status}</Text>
           </View>
         )}
       </View>
@@ -95,7 +93,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     height: 30,
   },
-  actvityStatusContainer: {
+  activityStatusContainer: {
     // position: 'absolute',
     // marginTop: 5,
     // right: 0,
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  actvityStatusText: {
+  activityStatusText: {
     color: theme.colors.white,
     ...theme.styles.scale.body3,
   },

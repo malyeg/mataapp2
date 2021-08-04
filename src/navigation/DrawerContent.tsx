@@ -1,43 +1,33 @@
 import {
   DrawerContentComponentProps,
-  DrawerContentOptions,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import React from 'react';
-import {Linking, StyleSheet, View} from 'react-native';
-import DrawerItem from './DrawerItem';
+import {Linking, StyleSheet} from 'react-native';
 import ProfileHeader from '../components/widgets/ProfileHeader';
-import {screens} from '../config/constants';
-import theme from '../styles/theme';
+import {screens, stacks} from '../config/constants';
 import useLocale from '../hooks/useLocale';
-import DrawerSection from './DrawerSection';
+import theme from '../styles/theme';
+import DrawerItem from './DrawerItem';
 
-const DrawerContent = ({
-  navigation,
-  ...props
-}: DrawerContentComponentProps<DrawerContentOptions>) => {
+const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
   const {t} = useLocale('common');
 
   return (
     <DrawerContentScrollView {...props}>
       <ProfileHeader style={styles.header} userNameStyle={styles.profileName} />
 
-      {/* <DrawerItem
-        label={t('drawer.nearByItemsLabel')}
-        icon="table-search"
-        onPress={() => navigation.navigate(screens.ITEMS)}
-      /> */}
       <DrawerItem
         label={t('drawer.dealsLabel')}
         icon="handshake"
         iconStyle={styles.dealsIcon}
-        onPress={() => navigation.navigate(screens.DEALS_TABS)}
+        onPress={() => navigation.navigate(stacks.DEALS_STACK)}
       />
 
       <DrawerItem
         label={t('drawer.profileLabel')}
         icon="account-outline"
-        onPress={() => navigation.navigate(screens.PROFILE_STACK)}
+        onPress={() => navigation.navigate(stacks.PROFILE_STACK)}
       />
       <DrawerItem
         label={t('drawer.settingsLabel')}

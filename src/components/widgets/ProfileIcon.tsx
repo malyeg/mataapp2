@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/core';
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import React, {FC} from 'react';
 import {StyleSheet, ViewProps} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,7 +11,7 @@ interface ProfileIconProps extends ViewProps {
   size?: number;
 }
 const ProfileIcon: FC<ProfileIconProps> = ({style, size = 25}) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<DrawerNavigationHelpers>();
   return (
     <PressableOpacity
       hitSlop={10}

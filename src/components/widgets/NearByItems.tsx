@@ -1,18 +1,14 @@
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {ApiResponse} from '../../api/Api';
 import itemsApi, {Item, ItemStatus} from '../../api/itemsApi';
 import {screens} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
-import {
-  Document,
-  Filter,
-  Location,
-  Operation,
-  QueryBuilder,
-} from '../../types/DataTypes';
+import {Filter, Location, Operation, QueryBuilder} from '../../types/DataTypes';
 import {Text} from '../core';
 import DataList from './DataList';
 import ItemCard from './ItemCard';
@@ -27,53 +23,37 @@ interface NearByItemsProps {
   // city: string;
   location: Location;
   // lastRefresh?: Date;
-  userId?: string;
   title?: string;
   style?: StyleProp<ViewStyle>;
 }
-const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
-  const navigation = useNavigation();
+const NearByItems = ({location, title, style}: NearByItemsProps) => {
+  const navigation = useNavigation<DrawerNavigationHelpers>();
   const {user} = useAuth();
+  const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
 
   const {t} = useLocale('widgets');
 
-  const listData = useMemo(
-    () => async (doc: Document<Item>) => {
-      try {
-        const filters: Filter<Item>[] = [
-          {field: 'location.city', value: location?.city!},
-          {field: 'status', value: 'online' as ItemStatus},
-        ];
+  useEffect(() => {
+    // const targetCategories = profile?.targetCategories;
+    const filters: Filter<Item>[] = [
+      {field: 'location.city', value: location?.city!},
+      {field: 'status', value: 'online' as ItemStatus},
+      {field: 'userId', value: user.id, operation: Operation.NOT_EQUAL},
+    ];
+    const query = new QueryBuilder<Item>().filters(filters).limit(100).build();
+    console.log('recommended', query);
+    const unsubscribe = itemsApi.onQuerySnapshot(
+      snapshot => {
+        setItemsResponse({items: snapshot.data});
+      },
+      error => {
+        console.log(error);
+      },
+      query,
+    );
 
-        if (userId) {
-          filters.push({field: 'userId', value: userId});
-        } else {
-          filters.push({
-            field: 'userId',
-            value: user.id,
-            operation: Operation.NOT_EQUAL,
-          });
-        }
-
-        const query = new QueryBuilder<Item>()
-          .filters(filters)
-          // .filter('timestamp', new Date(2021, 6, 1), Operation.GREATER_THAN)
-          .after(doc)
-          .limit(20)
-          // .orderBy('timestamp', 'desc')
-          .orderBy('userId', 'asc')
-          .build();
-
-        const response = await itemsApi.getAll(query, {
-          cache: {enabled: true, key: `nearBy_${location?.city}_${user.id}`},
-        });
-        return response;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [location?.city, user.id, userId],
-  );
+    return unsubscribe;
+  }, [location?.city, user.id]);
 
   const listEmptyComponent = (
     <NoDataFound body={'no items found in ' + location.city} icon="" />
@@ -92,32 +72,26 @@ const NearByItems = ({location, userId, title, style}: NearByItemsProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
-  return (
+  return itemsResponse && itemsResponse.items.length > 0 ? (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
         <Text style={styles.title}>
           {title ?? t('nearByItems.title', {params: {city: location?.city!}})}
         </Text>
-        {/* <Link
-          body1
-          textStyle={styles.title}
-          onPress={() => navigtion.navigate(ITEMS_SCREEN)}>
-          {t('nearByItems.itemsLink')}
-        </Link> */}
       </View>
       <DataList
         loaderStyle={styles.dataListHeight}
         refreshing={false}
         onRefresh={undefined}
         horizontal
-        data={listData}
+        data={itemsResponse!}
         renderItem={renderItem}
         ListEmptyComponent={listEmptyComponent}
         itemSize={ITEM_HEIGHT}
         onEndReached={onEndReached}
       />
     </View>
-  );
+  ) : null;
 };
 
 export default React.memo(NearByItems);

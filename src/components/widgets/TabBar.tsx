@@ -1,24 +1,15 @@
-import {
-  BottomTabBarOptions,
-  BottomTabBarProps,
-} from '@react-navigation/bottom-tabs';
-import React, {FC} from 'react';
+import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
+import React from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {screens} from '../../config/constants';
+import {screens, stacks} from '../../config/constants';
 import theme from '../../styles/theme';
 import PressableOpacity from '../core/PressableOpacity';
 import TabBarItem from './TabBarItem';
 
 export const ADD_ITEM_SCREEN = 'AddItemScreen';
-const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
-  const focusedOptions =
-    props.descriptors[props.state.routes[props.state.index].key].options;
-
-  if (focusedOptions.tabBarVisible === false) {
-    return null;
-  }
-  // props.
+interface TabBarProps extends BottomTabBarProps {}
+const TabBar = ({...props}: TabBarProps) => {
   const addItemPressHandler = () => {
     props.navigation.navigate(screens.ADD_ITEM);
   };
@@ -29,11 +20,7 @@ const TabBar: FC<BottomTabBarProps<BottomTabBarOptions>> = ({...props}) => {
           <PressableOpacity
             style={styles.addItem}
             onPress={addItemPressHandler}>
-            <Icon
-              name="plus"
-              size={24}
-              style={[styles.addItemIcon, props.iconStyle]}
-            />
+            <Icon name="plus" size={24} style={[styles.addItemIcon]} />
           </PressableOpacity>
         </View>
         {props.state.routes.map((route, index) => {
@@ -115,4 +102,5 @@ const styles = StyleSheet.create({
   dealsIcon: {
     transform: [{rotate: '40deg'}],
   },
+  iconStyle: {},
 });

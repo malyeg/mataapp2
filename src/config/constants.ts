@@ -51,6 +51,11 @@ export const cart = {
   DEFAULT_CURRENCY: 'EGP',
 };
 
+export const stacks = {
+  DEALS_STACK: 'DealsStack' as 'DealsStack',
+  PROFILE_STACK: 'ProfileStack' as 'ProfileStack',
+  ITEMS_STACK: 'ItemsStack' as 'ItemsStack',
+};
 export const screens = {
   SIGN_IN: 'SignInScreen' as 'SignInScreen',
   SIGN_UP: 'SignUpScreen' as 'SignUpScreen',

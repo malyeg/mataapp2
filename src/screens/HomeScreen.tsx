@@ -61,7 +61,6 @@ const HomeScreen = () => {
           <NearByItems
             key={lastRefresh.getTime()}
             location={location}
-            // lastRefresh={lastRefresh}
             style={styles.nearByItems}
           />
         </>
