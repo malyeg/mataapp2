@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/core';
-import {useLinkTo} from '@react-navigation/native';
+import {useLinkTo, useRoute} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
@@ -7,6 +7,7 @@ import {Item} from '../../api/itemsApi';
 import FreeIcon from '../../assets/svgs/free.svg';
 import {screens, stacks} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
+import Routes from '../../navigation/Routes';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
 import SwapIcon from './SwapIcon';
@@ -28,11 +29,19 @@ const ItemCard = ({
   showSwapIcon = false,
 }: ItemCardProps) => {
   const navigation = useNavigation<StackNavigationHelpers>();
-  const linkTo = useLinkTo();
+  const route = useRoute();
+  // const linkTo = useLinkTo();
 
   const openItemDetails = useCallback(() => {
-    linkTo('/items/' + item.id);
-  }, [item.id, linkTo]);
+    navigation.navigate(stacks.ITEMS_STACK, {
+      screen: screens.ITEM_DETAILS,
+      params: {
+        id: item.id,
+        fromScreen: route.name,
+      },
+    });
+    // linkTo('/items/' + item.id);
+  }, [item.id, navigation, route.name]);
 
   const imageUrl = item.defaultImageURL ?? item.images[0].downloadURL;
 

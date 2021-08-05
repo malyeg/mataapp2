@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/core';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {FC, useEffect, useState} from 'react';
 import {Pressable, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,7 +14,7 @@ import theme from '../styles/theme';
 const ProfileScreen = () => {
   const {signOut} = useAuth();
   const {t} = useLocale('profileScreen');
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationHelpers>();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   // const {onShare} = useSocial();
 
@@ -37,7 +38,10 @@ const ProfileScreen = () => {
       <ProfileItem
         title={t('myItemsLink')}
         onPress={() =>
-          navigation.navigate(stacks.ITEMS_STACK, {screen: screens.MY_ITEMS})
+          navigation.navigate(stacks.ITEMS_STACK, {
+            screen: screens.MY_ITEMS,
+            params: {fromScreen: stacks.PROFILE_STACK},
+          })
         }
       />
 

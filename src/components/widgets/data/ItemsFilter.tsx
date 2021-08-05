@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import * as yup from 'yup';
 import categoriesApi from '../../../api/categoriesApi';
@@ -15,13 +15,14 @@ import {Picker} from '../../form';
 interface ItemsFilterProps {
   onChange: (filters: Filter<Item>[] | undefined) => void;
   style?: StyleProp<ViewStyle>;
+  filters?: Filter<Item>[];
 }
 interface ItemsFilterFormValues {
   category: string;
   swapType: string;
   swapCategory: string;
 }
-const ItemsFilter = ({onChange, style}: ItemsFilterProps) => {
+const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
   const [swapType, setSwapType] = useState<SwapType | null>(null);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const {t} = useLocale('widgets');
@@ -32,37 +33,64 @@ const ItemsFilter = ({onChange, style}: ItemsFilterProps) => {
       swapCategory: yup.string().trim(),
     });
 
+  useEffect(() => {
+    if (filters) {
+      setValue(
+        'category',
+        filters.find(f => f.field === 'category.path')?.value,
+      );
+      setValue(
+        'swapType',
+        filters.find(f => f.field === 'swapOption.type')?.value,
+      );
+      setValue(
+        'swapCategory',
+        filters.find(f => f.field === 'swapOption.category')?.value,
+      );
+    }
+  }, [filters, setValue]);
+
+  // const defaultData = useMemo(() => {
+  //   return filters
+  //     ? {
+  //         category: filters.find(f => f.field === 'category.path')?.value,
+  //         swapType: filters.find(f => f.field === 'swapOption.type')?.value,
+  //         swapCategory: filters.find(f => f.field === 'swapOption.category')
+  //           ?.value,
+  //       }
+  //     : undefined;
+  // }, [filters]);
+
   const onOpenModal = useCallback(() => {
     setModalVisible(true);
-    // setState(s => !s);
   }, []);
 
-  const categories = useMemo(() => categoriesApi.getAll(), []);
-
   const onSubmit = (data: ItemsFilterFormValues) => {
-    const filters: Filter<Item>[] = [];
+    console.log('data', data);
+    const newFilters: Filter<Item>[] = [];
     !!data.category &&
-      filters.push({
+      newFilters.push({
         field: 'category.path',
         operation: Operation.CONTAINS,
         value: data.category,
       });
     !!data.swapType &&
-      filters.push({field: 'swapOption.type', value: data.swapType});
+      newFilters.push({field: 'swapOption.type', value: data.swapType});
     !!data.swapCategory &&
-      filters.push({field: 'swapOption.category', value: data.swapCategory});
-    onChange(filters);
-    setModalVisible(false);
-    if (!filters || filters.length === 0) {
+      newFilters.push({field: 'swapOption.category', value: data.swapCategory});
+    onChange(newFilters);
+    if (!newFilters || newFilters.length === 0) {
       console.log('resetting form');
       reset();
     }
-    console.log('formState.isDirty', formState.isDirty);
+
+    setModalVisible(false);
   };
 
   const onSwapChange = useCallback((value: string) => {
     setSwapType(value as SwapType);
   }, []);
+
   const onReset = useCallback(
     (name: string) => {
       console.log('name', name);
@@ -70,6 +98,7 @@ const ItemsFilter = ({onChange, style}: ItemsFilterProps) => {
         shouldValidate: true,
         shouldDirty: true,
       });
+      // reset({[name]: ''}, {keepValues: true});
     },
 
     [setValue],
@@ -98,10 +127,10 @@ const ItemsFilter = ({onChange, style}: ItemsFilterProps) => {
         <View style={styles.form}>
           <Picker
             name="category"
-            items={categories}
+            items={categoriesApi.getAll()}
             placeholder={t('itemsFilter.category.placeholder')}
             modalTitle={t('itemsFilter.category.modalTitle')}
-            // defaultValue={}
+            // defaultValue={defaultData?.category}
             control={control}
             multiLevel
             showReset
@@ -115,17 +144,19 @@ const ItemsFilter = ({onChange, style}: ItemsFilterProps) => {
             modalTitle={t('itemsFilter.swapType.modalTitle')}
             control={control}
             position="bottom"
+            // defaultValue={defaultData?.swapType}
             showReset
             onReset={onReset}
           />
           {swapType === 'swapWithAnother' && (
             <Picker
               name="swapCategory"
-              items={categories}
+              items={categoriesApi.getAll()}
               placeholder={t('itemsFilter.swapCategory.placeholder')}
               modalTitle={t('itemsFilter.swapCategory.modalTitle')}
               control={control}
               multiLevel
+              // defaultValue={defaultData?.swapCategory}
               showReset
               onReset={onReset}
             />

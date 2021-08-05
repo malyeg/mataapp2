@@ -1,12 +1,5 @@
-import {useNavigation} from '@react-navigation/core';
-import {
-  DrawerHeaderProps,
-  DrawerNavigationHelpers,
-} from '@react-navigation/drawer/lib/typescript/src/types';
-import {NavigationHelpers} from '@react-navigation/native';
-import {StackHeaderLeftButtonProps} from '@react-navigation/stack';
-import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
-import React, {FC, useCallback} from 'react';
+import {useLinkTo} from '@react-navigation/native';
+import React, {useCallback} from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screens} from '../../config/constants';
@@ -15,23 +8,30 @@ import PressableOpacity from '../core/PressableOpacity';
 
 interface HeaderNavProps {
   style: ViewStyle;
+  navigation: any;
+  route: any;
 }
-const HeaderNav = ({style}: HeaderNavProps) => {
-  const navigation = useNavigation<
-    StackNavigationHelpers | DrawerNavigationHelpers
-  >();
+const HeaderNav = ({navigation, route, style}: HeaderNavProps) => {
+  // const navigation = useNavigation<
+  //   StackNavigationHelpers | DrawerNavigationHelpers
+  // >();
+  const linkTo = useLinkTo();
   const onPressHandler = useCallback(() => {
-    if (navigation.canGoBack()) {
+    console.log(route);
+    if (route?.params?.fromLink) {
+      console.log('goBack fromLink', route?.params?.fromLink);
+      linkTo(route?.params?.fromLink);
+    } else if (route?.params?.fromScreen) {
+      console.log('goBack fromScreen', route?.params?.fromScreen);
+      navigation.navigate(route?.params?.fromScreen);
+    } else if (navigation.canGoBack() && navigation.getState().history) {
       console.log('canGoBack', navigation.getState().history);
-
       navigation.goBack();
     } else {
       console.log('cannot GoBack');
-      navigation.navigate(screens.HOME_TABS, {
-        screen: screens.HOME,
-      });
+      navigation.navigate(screens.HOME);
     }
-  }, [navigation]);
+  }, [linkTo, navigation, route]);
   return (
     <PressableOpacity
       onPress={onPressHandler}

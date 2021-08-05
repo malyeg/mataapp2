@@ -1,20 +1,29 @@
-import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {Platform, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screens, stacks} from '../../config/constants';
+import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
 import PressableOpacity from '../core/PressableOpacity';
 import TabBarItem from './TabBarItem';
 
 export const ADD_ITEM_SCREEN = 'AddItemScreen';
-interface TabBarProps extends BottomTabBarProps {}
-const TabBar = ({...props}: TabBarProps) => {
+interface TabBarProps {
+  // position: 'top' | 'bottom';
+  style?: StyleProp<ViewStyle>;
+}
+const TabBar = ({style}: TabBarProps) => {
+  const {t} = useLocale('common');
+  const navigation = useNavigation<DrawerNavigationHelpers>();
+  const route = useRoute();
+
   const addItemPressHandler = () => {
-    props.navigation.navigate(screens.ADD_ITEM);
+    navigation.navigate(screens.ADD_ITEM);
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <View style={styles.itemsContainer}>
         <View style={styles.addItemContainer}>
           <PressableOpacity
@@ -23,22 +32,39 @@ const TabBar = ({...props}: TabBarProps) => {
             <Icon name="plus" size={24} style={[styles.addItemIcon]} />
           </PressableOpacity>
         </View>
-        {props.state.routes.map((route, index) => {
-          const {options} = props.descriptors[route.key];
-          console.log(route.name);
-          return (
-            <TabBarItem
-              key={index}
-              {...props}
-              name={route.name}
-              style={index > 0 && index < 3 ? styles.middleItem : {}}
-              iconStyle={route.name === 'DealsTabs' ? styles.dealsIcon : {}}
-              label={(route.params as any)?.title}
-              icon={(route.params as any)?.icon}
-              badge={options?.tabBarBadge as number}
-            />
-          );
-        })}
+
+        <TabBarItem
+          label={t('tabBar.homeTitle')}
+          icon="home-outline"
+          isFocused={route.name === screens.HOME}
+          onPress={() => navigation.navigate(screens.HOME)}
+        />
+        <TabBarItem
+          label={t('tabBar.notificationsTitle')}
+          icon="bell-outline"
+          style={styles.middleItem}
+          isFocused={route.name === screens.NOTIFICATIONS}
+          onPress={() => navigation.navigate(screens.NOTIFICATIONS)}
+        />
+
+        <TabBarItem
+          label={t('tabBar.myItemsTitle')}
+          icon="view-list-outline"
+          style={styles.middleItem}
+          isFocused={route.name === screens.MY_ITEMS}
+          onPress={() =>
+            navigation.navigate(stacks.ITEMS_STACK, {
+              screen: screens.MY_ITEMS,
+            })
+          }
+        />
+        <TabBarItem
+          label={t('tabBar.dealsTitle')}
+          icon="handshake"
+          iconStyle={styles.dealsIcon}
+          isFocused={route.name === screens.DEALS_TABS}
+          onPress={() => navigation.navigate(stacks.DEALS_STACK)}
+        />
       </View>
     </View>
   );
@@ -48,8 +74,11 @@ export default React.memo(TabBar);
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
     height: 75,
-    backgroundColor: theme.colors.white,
+    // backgroundColor: theme.colors.white,
     zIndex: 10000,
   },
   itemsContainer: {

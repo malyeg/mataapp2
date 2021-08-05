@@ -10,7 +10,7 @@ import {LocationProvider} from './contexts/LocationContext';
 import useResources from './hooks/useResources';
 import Routes from './navigation/Routes';
 
-// enableScreens();
+enableScreens();
 
 const App: React.FC = () => {
   const {isLoadingComplete} = useResources();

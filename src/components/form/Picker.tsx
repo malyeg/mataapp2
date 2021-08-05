@@ -1,5 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {useFormContext} from 'react-hook-form';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useLocale from '../../hooks/useLocale';
@@ -57,11 +56,20 @@ function Picker<T extends Entity>({
   ...props
 }: PickerProps<T>) {
   const {t} = useLocale('common');
+  const firstLoadRef = useRef(true);
   const {field, formState} = useController({
     control,
     defaultValue: defaultValue?.toString() ?? '',
     name,
   });
+
+  useEffect(() => {
+    console.log('picker useEffect', name, defaultValue, field.value);
+    if (!firstLoadRef.current) {
+      console.log('not first load');
+      firstLoadRef.current = false;
+    }
+  }, [defaultValue, field.value, name]);
 
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -84,13 +92,10 @@ function Picker<T extends Entity>({
   }, []);
 
   const onResetHandler = useCallback(() => {
-    // field.onChange(defaultValue);
     if (onReset) {
       onReset(name);
     }
-    // methods.reset({name});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [name, onReset]);
 
   const selectedItem = useMemo(
     () => items.find(i => i.id.toString() === field.value),

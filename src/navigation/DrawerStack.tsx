@@ -8,6 +8,7 @@ import {screens, stacks} from '../config/constants';
 import useLocale from '../hooks/useLocale';
 import AddItemScreen from '../screens/AddItemScreen';
 import FAQScreen from '../screens/FAQScreen';
+import HomeScreen from '../screens/HomeScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import DealsStack from './DealsStack';
@@ -17,7 +18,8 @@ import ItemsStack from './ItemsStack';
 import ProfileStack from './ProfileStack';
 
 export type StackParams = {
-  [screens.HOME_TABS]: undefined;
+  // [screens.HOME_TABS]: undefined;
+  [screens.HOME]: undefined;
   [screens.PROFILE_STACK]: undefined;
   [stacks.ITEMS_STACK]: undefined;
   [stacks.DEALS_STACK]: undefined;
@@ -45,8 +47,8 @@ const DrawerStack = () => {
       // initialRouteName={screens.HOME_TABS}
       drawerContent={props => <DrawerContent {...props} />}>
       <Drawer.Screen
-        name={screens.HOME_TABS}
-        component={HomeTabs}
+        name={screens.HOME}
+        component={HomeScreen}
         options={{headerShown: false}}
       />
 

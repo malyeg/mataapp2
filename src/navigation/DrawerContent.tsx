@@ -2,6 +2,7 @@ import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
+import {useLinkTo} from '@react-navigation/native';
 import React from 'react';
 import {Linking, StyleSheet} from 'react-native';
 import ProfileHeader from '../components/widgets/ProfileHeader';
@@ -12,11 +13,17 @@ import DrawerItem from './DrawerItem';
 
 const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
   const {t} = useLocale('common');
+  const linkTo = useLinkTo();
 
   return (
     <DrawerContentScrollView {...props}>
       <ProfileHeader style={styles.header} userNameStyle={styles.profileName} />
 
+      <DrawerItem
+        label={t('drawer.myItemsLabel')}
+        icon="view-list-outline"
+        onPress={() => linkTo('/items/myItems')}
+      />
       <DrawerItem
         label={t('drawer.dealsLabel')}
         icon="handshake"

@@ -8,7 +8,7 @@ import ItemsFilter from '../components/widgets/data/ItemsFilter';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
 import useApi from '../hooks/useApi';
-import {ItemsRouteProp} from '../navigation/DrawerStack';
+import {ItemsRouteProp} from '../navigation/ItemsStack';
 import {Filter, Operation, Query, QueryBuilder} from '../types/DataTypes';
 
 const ItemsScreen = () => {
@@ -16,7 +16,7 @@ const ItemsScreen = () => {
   const initialQueryRef = useRef<Query<Item> | undefined>();
   const [query, setQuery] = useState<Query<Item>>();
   const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
-  const {request, loader} = useApi();
+  const {loader} = useApi();
 
   useEffect(() => {
     const builder = new QueryBuilder<Item>().limit(100);
@@ -50,7 +50,7 @@ const ItemsScreen = () => {
   }, [route.params]);
 
   useEffect(() => {
-    console.log(query);
+    console.log('useEffect query', query);
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
         setItemsResponse({items: snapshot.data});
@@ -72,25 +72,30 @@ const ItemsScreen = () => {
   );
 
   const onFilterChange = useCallback((filters?: Filter<Item>[]) => {
+    console.log('onFilterChange', filters);
     if (filters && filters.length > 0) {
-      console.log('init', initialQueryRef.current);
       const newFilters = initialQueryRef.current?.filters
         ? [...initialQueryRef.current?.filters, ...filters]
         : [...filters];
       const newQuery = QueryBuilder.from({...initialQueryRef.current}!)
         .filters(newFilters)
         .build();
-
+      console.log('newQuery', newQuery);
       setQuery(newQuery);
+      // setQuery(initialQueryRef.current);
     } else {
-      setQuery(initialQueryRef.current);
+      // setQuery(initialQueryRef.current);
     }
   }, []);
 
   return (
     <Screen scrollable={false} style={styles.screen}>
       <View style={styles.header}>
-        <ItemsFilter style={styles.filter} onChange={onFilterChange} />
+        <ItemsFilter
+          style={styles.filter}
+          onChange={onFilterChange}
+          filters={query?.filters}
+        />
       </View>
       {query && itemsResponse ? (
         <DataList

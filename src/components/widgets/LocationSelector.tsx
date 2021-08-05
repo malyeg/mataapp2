@@ -8,7 +8,7 @@ import constants from '../../config/constants';
 import useLocale from '../../hooks/useLocale';
 import useController from '../../hooks/userController';
 import {Coordinate, Location} from '../../types/DataTypes';
-import {Button, Text} from '../core';
+import {Button} from '../core';
 import {Error, KeyboardView} from '../form';
 import LocationSearch from './LocationSearch';
 import ModalView from './ModalView';

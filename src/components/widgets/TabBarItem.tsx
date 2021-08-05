@@ -13,56 +13,31 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../styles/theme';
 import PressableOpacity from '../core/PressableOpacity';
 
-interface TabBarItemProps extends BottomTabBarProps {
-  name: string;
+interface TabBarItemProps {
   label?: string;
   icon?: string;
   iconStyle?: StyleProp<TextStyle>;
   badge?: number;
   style?: StyleProp<ViewStyle>;
+  isFocused?: boolean;
+  onPress?: () => void;
 }
 const TabBarItem = ({
-  name,
   label,
   icon,
-  navigation,
-  state,
-  descriptors,
   badge,
   iconStyle,
+  isFocused,
+  onPress,
   ...props
 }: TabBarItemProps) => {
   // const route: any = state.routes.find(() => route.name === name);
-  const routeIndex = state.routes.findIndex(route => route.name === name);
-  const route = state.routes[routeIndex];
-  const {options} = descriptors[route.key];
-  const isFocused = state.index === routeIndex;
-  const onPress = () => {
-    const event = navigation.emit({
-      type: 'tabPress',
-      target: route.key,
-      canPreventDefault: true,
-    });
 
-    if (!isFocused && !event.defaultPrevented) {
-      navigation.navigate(route.name);
-    }
-  };
-
-  const onLongPress = () => {
-    navigation.emit({
-      type: 'tabLongPress',
-      target: route.key,
-    });
-  };
   return (
     <PressableOpacity
       accessibilityRole="button"
       accessibilityState={isFocused ? {selected: true} : {}}
-      accessibilityLabel={options.tabBarAccessibilityLabel}
-      testID={options.tabBarTestID}
       onPress={onPress}
-      onLongPress={onLongPress}
       style={[styles.container, props.style as ViewStyle]}>
       {!!badge && (
         <View style={styles.badge}>

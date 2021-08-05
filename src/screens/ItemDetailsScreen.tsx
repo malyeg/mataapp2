@@ -1,16 +1,19 @@
 import {
+  NavigationHelpers,
   useFocusEffect,
   useNavigation,
-  useNavigationState,
   useRoute,
 } from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
+import FreeIcon from '../assets/svgs/free.svg';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
+import Header from '../components/widgets/Header';
 import ItemActivity from '../components/widgets/ItemActivity';
 import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
 import LocationView from '../components/widgets/LocationView';
@@ -18,17 +21,14 @@ import OwnerItems from '../components/widgets/OwnerItems';
 import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
 import TextDescription from '../components/widgets/TextDescription';
-import {screens} from '../config/constants';
+import {screens, stacks} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useSheet from '../hooks/useSheet';
-import {ItemDetailsRouteProp} from '../navigation/HomeStack';
-import theme from '../styles/theme';
-import {HOME_SCREEN} from './HomeScreen';
-import {MY_ITEMS_SCREEN} from './MyItemsScreen';
-import FreeIcon from '../assets/svgs/free.svg';
 import useToast from '../hooks/useToast';
+import {ItemDetailsRouteProp} from '../navigation/ItemsStack';
+import theme from '../styles/theme';
 
 export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
 const ItemDetailsScreen = () => {
@@ -36,8 +36,7 @@ const ItemDetailsScreen = () => {
   const [item, setItem] = useState<Item>();
   const {loader, request} = useApi({loadingInitValue: true});
   const {user} = useAuth();
-  const navigation = useNavigation();
-  const state = useNavigationState(s => s);
+  const navigation = useNavigation<NavigationHelpers>();
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
   const {showToast} = useToast();
@@ -58,24 +57,38 @@ const ItemDetailsScreen = () => {
     }
   };
 
+  // React.useLayoutEffect(() => {
+  //   navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+  // }, [navigation, route, item]);
+
   useEffect(() => {
     loadData().then(i => {
       if (i) {
         console.log('i', i);
+        const shareLink = `https://mataapp.page.link/?link=https%3A%2F%2Fmataup.com/items%3Fid%3D${i.id}&apn=com.mataapp`;
         navigation.setOptions({
-          headerRight: () => (
-            <ItemDetailsNav
-              item={i}
-              onDelete={() =>
-                show({
-                  header: t('deleteConfirmationHeader'),
-                  body: t('deleteConfirmationBody'),
-                  cancelCallback: () => console.log('canceling'),
-                  confirmCallback: () => deleteItem(i.id),
-                })
-              }
-            />
+          header: (props: any) => (
+            <Header
+              {...props}
+              title={
+                i.name.trim().length > 20
+                  ? i.name.substr(0, 20).trim() + ' ...'
+                  : i.name
+              }>
+              <ItemDetailsNav
+                item={i}
+                onDelete={() =>
+                  show({
+                    header: t('deleteConfirmationHeader'),
+                    body: t('deleteConfirmationBody'),
+                    cancelCallback: () => console.log('canceling'),
+                    confirmCallback: () => deleteItem(i.id),
+                  })
+                }
+              />
+            </Header>
           ),
+
           headerTitle:
             i.name.trim().length > 20
               ? i.name.substr(0, 20).trim() + ' ...'
@@ -83,7 +96,7 @@ const ItemDetailsScreen = () => {
         });
       } else {
         console.warn('item not found', i);
-        navigation.navigate(MY_ITEMS_SCREEN);
+        navigation.navigate(stacks.ITEMS_STACK);
       }
     });
     console.log('route', route.params?.id);
@@ -105,21 +118,14 @@ const ItemDetailsScreen = () => {
             cache: {evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`},
           }),
         );
-        if (navigation.canGoBack()) {
-          const routes = state.routes;
-          if (routes[routes.length - 2]?.name === MY_ITEMS_SCREEN) {
-            navigation.navigate(screens.MY_ITEMS, {lastRefresh: Date.now()});
-          } else {
-            navigation.goBack();
-          }
-        } else {
-          navigation.navigate(screens.HOME_TABS);
-        }
+        navigation.canGoBack()
+          ? navigation.goBack()
+          : navigation.navigate(screens.HOME);
       } catch (error) {
         console.error(error);
       }
     },
-    [navigation, request, state.routes, user.id],
+    [navigation, request, user.id],
   );
 
   const itemImage = useCallback(

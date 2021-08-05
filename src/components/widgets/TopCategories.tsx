@@ -1,10 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback} from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import categoriesApi from '../../api/categoriesApi';
-import {screens} from '../../config/constants';
+import {screens, stacks} from '../../config/constants';
 import theme from '../../styles/theme';
 import {Text} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
@@ -15,11 +16,12 @@ const categories = categoriesApi
   .filter(category => category.level === 0);
 
 const TopCategories = ({style}: TopCategoriesProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationHelpers>();
   const onPress = useCallback(
     (categoryId: string) => {
-      navigation.navigate(screens.ITEMS, {
-        categoryId,
+      navigation.navigate(stacks.ITEMS_STACK, {
+        screen: screens.ITEMS,
+        params: {categoryId},
       });
     },
     [navigation],

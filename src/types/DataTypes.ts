@@ -45,6 +45,7 @@ export type SortDirection = 'asc' | 'desc' | undefined;
 
 export class QueryBuilder<T> {
   private readonly _query: Query<T>;
+  private readonly filtersMap: Map<string, Filter<T>> = new Map();
 
   constructor(query?: Query<T>) {
     if (query) {
@@ -54,6 +55,7 @@ export class QueryBuilder<T> {
     }
   }
 
+  // eslint-disable-next-line no-shadow
   static from<T>(query: Query<T>) {
     return new QueryBuilder(query);
   }
@@ -63,14 +65,14 @@ export class QueryBuilder<T> {
     value: any,
     operation: Operation = Operation.EQUAL,
   ): QueryBuilder<T> {
-    if (!this._query.filters) {
-      this._query.filters = [];
-    }
-    !!field && this._query.filters.push({field, value, operation});
+    const filter: Filter<T> = {field, value, operation};
+    this.filtersMap.set(field, filter);
     return this;
   }
-  filters(filter: Filter<T>[]): QueryBuilder<T> {
-    this._query.filters = filter;
+  filters(filters: Filter<T>[]): QueryBuilder<T> {
+    this._query.filters = filters;
+    this.filtersMap.clear();
+    filters.forEach(filter => this.filtersMap.set(filter.field, filter));
     return this;
   }
   limit(limit: number): QueryBuilder<T> {
@@ -96,6 +98,7 @@ export class QueryBuilder<T> {
   }
 
   build(): Query<T> {
+    this._query.filters = Array.from(this.filtersMap.values());
     return this._query;
   }
 

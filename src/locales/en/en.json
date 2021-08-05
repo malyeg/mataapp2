@@ -73,7 +73,8 @@
       "itemDetails":"Item details",
       "deals":"Deals",
       "dealDetails":"Deal details",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "notifications": "Notifications"
     },
     "location": {
       "title": "Select location",

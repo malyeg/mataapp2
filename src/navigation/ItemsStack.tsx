@@ -4,6 +4,7 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import React from 'react';
+import {ItemStatus} from '../api/itemsApi';
 import Header from '../components/widgets/Header';
 import {screens} from '../config/constants';
 import useLocale from '../hooks/useLocale';
@@ -19,10 +20,19 @@ const screenOptions: StackNavigationOptions = {
   ),
 };
 export type StackParams = {
-  [screens.ITEMS]: undefined;
+  [screens.ITEMS]:
+    | {
+        categoryId: string;
+        swapType: string;
+        conditionType: string;
+        status: ItemStatus;
+        userId: string;
+        city: string;
+      }
+    | undefined;
   [screens.MY_ITEMS]: undefined;
   [screens.ADD_ITEM]: undefined;
-  [screens.ITEM_DETAILS]: undefined;
+  [screens.ITEM_DETAILS]: {id: string} | undefined;
 };
 export type ItemDetailsRouteProp = RouteProp<
   StackParams,

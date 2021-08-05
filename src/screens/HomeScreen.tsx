@@ -1,12 +1,14 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+
 import {Screen} from '../components/core';
 import Icon from '../components/core/Icon';
 import Logo from '../components/core/Logo';
 import NearByItems from '../components/widgets/NearByItems';
 import ProfileIcon from '../components/widgets/ProfileIcon';
 import RecommendedItems from '../components/widgets/RecommendedItems';
+import TabBar from '../components/widgets/TabBar';
 import TopCategories from '../components/widgets/TopCategories';
 import useAuth from '../hooks/useAuth';
 import useLocation from '../hooks/useLocation';
@@ -35,38 +37,41 @@ const HomeScreen = () => {
   };
 
   return (
-    <Screen
-      style={styles.container}
-      refreshable
-      onRefresh={onRefresh}
-      scrollable={true}>
-      <View style={styles.header}>
-        <Icon
-          name="menu"
-          size={30}
-          color={theme.colors.dark}
-          onPress={toggleDrawer}
-        />
-        <Logo size={75} style={styles.logo} />
-        <ProfileIcon style={styles.profile} size={30} />
-      </View>
-      {location && location.city && (
-        <>
-          {profile?.targetCategories && (
-            <RecommendedItems
-              style={styles.recommendedItems}
-              location={location}
-            />
-          )}
-          <NearByItems
-            key={lastRefresh.getTime()}
-            location={location}
-            style={styles.nearByItems}
+    <>
+      <Screen
+        style={styles.container}
+        refreshable
+        onRefresh={onRefresh}
+        scrollable={true}>
+        <View style={styles.header}>
+          <Icon
+            name="menu"
+            size={30}
+            color={theme.colors.dark}
+            onPress={toggleDrawer}
           />
-        </>
-      )}
-      <TopCategories style={styles.categories} />
-    </Screen>
+          <Logo size={75} style={styles.logo} />
+          <ProfileIcon style={styles.profile} size={30} />
+        </View>
+        {location && location.city && (
+          <>
+            {profile?.targetCategories && (
+              <RecommendedItems
+                style={styles.recommendedItems}
+                location={location}
+              />
+            )}
+            <NearByItems
+              key={lastRefresh.getTime()}
+              location={location}
+              style={styles.nearByItems}
+            />
+          </>
+        )}
+        <TopCategories style={styles.categories} />
+      </Screen>
+      <TabBar />
+    </>
   );
 };
 
@@ -96,5 +101,8 @@ const styles = StyleSheet.create({
   },
   categories: {
     marginVertical: 10,
+  },
+  tabBar: {
+    position: 'absolute',
   },
 });
