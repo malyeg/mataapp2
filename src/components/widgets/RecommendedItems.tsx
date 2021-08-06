@@ -33,6 +33,9 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
 
   useEffect(() => {
     const targetCategories = profile?.targetCategories;
+    if (!targetCategories || targetCategories.length === 0) {
+      return;
+    }
     const query = new QueryBuilder<Item>()
       .filters([
         {field: 'location.city', value: location?.city!},
@@ -63,7 +66,7 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
     );
 
     return unsubscribe;
-  }, [location?.city, profile?.targetCategories, user.id]);
+  }, [location?.city, profile, user.id]);
 
   const listEmptyComponent = (
     <NoDataFound body={'no items found in ' + location.city} icon="" />
