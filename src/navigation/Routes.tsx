@@ -41,11 +41,9 @@ const Routes = () => {
         const url = await Linking.getInitialURL();
         const link = await dynamicLinks().getInitialLink();
         const message = await messaging().getInitialNotification();
+        console.log('getInitialURL', {url, link, message});
         let initUrl: string =
-          url ??
-          link?.url ??
-          (message?.notification as any)?.url ??
-          'mataapp://home';
+          url ?? link?.url ?? (message?.data as any)?.url ?? 'mataapp://home';
         // 'mataapp://theme';
         if (initUrl.includes('?link=')) {
           initUrl = initUrl.substring(initUrl.indexOf('?link=') + 6);
@@ -72,7 +70,11 @@ const Routes = () => {
             let url = (message.data as any)?.url as string;
 
             if (url) {
-              listener(url.includes('//') ? url : `mataapp://${url}`);
+              const fullUrl = url.includes('//') ? url : `mataapp://${url}`;
+              console.log('onNotificationOpenedApp url', fullUrl);
+              listener(fullUrl);
+            } else {
+              console.log('onNotificationOpenedApp no url');
             }
           },
         );
