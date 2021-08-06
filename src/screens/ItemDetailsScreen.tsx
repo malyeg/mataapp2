@@ -3,7 +3,13 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import dealsApi, {Deal} from '../api/dealsApi';
@@ -65,11 +71,12 @@ const ItemDetailsScreen = () => {
           />
         </Header>
       ),
+    });
+  };
 
-      headerTitle:
-        i.name.trim().length > 20
-          ? i.name.substr(0, 20).trim() + ' ...'
-          : i.name,
+  const resetHeader = () => {
+    navigation.setOptions({
+      header: (props: any) => <Header title="" {...props} />,
     });
   };
 
@@ -78,24 +85,26 @@ const ItemDetailsScreen = () => {
       navigation.navigate(stacks.ITEMS_STACK);
       return;
     }
-    const unsubscribe = itemsApi.onDocumentSnapshot(
-      route.params?.id,
-      ({doc}) => {
-        setHeader(doc);
-        setItem(doc);
-      },
-    );
-    return unsubscribe;
-    // console.log('route', route.params?.id);
+    if (!!item && route.params?.id !== item.id) {
+      console.log('resetting item');
+      resetHeader();
+      setItem(undefined);
+    }
+    itemsApi
+      .getById(route.params?.id, {
+        cache: {
+          enabled: true,
+        },
+      })
+      .then(i => {
+        if (i) {
+          setHeader(i);
+          setItem(i);
+        }
+      });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params?.id]);
-
-  // useFocusEffect(() => {
-  //   if (refreshItem.current === true) {
-  //     refreshItem.current = false;
-  //     loadData().then(() => console.log('useFocusEffect'));
-  //   }
-  // });
 
   const deleteItem = useCallback(
     async (id: string) => {

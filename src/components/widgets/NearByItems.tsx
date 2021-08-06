@@ -44,6 +44,7 @@ const NearByItems = ({location, title, style}: NearByItemsProps) => {
     console.log('recommended', query);
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
+        console.log('setting nearby items');
         setItemsResponse({items: snapshot.data});
       },
       error => {

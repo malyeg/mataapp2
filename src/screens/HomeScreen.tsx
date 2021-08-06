@@ -1,7 +1,6 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-
 import {Screen} from '../components/core';
 import Icon from '../components/core/Icon';
 import Logo from '../components/core/Logo';

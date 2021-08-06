@@ -53,6 +53,7 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
     );
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
+        console.log('setting recommended items');
         setItemsResponse({items: snapshot.data});
       },
       error => {

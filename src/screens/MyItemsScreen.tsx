@@ -16,6 +16,11 @@ const MyItemsScreen = () => {
   useEffect(() => {
     const filters: Filter<Item>[] = [{field: 'userId', value: user.id}];
     let query = new QueryBuilder<Item>().filters(filters).limit(100).build();
+
+    // itemsApi.getAll(query).then(items => {
+    //   console.log('new myitems');
+    //   setItemsResponse(items);
+    // });
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
         console.log('new snapshot');
@@ -24,7 +29,6 @@ const MyItemsScreen = () => {
       error => console.error(error),
       query,
     );
-
     return () => {
       console.log('unsubscribe');
       unsubscribe();

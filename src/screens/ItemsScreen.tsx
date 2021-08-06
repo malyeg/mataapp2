@@ -37,11 +37,9 @@ const ItemsScreen = () => {
 
     if (route.params?.userId) {
       builder.filter('userId', route.params?.userId);
-      // TODO change title
     }
     if (route.params?.city) {
       builder.filter('location.city', route.params?.city);
-      // TODO change title
     }
     const newQuery = builder.build();
     console.log('newQuery', newQuery);
@@ -50,7 +48,6 @@ const ItemsScreen = () => {
   }, [route.params]);
 
   useEffect(() => {
-    console.log('useEffect query', query);
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
         setItemsResponse({items: snapshot.data});

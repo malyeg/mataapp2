@@ -34,25 +34,27 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
 
   onDocumentSnapshot = (
     id: string,
-    observerCallback: (snapshot: DocumentSnapshot<T>) => void,
+    observerCallback: (snapshot: any) => void,
+    onError?: (error: Error) => void,
   ) => {
-    try {
-      console.log('id', id);
-      return this.collection.doc(id).onSnapshot(snapshot => {
-        const timestamp = (snapshot.data()?.timestamp as any)?.toDate();
-        const doc: T = snapshot.data()
-          ? {
-              ...snapshot.data(),
-              id: snapshot.id,
-              timestamp,
-            }
-          : undefined;
-        observerCallback({...snapshot, doc});
-      });
-    } catch (error) {
-      this.logger.error(error);
-      throw error;
-    }
+    return this.collection.doc(id).onSnapshot(observerCallback, onError);
+    // try {
+    //   console.log('id', id);
+    //   return this.collection.doc(id).onSnapshot(snapshot => {
+    //     const timestamp = (snapshot.data()?.timestamp as any)?.toDate();
+    //     const doc: T = snapshot.data()
+    //       ? {
+    //           ...snapshot.data(),
+    //           id: snapshot.id,
+    //           timestamp,
+    //         }
+    //       : undefined;
+    //     observerCallback({...snapshot, doc});
+    //   });
+    // } catch (error) {
+    //   this.logger.error(error);
+    //   throw error;
+    // }
   };
 
   onQuerySnapshot = (

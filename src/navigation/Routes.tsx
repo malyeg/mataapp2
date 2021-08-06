@@ -22,7 +22,7 @@ import Analytics from '../utils/Analytics';
 import {LoggerFactory} from '../utils/logger';
 import AuthStack from './AuthStack';
 import DrawerStack from './DrawerStack';
-import LinkingConfig from './LinkingConfig';
+import LinkingConfig, {parseUrl} from './LinkingConfig';
 
 const logger = LoggerFactory.getLogger('Routes');
 
@@ -41,7 +41,7 @@ const Routes = () => {
         const url = await Linking.getInitialURL();
         const link = await dynamicLinks().getInitialLink();
         const message = await messaging().getInitialNotification();
-        let initUrl =
+        let initUrl: string =
           url ??
           link?.url ??
           (message?.notification as any)?.url ??
@@ -51,12 +51,19 @@ const Routes = () => {
           initUrl = initUrl.substring(initUrl.indexOf('?link=') + 6);
           initUrl = decodeURIComponent(initUrl);
         }
+        if (initUrl.includes('?id=')) {
+          initUrl = parseUrl(initUrl);
+        }
         console.log('initUrl', initUrl);
         return initUrl;
       },
 
       subscribe(listener: (deeplink: string) => void) {
-        const onReceiveURL = ({url}: {url: string}) => listener(url);
+        console.log('subscribe');
+        const onReceiveURL = ({url}: {url: string}) => {
+          console.log('subscribe', url);
+          listener(url);
+        };
         Linking.addEventListener('url', onReceiveURL);
 
         const unsubscribeNotification = messaging().onNotificationOpenedApp(
@@ -90,9 +97,11 @@ const Routes = () => {
           }
         });
 
-        const unsubscribeDynamicLink = dynamicLinks().onLink(link =>
-          listener(link.url),
-        );
+        const unsubscribeDynamicLink = dynamicLinks().onLink(link => {
+          console.log('dynamicLinks', link);
+          const url = parseUrl(link.url);
+          listener(url);
+        });
 
         return () => {
           Linking.removeEventListener('url', onReceiveURL);
