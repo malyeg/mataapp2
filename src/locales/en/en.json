@@ -102,6 +102,14 @@
     "itemsFilter": {
       "showResultsBtnTitle": "Show results",
       "clearBtnTitle": "Clear",
+      "country": {
+        "placeholder": "Country",
+        "modalTitle": "Country"
+      },
+      "state": {
+        "placeholder": "State",
+        "modalTitle": "State"
+      },
       "city": {
         "placeholder": "City",
         "modalTitle": "City"

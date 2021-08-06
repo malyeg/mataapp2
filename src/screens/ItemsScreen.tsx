@@ -8,19 +8,30 @@ import ItemsFilter from '../components/widgets/data/ItemsFilter';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
 import useApi from '../hooks/useApi';
+import useLocation from '../hooks/useLocation';
 import {ItemsRouteProp} from '../navigation/ItemsStack';
 import {Filter, Operation, Query, QueryBuilder} from '../types/DataTypes';
 
 const ItemsScreen = () => {
+  const {location} = useLocation();
   const route = useRoute<ItemsRouteProp>();
-  const initialQueryRef = useRef<Query<Item> | undefined>();
+  const initialQueryRef = useRef<Filter<Item>[]>([
+    {
+      field: 'status',
+      value: 'online' as ItemStatus,
+    },
+    {
+      field: 'location.city',
+      value: location?.city,
+    },
+  ]);
   const [query, setQuery] = useState<Query<Item>>();
   const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
   const {loader} = useApi();
 
   useEffect(() => {
-    const builder = new QueryBuilder<Item>().limit(100);
-    builder.filter('status', 'online' as ItemStatus);
+    const builder = new QueryBuilder<Item>();
+    builder.filters(initialQueryRef.current);
 
     !!route.params?.categoryId &&
       builder.filter(
@@ -29,21 +40,20 @@ const ItemsScreen = () => {
         Operation.CONTAINS,
       );
 
-    !!route.params?.swapType &&
-      builder.filter('swapOption.type', route.params?.swapType);
-    !!route.params?.status && builder.filter('status', route.params?.status);
-    !!route.params?.conditionType &&
-      builder.filter('condition.type', route.params?.conditionType);
+    // !!route.params?.swapType &&
+    //   builder.filter('swapOption.type', route.params?.swapType);
+    // !!route.params?.status && builder.filter('status', route.params?.status);
+    // !!route.params?.conditionType &&
+    //   builder.filter('condition.type', route.params?.conditionType);
 
-    if (route.params?.userId) {
-      builder.filter('userId', route.params?.userId);
-    }
-    if (route.params?.city) {
-      builder.filter('location.city', route.params?.city);
-    }
+    // if (route.params?.userId) {
+    //   builder.filter('userId', route.params?.userId);
+    // }
+    // if (route.params?.city) {
+    //   builder.filter('location.city', route.params?.city);
+    // }
     const newQuery = builder.build();
     console.log('newQuery', newQuery);
-    initialQueryRef.current = newQuery;
     setQuery(newQuery);
   }, [route.params]);
 
@@ -71,17 +81,18 @@ const ItemsScreen = () => {
   const onFilterChange = useCallback((filters?: Filter<Item>[]) => {
     console.log('onFilterChange', filters);
     if (filters && filters.length > 0) {
-      const newFilters = initialQueryRef.current?.filters
-        ? [...initialQueryRef.current?.filters, ...filters]
+      const newFilters = initialQueryRef.current
+        ? [...initialQueryRef.current, ...filters]
         : [...filters];
-      const newQuery = QueryBuilder.from({...initialQueryRef.current}!)
-        .filters(newFilters)
-        .build();
+      const newQuery = new QueryBuilder<Item>().filters(newFilters).build();
       console.log('newQuery', newQuery);
       setQuery(newQuery);
-      // setQuery(initialQueryRef.current);
     } else {
-      // setQuery(initialQueryRef.current);
+      const newQuery = new QueryBuilder<Item>()
+        .filters(initialQueryRef.current)
+        .build();
+      console.log('else new query', newQuery);
+      setQuery(newQuery);
     }
   }, []);
 

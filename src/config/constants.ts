@@ -9,6 +9,7 @@ export const auth = {
 export const firebase = {
   ITEM_UPLOAD_PATH: 'images/items',
   MAX_IMAGE_SIZE: 1000 * 1000,
+  MAX_QUERY_LIMIT: 100,
 };
 
 export const DOMAINS = [

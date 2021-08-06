@@ -123,7 +123,7 @@ const AddItemScreen = () => {
           addTargetCategory(item.swapOption.category);
         }
       }
-      // reset();
+      reset();
       showToast({
         type: 'success',
         message: t('addItemSuccess'),

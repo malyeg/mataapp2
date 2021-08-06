@@ -64,9 +64,7 @@ function Picker<T extends Entity>({
   });
 
   useEffect(() => {
-    console.log('picker useEffect', name, defaultValue, field.value);
     if (!firstLoadRef.current) {
-      console.log('not first load');
       firstLoadRef.current = false;
     }
   }, [defaultValue, field.value, name]);
@@ -127,12 +125,14 @@ function Picker<T extends Entity>({
                 placeholder ??
                 t('picker.pickerPlaceholder')}
             </Text>
-            <Icon
-              name="chevron-down"
-              size={30}
-              color={theme.colors.green}
-              style={styles.pickerIcon}
-            />
+            {!disabled && (
+              <Icon
+                name="chevron-down"
+                size={30}
+                color={theme.colors.green}
+                style={styles.pickerIcon}
+              />
+            )}
           </Pressable>
           {showReset && !!field.value && (
             <Icon

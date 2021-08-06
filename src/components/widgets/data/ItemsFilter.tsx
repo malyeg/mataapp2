@@ -3,14 +3,16 @@ import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import * as yup from 'yup';
 import categoriesApi from '../../../api/categoriesApi';
 import {Item, SwapType} from '../../../api/itemsApi';
+import locationApi from '../../../api/locationApi';
 import swapTypes from '../../../data/swapTypes';
+import useAuth from '../../../hooks/useAuth';
 import useForm from '../../../hooks/useForm';
 import useLocale from '../../../hooks/useLocale';
 import theme from '../../../styles/theme';
 import {Filter, Operation} from '../../../types/DataTypes';
 import {Button, Modal, Text} from '../../core';
 import Icon from '../../core/Icon';
-import {Picker} from '../../form';
+import {Picker, TextInput} from '../../form';
 
 interface ItemsFilterProps {
   onChange: (filters: Filter<Item>[] | undefined) => void;
@@ -21,8 +23,10 @@ interface ItemsFilterFormValues {
   category: string;
   swapType: string;
   swapCategory: string;
+  city: string;
 }
 const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
+  const {profile} = useAuth();
   const [swapType, setSwapType] = useState<SwapType | null>(null);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const {t} = useLocale('widgets');
@@ -31,6 +35,7 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
       category: yup.string().trim(),
       swapType: yup.string().trim(),
       swapCategory: yup.string().trim(),
+      city: yup.string().trim(),
     });
 
   useEffect(() => {
@@ -39,6 +44,7 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
         'category',
         filters.find(f => f.field === 'category.path')?.value,
       );
+
       setValue(
         'swapType',
         filters.find(f => f.field === 'swapOption.type')?.value,
@@ -126,6 +132,37 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
         onClose={() => setModalVisible(false)}>
         <View style={styles.form}>
           <Picker
+            placeholder={t('itemsFilter.country.placeholder')}
+            name="country"
+            items={[profile?.country!]}
+            defaultValue={profile?.country?.id.toString()}
+            // onChange={onCountryChange}
+            control={control}
+            disabled
+          />
+          <View style={styles.rowContainer}>
+            <Picker
+              style={styles.location}
+              // disabled={!!states && states.length > 0}
+              placeholder={t('itemsFilter.state.placeholder')}
+              defaultValue={profile?.state?.id.toString()}
+              // onChange={onStateChange}
+              name="state"
+              items={[profile?.state!]}
+              control={control}
+              disabled
+            />
+            <Picker
+              style={styles.location}
+              placeholder={t('itemsFilter.city.placeholder')}
+              defaultValue={'31802'}
+              name="city"
+              items={[{id: '31802', name: 'Cairo'}]}
+              control={control}
+              disabled
+            />
+          </View>
+          <Picker
             name="category"
             items={categoriesApi.getAll()}
             placeholder={t('itemsFilter.category.placeholder')}
@@ -187,8 +224,9 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
   },
   form: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'space-evenly',
+    // backgroundColor: 'grey',
   },
   label: {
     marginRight: 10,
@@ -198,5 +236,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginBottom: 20,
     // flex: 1,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  location: {
+    flexBasis: '48%',
   },
 });

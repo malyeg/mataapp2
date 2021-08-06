@@ -2,6 +2,7 @@ import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
 import Config from 'react-native-config';
+import constants from '../config/constants';
 import {
   DataCollection,
   DataSearchable,
@@ -323,9 +324,9 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     if (query.afterDoc) {
       collectionQuery = collectionQuery.startAfter(query.afterDoc);
     }
-    if (query.limit) {
-      collectionQuery = collectionQuery.limit(query.limit);
-    }
+    collectionQuery = collectionQuery.limit(
+      query.limit ?? constants.firebase.MAX_QUERY_LIMIT,
+    );
     // this.logger.debug(collectionQuery.);
     return collectionQuery;
   };
