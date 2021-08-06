@@ -24,7 +24,7 @@ const ItemDetailsNav = ({item, onDelete}: ItemDetailsNavProps) => {
   return (
     <View style={styles.container}>
       <ShareIcon message={shareLink} style={styles.shareIcon} />
-      {item.userId === user.id && <ItemEditIcon onDelete={onDeleteHandler} />}
+      {/* {item.userId === user.id && <ItemEditIcon onDelete={onDeleteHandler} />} */}
     </View>
   );
 };

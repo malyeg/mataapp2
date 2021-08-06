@@ -23,7 +23,7 @@ const useMessaging = () => {
         Platform.OS === 'ios' &&
         !messaging().isDeviceRegisteredForRemoteMessages
       ) {
-        await messaging().registerDeviceForRemoteMessages();
+        //await messaging().registerDeviceForRemoteMessages();
       }
       const token = await messaging().getToken();
       return token;

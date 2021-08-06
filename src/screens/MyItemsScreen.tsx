@@ -1,60 +1,35 @@
-import {useFocusEffect, useRoute} from '@react-navigation/native';
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
+import {ApiResponse} from '../api/Api';
 import itemsApi, {Item} from '../api/itemsApi';
-import {Screen} from '../components/core';
+import {Loader, Screen} from '../components/core';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
 import useAuth from '../hooks/useAuth';
-import useLoader from '../hooks/useLoader';
-import {MyItemsRouteProp} from '../navigation/DrawerStack';
-
 import {Filter, QueryBuilder} from '../types/DataTypes';
 
 export const MY_ITEMS_SCREEN = 'MyItemsScreen';
 const MyItemsScreen = () => {
   const {user} = useAuth();
-  const route = useRoute<MyItemsRouteProp>();
-  const lastRefresh = useRef<number>();
-  // const [lastRefresh, setLastRefresh] = useState<number>(Date.now());
-  const {loader, loading, hideLoader} = useLoader(true);
+  const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
 
-  useFocusEffect(() => {
-    console.log('useFocusEffect');
-    if (route.params?.lastRefresh) {
-      console.log('useFocusEffect refresh');
-      lastRefresh.current = route.params?.lastRefresh;
-      // setLastRefresh(Date.now());
-    }
+  useEffect(() => {
+    const filters: Filter<Item>[] = [{field: 'userId', value: user.id}];
+    let query = new QueryBuilder<Item>().filters(filters).limit(100).build();
+    const unsubscribe = itemsApi.onQuerySnapshot(
+      snapshot => {
+        console.log('new snapshot');
+        setItemsResponse({items: snapshot.data});
+      },
+      error => console.error(error),
+      query,
+    );
 
-    hideLoader();
-  });
-
-  const loadItems = useCallback(
-    async () => {
-      try {
-        console.log('loadItems');
-        const filters: Filter<Item>[] = [{field: 'userId', value: user.id}];
-        let query = new QueryBuilder<Item>()
-          .filters(filters)
-          .limit(100)
-          .build();
-        const cacheEnabled = route.params?.lastRefresh === lastRefresh.current;
-        console.log('cacheEnabled', route.params?.lastRefresh, cacheEnabled);
-        const response = await itemsApi.getAll(query, {
-          cache: {
-            enabled: false,
-            key: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`,
-          },
-        });
-        return response;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [route.params?.lastRefresh],
-  );
+    return () => {
+      console.log('unsubscribe');
+      unsubscribe();
+    };
+  }, [user.id]);
 
   const renderItem = useCallback(
     ({item}: any) => (
@@ -65,22 +40,20 @@ const MyItemsScreen = () => {
 
   return (
     <Screen scrollable={false} style={styles.screen}>
-      {!loading && (
+      {itemsResponse ? (
         <DataList
           containerStyle={styles.datalist}
           listStyle={styles.datalist}
-          // key={lastRefresh}
           showsVerticalScrollIndicator={false}
-          data={loadItems}
+          data={itemsResponse}
           columnWrapperStyle={styles.columnWrapper}
           numColumns={2}
-          // pageable
-          refreshable
           renderItem={renderItem}
           itemSize={ITEM_CARD_HEIGHT}
         />
+      ) : (
+        <Loader />
       )}
-      {loader}
     </Screen>
   );
 };

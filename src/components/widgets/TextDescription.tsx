@@ -1,12 +1,25 @@
 import React, {useState} from 'react';
-import {Pressable, StyleSheet, TextProps, View} from 'react-native';
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TextProps,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Text} from '../core';
 
 interface TextDescriptionProps extends TextProps {
   maxLines?: number;
   children: any;
+  textStyle?: StyleProp<TextStyle>;
 }
-const TextDescription = ({children, maxLines = 2}: TextDescriptionProps) => {
+const TextDescription = ({
+  children,
+  maxLines = 2,
+  textStyle,
+}: TextDescriptionProps) => {
   const [showAll, setShowAll] = useState(false);
   const [numLines, setNumLines] = useState(maxLines);
 
@@ -24,7 +37,7 @@ const TextDescription = ({children, maxLines = 2}: TextDescriptionProps) => {
 
   return (
     <Pressable style={styles.container}>
-      <Text onTextLayout={onTextLayout} numberOfLines={5}>
+      <Text onTextLayout={onTextLayout} numberOfLines={5} style={textStyle}>
         {children}
       </Text>
       {/* {!showAll ? (

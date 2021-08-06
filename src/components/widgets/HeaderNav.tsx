@@ -3,6 +3,7 @@ import React, {useCallback} from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screens} from '../../config/constants';
+import {goBack} from '../../navigation/NavigationHelper';
 import theme from '../../styles/theme';
 import PressableOpacity from '../core/PressableOpacity';
 
@@ -18,19 +19,7 @@ const HeaderNav = ({navigation, route, style}: HeaderNavProps) => {
   const linkTo = useLinkTo();
   const onPressHandler = useCallback(() => {
     console.log(route);
-    if (route?.params?.fromLink) {
-      console.log('goBack fromLink', route?.params?.fromLink);
-      linkTo(route?.params?.fromLink);
-    } else if (route?.params?.fromScreen) {
-      console.log('goBack fromScreen', route?.params?.fromScreen);
-      navigation.navigate(route?.params?.fromScreen);
-    } else if (navigation.canGoBack() && navigation.getState().history) {
-      console.log('canGoBack', navigation.getState().history);
-      navigation.goBack();
-    } else {
-      console.log('cannot GoBack');
-      navigation.navigate(screens.HOME);
-    }
+    goBack({navigation, route, linkTo});
   }, [linkTo, navigation, route]);
   return (
     <PressableOpacity

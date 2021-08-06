@@ -1,10 +1,8 @@
 import {
   NavigationHelpers,
-  useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,19 +20,21 @@ import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
 import TextDescription from '../components/widgets/TextDescription';
 import {screens, stacks} from '../config/constants';
+import swapTypes from '../data/swapTypes';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useSheet from '../hooks/useSheet';
 import useToast from '../hooks/useToast';
 import {ItemDetailsRouteProp} from '../navigation/ItemsStack';
+import {goBack} from '../navigation/NavigationHelper';
 import theme from '../styles/theme';
 
 export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
 const ItemDetailsScreen = () => {
   const route = useRoute<ItemDetailsRouteProp>();
   const [item, setItem] = useState<Item>();
-  const {loader, request} = useApi({loadingInitValue: true});
+  const {loader, request} = useApi();
   const {user} = useAuth();
   const navigation = useNavigation<NavigationHelpers>();
   const {t} = useLocale('itemDetailsScreen');
@@ -42,90 +42,75 @@ const ItemDetailsScreen = () => {
   const {showToast} = useToast();
   const refreshItem = useRef(false);
 
-  const loadData = async () => {
-    console.log('route.params', route.params);
-    const itemId = route.params?.id;
-
-    if (itemId) {
-      const freshItem = await request<Item>(() =>
-        itemsApi.getById(itemId, {cache: {enabled: true}}),
-      );
-      if (freshItem) {
-        setItem(freshItem);
-      }
-      return freshItem;
-    }
-  };
-
-  // React.useLayoutEffect(() => {
-  //   navigation.setOptions({ headerTitle: getHeaderTitle(route) });
-  // }, [navigation, route, item]);
-
-  useEffect(() => {
-    loadData().then(i => {
-      if (i) {
-        console.log('i', i);
-        const shareLink = `https://mataapp.page.link/?link=https%3A%2F%2Fmataup.com/items%3Fid%3D${i.id}&apn=com.mataapp`;
-        navigation.setOptions({
-          header: (props: any) => (
-            <Header
-              {...props}
-              title={
-                i.name.trim().length > 20
-                  ? i.name.substr(0, 20).trim() + ' ...'
-                  : i.name
-              }>
-              <ItemDetailsNav
-                item={i}
-                onDelete={() =>
-                  show({
-                    header: t('deleteConfirmationHeader'),
-                    body: t('deleteConfirmationBody'),
-                    cancelCallback: () => console.log('canceling'),
-                    confirmCallback: () => deleteItem(i.id),
-                  })
-                }
-              />
-            </Header>
-          ),
-
-          headerTitle:
+  const setHeader = (i: Item) => {
+    navigation.setOptions({
+      header: (props: any) => (
+        <Header
+          {...props}
+          title={
             i.name.trim().length > 20
               ? i.name.substr(0, 20).trim() + ' ...'
-              : i.name,
-        });
-      } else {
-        console.warn('item not found', i);
-        navigation.navigate(stacks.ITEMS_STACK);
-      }
+              : i.name
+          }>
+          <ItemDetailsNav
+            item={i}
+            onDelete={() =>
+              show({
+                header: t('deleteConfirmationHeader'),
+                body: t('deleteConfirmationBody'),
+                cancelCallback: () => console.log('canceling'),
+                confirmCallback: () => deleteItem(i.id),
+              })
+            }
+          />
+        </Header>
+      ),
+
+      headerTitle:
+        i.name.trim().length > 20
+          ? i.name.substr(0, 20).trim() + ' ...'
+          : i.name,
     });
-    console.log('route', route.params?.id);
+  };
+
+  useEffect(() => {
+    if (!route.params?.id) {
+      navigation.navigate(stacks.ITEMS_STACK);
+      return;
+    }
+    const unsubscribe = itemsApi.onDocumentSnapshot(
+      route.params?.id,
+      ({doc}) => {
+        setHeader(doc);
+        setItem(doc);
+      },
+    );
+    return unsubscribe;
+    // console.log('route', route.params?.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params?.id]);
 
-  useFocusEffect(() => {
-    if (refreshItem.current === true) {
-      refreshItem.current = false;
-      loadData().then(() => console.log('useFocusEffect'));
-    }
-  });
+  // useFocusEffect(() => {
+  //   if (refreshItem.current === true) {
+  //     refreshItem.current = false;
+  //     loadData().then(() => console.log('useFocusEffect'));
+  //   }
+  // });
 
   const deleteItem = useCallback(
     async (id: string) => {
       try {
-        await request(() =>
-          itemsApi.deleteById(id, {
-            cache: {evict: `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`},
-          }),
-        );
-        navigation.canGoBack()
-          ? navigation.goBack()
-          : navigation.navigate(screens.HOME);
+        console.log('delete by id', id);
+        // await request(() => itemsApi.deleteById(id));
+        await itemsApi.deleteById(id);
+        console.log('finish delete');
+        goBack({navigation, route});
       } catch (error) {
         console.error(error);
       }
     },
-    [navigation, request, user.id],
+
+    [navigation, route],
   );
 
   const itemImage = useCallback(
@@ -164,9 +149,12 @@ const ItemDetailsScreen = () => {
             dealsApi.createOffer(user.id, item!),
           );
           refreshItem.current = true;
-          navigation.navigate(screens.DEAL_DETAILS, {
-            id: offer.id,
-            toastType: 'newOffer',
+          navigation.navigate(stacks.DEALS_STACK, {
+            screen: screens.DEAL_DETAILS,
+            params: {
+              id: offer.id,
+              toastType: 'newOffer',
+            },
           });
         } catch (error) {}
       },
@@ -210,40 +198,70 @@ const ItemDetailsScreen = () => {
           />
         )}
       </View>
+      <View style={styles.statusContainer}>
+        <Text style={styles.rowTitle}>{t('statusTitle')}</Text>
+        <View>
+          <Text style={styles.status}>{item.status}</Text>
+        </View>
+      </View>
       {!!item.description && (
         <View style={styles.descriptionContainer}>
           <View>
-            <Text style={styles.statusTitle}>{t('itemDescriptionTitle')}</Text>
+            <Text style={styles.rowTitle}>{t('itemDescriptionTitle')}</Text>
           </View>
           {/* <TextDescription>{item.description}</TextDescription> */}
-          <Text>{item.description}</Text>
+          <Text style={styles.status}>{item.description}</Text>
         </View>
       )}
-      <View style={styles.statusContainer}>
-        <Text style={styles.statusTitle}>{t('itemConditionTitle')}</Text>
-        <View>
+      <View style={styles.rowContainer}>
+        <View style={styles.conditionTitle}>
+          <Text style={[styles.rowTitle]}>{t('itemConditionTitle')}</Text>
+        </View>
+        <View style={styles.conditionColumn}>
           <Text style={styles.status}>
             {conditionName ?? item.condition?.type}
           </Text>
-          {!!item.condition?.desc && <Text>{item.condition?.desc}</Text>}
+          {!!item.condition?.desc && (
+            <Text style={styles.status}>{item.condition?.desc}</Text>
+          )}
         </View>
       </View>
 
       {!!item?.description ?? (
-        <TextDescription>{item.description}</TextDescription>
+        <TextDescription textStyle={styles.status}>
+          {item.description}
+        </TextDescription>
       )}
+
+      <View style={styles.statusContainer}>
+        <Text style={styles.rowTitle}>{t('swapTypeTitle')}</Text>
+        <Text style={styles.status}>
+          {swapTypes.find(type => type.id === item.swapOption.type)?.name}
+        </Text>
+      </View>
+
+      {item.swapOption.type === 'swapWithAnother' && (
+        <View style={styles.statusContainer}>
+          <Text style={styles.rowTitle}>{t('swapCategoryTitle')}</Text>
+          <Text style={styles.status}>
+            {item.swapOption?.category?.name ?? item.swapOption.category}
+          </Text>
+        </View>
+      )}
+
       <View style={[styles.row, styles.statusContainer]}>
         <Text style={styles.rowTitle}>{t('addressTitle')}</Text>
-        <Text numberOfLines={2}>
+        <Text style={styles.status}>
           {item.location?.city}, {item.location?.country?.name}
         </Text>
       </View>
+
       <LocationView location={item.location!} style={styles.location} />
 
       {!!item && item.userId !== user.id && route.params?.id === item.id && (
         <OwnerItems item={item} />
       )}
-      {/* {ConfirmSheet} */}
+
       <Sheet ref={sheetRef} />
 
       {item?.swapOption?.type === 'free' && (
@@ -288,19 +306,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
   },
+  rowContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+
   descriptionContainer: {
     flexDirection: 'row',
     // marginTop: 10,
   },
-  statusTitle: {
-    color: theme.colors.salmon,
-    fontWeight: theme.fontWeight.semiBold,
-  },
   rowTitle: {
     color: theme.colors.salmon,
     fontWeight: theme.fontWeight.semiBold,
-    flexShrink: 0,
   },
+  conditionTitle: {
+    // width: 50,
+    // flexWrap: 'nowrap',
+  },
+  conditionColumn: {
+    flexShrink: 1,
+  },
+  // rowTitle: {
+  //   color: theme.colors.salmon,
+  //   fontWeight: theme.fontWeight.semiBold,
+  //   flexShrink: 0,
+  // },
   status: {
     color: theme.colors.grey,
     fontWeight: theme.fontWeight.semiBold,

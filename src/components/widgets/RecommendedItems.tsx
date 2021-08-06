@@ -1,19 +1,16 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-
 import {ApiResponse} from '../../api/Api';
-import categoriesApi from '../../api/categoriesApi';
 import itemsApi, {Item, ItemStatus} from '../../api/itemsApi';
-import {screens} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
 import {Location, Operation, QueryBuilder} from '../../types/DataTypes';
-import {Loader, Text} from '../core';
+import {Text} from '../core';
 import DataList from './DataList';
 import NoDataFound from './NoDataFound';
-import RecommendedCard, {RecommendedCardSkeleton} from './RecommendedCard';
+import RecommendedCard from './RecommendedCard';
 
 const CARD_BORDER = 2;
 const CARD_HEIGHT = 200;
@@ -29,7 +26,7 @@ interface RecommendedItemsProps {
 
 const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
   const navigation = useNavigation();
-  const {profile} = useAuth();
+  const {user, profile} = useAuth();
   const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
 
   const {t} = useLocale('widgets');
@@ -40,6 +37,7 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
       .filters([
         {field: 'location.city', value: location?.city!},
         {field: 'status', value: 'online' as ItemStatus},
+        {field: 'userId', value: user.id, operation: Operation.NOT_EQUAL},
         {
           field: 'category.id',
           operation: Operation.IN,
@@ -48,7 +46,11 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
       ])
       .limit(100)
       .build();
-    console.log('recommended', query);
+    console.log(
+      'recommended',
+      JSON.stringify(query),
+      profile?.targetCategories,
+    );
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
         setItemsResponse({items: snapshot.data});
@@ -60,7 +62,7 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
     );
 
     return unsubscribe;
-  }, [location?.city, profile?.targetCategories]);
+  }, [location?.city, profile?.targetCategories, user.id]);
 
   const listEmptyComponent = (
     <NoDataFound body={'no items found in ' + location.city} icon="" />
@@ -72,7 +74,7 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
   );
   const onEndReached = (info: any, length: number) => {
     if (length > 20) {
-      navigation.navigate(screens.ITEMS);
+      // navigation.navigate();
     }
   };
 

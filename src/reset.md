@@ -47,7 +47,7 @@ from xcode in sigining section, select team
 
 ##  icons
 https://github.com/oblador/react-native-vector-icons#android
-
+https://github.com/oblador/react-native-vector-icons#ios
 ## app start icon
 xcode => Images.xcassets upload from assets appicon folder
 

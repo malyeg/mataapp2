@@ -350,7 +350,10 @@
     "swapHeader": "New Offer",
     "swapBody": "Confirm sending new offer for item {{item}}",
     "newOfferSuccess": "New offer sent successfully 👋",
-    "alreadyHasDealError": "you already has a deal for this item"
+    "alreadyHasDealError": "you already has a deal for this item",
+    "swapTypeTitle": "Swap type: ",
+    "swapCategoryTitle": "Swap Category: ",
+    "statusTitle": "Status: "
   },
 
 

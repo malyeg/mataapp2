@@ -10,7 +10,7 @@ import {
   Operation,
   Query,
 } from '../types/DataTypes';
-import {QuerySnapshot} from '../types/UtilityTypes';
+import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
 // import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
 import cache, {CacheConfig} from '../utils/cache/cacheManager';
 import {allCombinations} from '../utils/CommonUtils';
@@ -31,6 +31,29 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     );
     this.cacheStore = collectionName;
   }
+
+  onDocumentSnapshot = (
+    id: string,
+    observerCallback: (snapshot: DocumentSnapshot<T>) => void,
+  ) => {
+    try {
+      console.log('id', id);
+      return this.collection.doc(id).onSnapshot(snapshot => {
+        const timestamp = (snapshot.data()?.timestamp as any)?.toDate();
+        const doc: T = snapshot.data()
+          ? {
+              ...snapshot.data(),
+              id: snapshot.id,
+              timestamp,
+            }
+          : undefined;
+        observerCallback({...snapshot, doc});
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  };
 
   onQuerySnapshot = (
     observerCallback: (snapshot: QuerySnapshot<T>) => void,
@@ -53,22 +76,24 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
           return item;
         });
         observerCallback({...snapshot, data});
-      });
+      }, onError);
     } catch (error) {
       this.logger.error(error);
-      throw error;
+      if (onError) {
+        onError(error);
+      }
     }
   };
 
   getAll = async (query?: Query<T>, options?: APIOptions) => {
     try {
       const cacheKey = this.buildKeyFrom(options?.cache!, query);
-      if (options?.cache?.enabled && !query?.afterDoc) {
-        const cachedResponse = await cache.get(cacheKey);
-        if (cachedResponse) {
-          return cachedResponse as ApiResponse<T>;
-        }
-      }
+      // if (options?.cache?.enabled && !query?.afterDoc) {
+      //   const cachedResponse = await cache.get(cacheKey);
+      //   if (cachedResponse) {
+      //     return cachedResponse as ApiResponse<T>;
+      //   }
+      // }
       this.logger.debug('getAll query:', query);
       const coll = query ? this.fromQuery(query) : this.collection;
       const snapshot = await coll.get();
@@ -84,9 +109,9 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         if (!!query?.limit && items.length === query.limit) {
           response.lastDoc = snapshot.docs.slice(-1)[0];
         }
-        if (options?.cache?.enabled && !response.lastDoc) {
-          cache.store(cacheKey, response);
-        }
+        // if (options?.cache?.enabled && !response.lastDoc) {
+        //   cache.store(cacheKey, response);
+        // }
         return response;
       }
     } catch (error) {
@@ -96,13 +121,13 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
 
   getById = async (id: string, options?: APIOptions) => {
     this.logger.debug('getById:', id);
-    if (options?.cache?.enabled) {
-      const doc = await cache.get(id);
-      if (doc) {
-        console.log(doc);
-        return doc as T;
-      }
-    }
+    // if (options?.cache?.enabled) {
+    //   const doc = await cache.get(id);
+    //   if (doc) {
+    //     console.log(doc);
+    //     return doc as T;
+    //   }
+    // }
     const snapshot = await this.collection.doc(id).get();
     if (snapshot.exists) {
       const doc = {
@@ -111,8 +136,8 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         // timestamp: new Date(),
         id,
       } as T;
-      !!options?.cache?.enabled &&
-        (await cache.store(id, doc, options.cache.expireInSeconds));
+      // !!options?.cache?.enabled &&
+      //   (await cache.store(id, doc, options.cache.expireInSeconds));
       console.log('finish getbyid');
       return doc;
     }
@@ -172,12 +197,12 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       const createdDoc = {...newDoc, timestamp};
       await this.collection.doc(id).set(createdDoc);
       createdDoc.id = id;
-      options?.analyticsEvent &&
-        this.callAnalytics(options?.analyticsEvent)?.then();
-      if (options?.cache?.enabled) {
-        await cache.store(id, createdDoc, options?.cache?.expireInSeconds);
-      }
-      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
+      // options?.analyticsEvent &&
+      //   this.callAnalytics(options?.analyticsEvent)?.then();
+      // if (options?.cache?.enabled) {
+      //   await cache.store(id, createdDoc, options?.cache?.expireInSeconds);
+      // }
+      // !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
       return newDoc;
     } catch (error) {
       options?.analyticsEvent &&
@@ -189,16 +214,16 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   update = async (id: string, doc: Partial<T>, options?: APIOptions) => {
     try {
       this.logger.debug('update:', doc);
-      cache.remove(id);
+      // cache.remove(id);
       const newDoc = {...doc};
       delete newDoc.timestamp;
       await this.collection.doc(id).update(newDoc);
-      options?.analyticsEvent &&
-        this.callAnalytics(options?.analyticsEvent)?.then();
+      // options?.analyticsEvent &&
+      //   this.callAnalytics(options?.analyticsEvent)?.then();
       if (options?.cache?.enabled) {
         console.warn('not supported');
       }
-      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
+      // !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
@@ -210,12 +235,14 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     try {
       this.logger.debug('deleteById:', docId);
       await this.collection.doc(docId).delete();
-      !!options?.analyticsEvent &&
-        this.callAnalytics(options?.analyticsEvent)?.then();
-      await cache.remove(docId);
-      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
+      console.log('after delete');
+      // !!options?.analyticsEvent &&
+      //   this.callAnalytics(options?.analyticsEvent)?.then();
+      // await cache.remove(docId);
+      // !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
     } catch (error) {
-      options?.analyticsEvent &&
+      console.error(error);
+      !!options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
       throw error;
     }

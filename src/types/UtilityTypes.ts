@@ -37,7 +37,11 @@ export interface QuerySnapshot<T>
   extends FirebaseFirestoreTypes.QuerySnapshot<T> {
   data: T[];
 }
-export type DocumentSnapshot<T> = FirebaseFirestoreTypes.DocumentSnapshot<T>;
+export interface DocumentSnapshot<T>
+  extends FirebaseFirestoreTypes.DocumentSnapshot<T> {
+  doc: T;
+}
+// export type DocumentSnapshot<T> = FirebaseFirestoreTypes.DocumentSnapshot<T>;
 
 // export type NavigationRoute<
 //   ParamList extends ParamListBase,
