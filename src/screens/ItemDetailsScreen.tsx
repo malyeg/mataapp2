@@ -3,22 +3,19 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import {StyleSheet, View} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {Pressable, StyleSheet, View} from 'react-native';
+// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import FreeIcon from '../assets/svgs/free.svg';
 import {Image, Loader, Screen, Text} from '../components/core';
+import {Icon} from '../components/core';
+
 import Carousel from '../components/widgets/Carousel';
 import Header from '../components/widgets/Header';
 import ItemActivity from '../components/widgets/ItemActivity';
+import ItemDetailsCard from '../components/widgets/ItemDetailsCard';
 import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
 import LocationView from '../components/widgets/LocationView';
 import OwnerItems from '../components/widgets/OwnerItems';
@@ -34,6 +31,7 @@ import useSheet from '../hooks/useSheet';
 import useToast from '../hooks/useToast';
 import {ItemDetailsRouteProp} from '../navigation/ItemsStack';
 import {goBack} from '../navigation/NavigationHelper';
+import sharedStyles from '../styles/SharedStyles';
 import theme from '../styles/theme';
 
 export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
@@ -51,13 +49,7 @@ const ItemDetailsScreen = () => {
   const setHeader = (i: Item) => {
     navigation.setOptions({
       header: (props: any) => (
-        <Header
-          {...props}
-          title={
-            i.name.trim().length > 20
-              ? i.name.substr(0, 20).trim() + ' ...'
-              : i.name
-          }>
+        <Header {...props} title="Item Details">
           <ItemDetailsNav
             item={i}
             onDelete={() =>
@@ -76,7 +68,7 @@ const ItemDetailsScreen = () => {
 
   const resetHeader = () => {
     navigation.setOptions({
-      header: (props: any) => <Header title="" {...props} />,
+      header: (props: any) => <Header title="Item details" {...props} />,
     });
   };
 
@@ -137,18 +129,18 @@ const ItemDetailsScreen = () => {
   );
 
   const swapHandler = useCallback(async () => {
-    const existingDeals = await dealsApi.getUserDeals(user.id, item!);
-    if (!!existingDeals && existingDeals.items.length > 0) {
-      showToast({
-        message: t('alreadyHasDealError'),
-        type: 'error',
-        options: {
-          duration: 5000,
-          autoHide: true,
-        },
-      });
-      return;
-    }
+    // const existingDeals = await dealsApi.getUserDeals(user.id, item!);
+    // if (!!existingDeals && existingDeals.items.length > 0) {
+    //   showToast({
+    //     message: t('alreadyHasDealError'),
+    //     type: 'error',
+    //     options: {
+    //       duration: 5000,
+    //       autoHide: true,
+    //     },
+    //   });
+    //   return;
+    // }
     show({
       header: t('swapHeader'),
       body: t('swapBody'),
@@ -176,110 +168,97 @@ const ItemDetailsScreen = () => {
   )?.name;
 
   return item ? (
-    <Screen scrollable={true} style={styles.screen}>
-      {item.images && item.images.length === 1 ? (
-        <Image
-          uri={item.images[0].downloadURL!}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      ) : (
-        <Carousel images={item.images!} renderItem={itemImage} />
-      )}
-
-      <View style={[styles.row, styles.ownerContainer]}>
-        <View style={styles.categoryContainer}>
-          <Icon
-            style={styles.ownerIcon}
-            name="account-outline"
-            size={40} // TODO change to responsive
-            color={theme.colors.grey}
-            //   onPress={toggleEyeIcon}
-          />
-          <Text>{item.category.name}</Text>
-        </View>
-        {item.userId !== user.id && (
-          <SwapButton
-            onPress={swapHandler}
-            item={item}
-            iconStyle={styles.swapButton}
-            iconSize={20}
-          />
-        )}
-      </View>
-      <View style={styles.statusContainer}>
-        <Text style={styles.rowTitle}>{t('statusTitle')}</Text>
-        <View>
-          <Text style={styles.status}>{item.status}</Text>
-        </View>
-      </View>
-      {!!item.description && (
-        <View style={styles.descriptionContainer}>
-          <View>
-            <Text style={styles.rowTitle}>{t('itemDescriptionTitle')}</Text>
-          </View>
-          {/* <TextDescription>{item.description}</TextDescription> */}
-          <Text style={styles.status}>{item.description}</Text>
-        </View>
-      )}
-      <View style={styles.rowContainer}>
-        <View style={styles.conditionTitle}>
-          <Text style={[styles.rowTitle]}>{t('itemConditionTitle')}</Text>
-        </View>
-        <View style={styles.conditionColumn}>
-          <Text style={styles.status}>
-            {conditionName ?? item.condition?.type}
-          </Text>
-          {!!item.condition?.desc && (
-            <Text style={styles.status}>{item.condition?.desc}</Text>
+    <>
+      <Screen scrollable={true} style={styles.screen}>
+        <View style={styles.nameContainer}>
+          <Text style={styles.nameText}>{item.name}</Text>
+          {item.userId !== user.id && (
+            <SwapButton
+              onPress={swapHandler}
+              item={item}
+              // iconStyle={styles.swapButton}
+              iconSize={20}
+            />
           )}
         </View>
-      </View>
+        {!!item.description && (
+          <Text style={styles.descriptionText}>{item.description}</Text>
+        )}
 
-      {!!item?.description ?? (
-        <TextDescription textStyle={styles.status}>
-          {item.description}
-        </TextDescription>
-      )}
+        {item.images && item.images.length === 1 ? (
+          <Image
+            uri={item.images[0].downloadURL!}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        ) : (
+          <Carousel images={item.images!} renderItem={itemImage} />
+        )}
 
-      <View style={styles.statusContainer}>
-        <Text style={styles.rowTitle}>{t('swapTypeTitle')}</Text>
-        <Text style={styles.status}>
-          {swapTypes.find(type => type.id === item.swapOption.type)?.name}
-        </Text>
-      </View>
+        {item.userId !== user.id && (
+          <ItemDetailsCard
+            title="Owner: "
+            content={'Mohamed Aly'}
+            icon="account-outline"
+          />
+        )}
+        {item.userId === user.id && (
+          <ItemDetailsCard
+            title="Status: "
+            content={item.status}
+            icon="cast-connected"
+            contentStyle={item.status === 'online' ? styles.greenText : {}}
+          />
+        )}
 
-      {item.swapOption.type === 'swapWithAnother' && (
-        <View style={styles.statusContainer}>
-          <Text style={styles.rowTitle}>{t('swapCategoryTitle')}</Text>
-          <Text style={styles.status}>
-            {item.swapOption?.category?.name ?? item.swapOption.category}
-          </Text>
-        </View>
-      )}
+        <ItemDetailsCard
+          title={t('itemConditionTitle')}
+          content={conditionName ?? item.condition?.type}
+          icon="cast-connected"
+          contentStyle={(styles as any)[item.condition?.type]}>
+          {/* {!!item.condition?.desc && (
+          <Text style={styles.status}>{item.condition?.desc}</Text>
+        )} */}
+        </ItemDetailsCard>
+        <ItemDetailsCard
+          title={t('categoryTitle')}
+          content={item.category.name}
+          icon="category"
+          iconType="svg"
+        />
 
-      <View style={[styles.row, styles.statusContainer]}>
-        <Text style={styles.rowTitle}>{t('addressTitle')}</Text>
-        <Text style={styles.status}>
-          {item.location?.city}, {item.location?.country?.name}
-        </Text>
-      </View>
+        <ItemDetailsCard
+          title={
+            item.swapOption.type === 'swapWithAnother'
+              ? 'Swap with: '
+              : t('swapTypeTitle')
+          }
+          content={
+            item.swapOption.type === 'swapWithAnother'
+              ? item.swapOption?.category?.name ?? item.swapOption.category
+              : swapTypes.find(type => type.id === item.swapOption.type)
+                  ?.name ?? item.swapOption.type
+          }
+          icon="handshake"
+          contentStyle={(styles as any)[item.swapOption.type]}
+        />
+        <ItemDetailsCard
+          title={t('addressTitle')}
+          content={item.location?.city + ', ' + item.location?.country?.name}
+          icon="google-maps"
+        />
 
-      <LocationView location={item.location!} style={styles.location} />
+        {!!item && item.userId !== user.id && route.params?.id === item.id && (
+          <OwnerItems item={item} style={styles.ownerItems} />
+        )}
 
-      {!!item && item.userId !== user.id && route.params?.id === item.id && (
-        <OwnerItems item={item} />
-      )}
-
-      <Sheet ref={sheetRef} />
-
-      {item?.swapOption?.type === 'free' && (
-        <View style={styles.freeImage}>
-          <FreeIcon width={60} height={60} fill={theme.colors.salmon} />
-        </View>
-      )}
-      {loader}
-    </Screen>
+        <Sheet ref={sheetRef} />
+        {loader}
+      </Screen>
+      <Pressable style={styles.swapContainer} onPress={swapHandler}>
+        <Text style={styles.swapButton}>Send swap offer</Text>
+      </Pressable>
+    </>
   ) : (
     <Loader />
   );
@@ -291,6 +270,24 @@ const styles = StyleSheet.create({
   screen: {
     // flex: 1,
     marginTop: 10,
+    paddingBottom: 20,
+    // marginBottom: 70,
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  nameText: {
+    color: theme.colors.salmon,
+    ...theme.styles.scale.h5,
+  },
+  descriptionText: {
+    marginBottom: 10,
+  },
+
+  greenText: {
+    color: theme.colors.green,
   },
   imageContainer: {
     marginBottom: 10,
@@ -300,16 +297,12 @@ const styles = StyleSheet.create({
     // width: 500,
     maxHeight: 200,
     borderRadius: 20,
+    marginBottom: 10,
   },
   activityContainer: {
     position: 'absolute',
     right: 10,
     top: 10,
-  },
-  nameText: {
-    marginBottom: 10,
-    color: theme.colors.salmon,
-    fontWeight: theme.fontWeight.semiBold,
   },
   statusContainer: {
     flexDirection: 'row',
@@ -385,8 +378,34 @@ const styles = StyleSheet.create({
     height: 70,
     transform: [{rotate: '-10deg'}],
   },
+  // swapButton: {
+  //   height: 30,
+  //   // backgroundColor: 'grey',
+  // },
+
+  swapContainer: {
+    // position: 'absolute',
+    // bottom: 0,
+    height: 60,
+    marginHorizontal: 5,
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    backgroundColor: theme.colors.salmon,
+    // width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   swapButton: {
-    height: 30,
-    // backgroundColor: 'grey',
+    color: theme.colors.white,
+    ...theme.styles.scale.h6,
+  },
+  ownerItems: {
+    marginTop: 20,
+  },
+  used: {
+    color: theme.colors.orange,
+  },
+  free: {
+    color: theme.colors.green,
   },
 });

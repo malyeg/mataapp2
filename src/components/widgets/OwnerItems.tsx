@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import itemsApi, {Item} from '../../api/itemsApi';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
@@ -14,8 +14,9 @@ const ITEM_HEIGHT = CARD_HEIGHT + CARD_BORDER;
 
 interface ItemListProps {
   item: Item;
+  style?: StyleProp<ViewStyle>;
 }
-const OwnerItems = ({item}: ItemListProps) => {
+const OwnerItems = ({item, style}: ItemListProps) => {
   const {t} = useLocale('itemDetailsScreen');
   const listHeaderComponent = useMemo(
     () => <Text style={styles.ownerHeaderText}>{t('ownerItemsTitle')}</Text>,
@@ -55,7 +56,7 @@ const OwnerItems = ({item}: ItemListProps) => {
   console.log('itemList render');
 
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container, style]}>
       {item && (
         <DataList
           loaderStyle={styles.dataListHeight}

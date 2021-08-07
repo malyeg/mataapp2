@@ -5,11 +5,12 @@ import {SvgIcons} from '../../assets/svgs';
 
 // import csv from "!!raw-loader!../../assets/icons/csv_icon.svg";
 
+export type IconType = 'svg' | 'materialCommunity';
 export interface IconProps {
   name: string;
   color?: string;
   size?: number;
-  type?: 'svg' | 'materialCommunity';
+  type?: IconType;
   style?: StyleProp<TextStyle>;
   onPress?: () => void;
 }

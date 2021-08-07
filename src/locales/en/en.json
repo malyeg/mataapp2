@@ -352,6 +352,7 @@
     "ownerItemsTitle": "Owner other items",
     "itemDescriptionTitle": "Description: ",
     "addressTitle": "Location: ",
+    "categoryTitle": "Category: ",
     "itemConditionTitle": "Condition: ",
     "deleteConfirmationHeader": "Confirm delete",
     "deleteConfirmationBody": "Are you sure?",

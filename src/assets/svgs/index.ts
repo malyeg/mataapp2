@@ -1,6 +1,7 @@
 import {SvgProps} from 'react-native-svg';
 import free from './free.svg';
 import filter from './filter.svg';
+import category from './category.svg';
 import React from 'react';
 
 interface SvgIconsType {
@@ -9,4 +10,5 @@ interface SvgIconsType {
 export const SvgIcons: SvgIconsType = {
   free,
   filter,
+  category,
 };

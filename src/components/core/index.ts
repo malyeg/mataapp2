@@ -10,6 +10,7 @@ export {default as Switch} from './Switch';
 export {default as Modal} from './Modal';
 export {default as Loader} from './Loader';
 export {default as Separator} from './Separator';
+export {default as Icon} from './Icon';
 
 // declare module '.' {
 //   export const Button: React.FC<ButtonDataProps>;
