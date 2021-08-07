@@ -123,7 +123,7 @@ const AddItemScreen = () => {
           addTargetCategory(item.swapOption.category);
         }
       }
-      // reset();
+      reset();
       showToast({
         type: 'success',
         message: t('addItemSuccess'),
@@ -176,7 +176,7 @@ const AddItemScreen = () => {
   const categories = useMemo(() => categoriesApi.getAll(), []);
 
   return (
-    <PressableScreen style={styles.screen} scrollable>
+    <PressableScreen style={styles.screen}>
       <ItemImages
         name="images"
         onChange={onItemImagesChange}
@@ -198,7 +198,6 @@ const AddItemScreen = () => {
         control={control}
       />
 
-      {/* <CategoryPicker control={control} /> */}
       <Picker
         name="category"
         items={categories}
