@@ -35,13 +35,13 @@ const Screen: FC<ScreenProps> = ({
       console.log('back handler');
       if (!navigation.canGoBack()) {
         console.log('back handler: no nav');
-        if (route.name !== screens.HOME_TABS) {
-          console.log('back handler: no nav, not home');
-          navigation.navigate(screens.HOME_TABS, {
-            Screen: screens.HOME,
-          });
-          return true;
-        }
+        // if (route.name !== screens.HOME_TABS) {
+        //   console.log('back handler: no nav, not home');
+        //   navigation.navigate(screens.HOME_TABS, {
+        //     Screen: screens.HOME,
+        //   });
+        //   return true;
+        // }
         // TODO show toaster
         // Alert.alert(t('exitModal.title'), 'Are you sure you want to Exit?', [
         //   {

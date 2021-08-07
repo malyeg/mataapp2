@@ -45,7 +45,9 @@ const Stack = createStackNavigator();
 const ItemsStack = () => {
   const {t} = useLocale('common');
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator
+      screenOptions={screenOptions}
+      initialRouteName={screens.ITEMS}>
       <Stack.Screen
         name={screens.ITEMS}
         component={ItemsScreen}

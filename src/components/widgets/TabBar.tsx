@@ -55,6 +55,7 @@ const TabBar = ({style}: TabBarProps) => {
           onPress={() =>
             navigation.navigate(stacks.ITEMS_STACK, {
               screen: screens.MY_ITEMS,
+              params: {fromScreen: screens.HOME},
             })
           }
         />

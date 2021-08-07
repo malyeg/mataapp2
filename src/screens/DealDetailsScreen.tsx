@@ -1,19 +1,19 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import dealsApi, {Deal, DealStatus} from '../api/dealsApi';
-import {Button, Image, Loader, Screen, Text} from '../components/core';
+import {Image, Loader, Screen, Text} from '../components/core';
 import Chat from '../components/widgets/Chat';
-import SwapIcon from '../components/widgets/SwapIcon';
 import {screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
-import {DealDetailsRouteProp} from '../navigation/DrawerStack';
+import {DealDetailsRouteProp} from '../navigation/DealsStack';
 import theme from '../styles/theme';
 
 const DealDetailsScreen = () => {
   const route = useRoute<DealDetailsRouteProp>();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationHelpers>();
   const {request, loader} = useApi();
   const {user} = useAuth();
   const [deal, setDeal] = useState<Deal>();
@@ -67,7 +67,10 @@ const DealDetailsScreen = () => {
     !!deal && (deal.status === 'new' || deal.status === 'accepted');
 
   const onHeaderPress = useCallback(() => {
-    navigation.navigate(screens.ITEM_DETAILS, {id: deal?.item.id});
+    navigation.navigate(screens.ITEM_DETAILS, {
+      id: deal?.item.id,
+      fromScreen: screens.DEAL_DETAILS,
+    });
   }, [deal?.item.id, navigation]);
   return deal ? (
     <Screen style={styles.screen}>

@@ -8,20 +8,15 @@ import {Pressable, StyleSheet, View} from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
-import FreeIcon from '../assets/svgs/free.svg';
 import {Image, Loader, Screen, Text} from '../components/core';
-import {Icon} from '../components/core';
-
 import Carousel from '../components/widgets/Carousel';
 import Header from '../components/widgets/Header';
 import ItemActivity from '../components/widgets/ItemActivity';
 import ItemDetailsCard from '../components/widgets/ItemDetailsCard';
 import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
-import LocationView from '../components/widgets/LocationView';
 import OwnerItems from '../components/widgets/OwnerItems';
 import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
-import TextDescription from '../components/widgets/TextDescription';
 import {screens, stacks} from '../config/constants';
 import swapTypes from '../data/swapTypes';
 import useApi from '../hooks/useApi';
@@ -31,7 +26,6 @@ import useSheet from '../hooks/useSheet';
 import useToast from '../hooks/useToast';
 import {ItemDetailsRouteProp} from '../navigation/ItemsStack';
 import {goBack} from '../navigation/NavigationHelper';
-import sharedStyles from '../styles/SharedStyles';
 import theme from '../styles/theme';
 
 export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
