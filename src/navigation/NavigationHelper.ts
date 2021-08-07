@@ -12,8 +12,11 @@ export const goBack = ({navigation, route, linkTo}: GoBackProps) => {
   } else if (route?.params?.fromScreen) {
     console.log('goBack fromScreen', route?.params?.fromScreen);
     navigation.navigate(route?.params?.fromScreen);
-  } else if (navigation.canGoBack() && navigation.getState().history) {
-    console.log('canGoBack', navigation.getState().history);
+  } else if (
+    navigation.canGoBack() &&
+    navigation.getState().routes?.length > 1
+  ) {
+    console.log('canGoBack');
     navigation.goBack();
   } else {
     console.log('cannot GoBack');

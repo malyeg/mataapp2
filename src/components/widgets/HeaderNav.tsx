@@ -2,7 +2,6 @@ import {useLinkTo} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {screens} from '../../config/constants';
 import {goBack} from '../../navigation/NavigationHelper';
 import theme from '../../styles/theme';
 import PressableOpacity from '../core/PressableOpacity';
@@ -18,7 +17,6 @@ const HeaderNav = ({navigation, route, style}: HeaderNavProps) => {
   // >();
   const linkTo = useLinkTo();
   const onPressHandler = useCallback(() => {
-    console.log(route);
     goBack({navigation, route, linkTo});
   }, [linkTo, navigation, route]);
   return (

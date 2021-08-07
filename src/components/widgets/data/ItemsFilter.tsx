@@ -131,21 +131,21 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
         containerStyle={styles.modal}
         onClose={() => setModalVisible(false)}>
         <View style={styles.form}>
-          <Picker
+          {/* <Picker
             placeholder={t('itemsFilter.country.placeholder')}
             name="country"
             items={[profile?.country!]}
-            defaultValue={profile?.country?.id.toString()}
+            defaultValue={profile?.country?.id?.toString()}
             // onChange={onCountryChange}
             control={control}
             disabled
-          />
-          <View style={styles.rowContainer}>
+          /> */}
+          {/* <View style={styles.rowContainer}>
             <Picker
               style={styles.location}
               // disabled={!!states && states.length > 0}
               placeholder={t('itemsFilter.state.placeholder')}
-              defaultValue={profile?.state?.id.toString()}
+              defaultValue={profile?.state?.id?.toString()}
               // onChange={onStateChange}
               name="state"
               items={[profile?.state!]}
@@ -155,13 +155,13 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
             <Picker
               style={styles.location}
               placeholder={t('itemsFilter.city.placeholder')}
-              defaultValue={'31802'}
+              defaultValue={profile?.city?.id.toString()}
               name="city"
-              items={[{id: '31802', name: 'Cairo'}]}
+              items={[profile?.city!]}
               control={control}
               disabled
             />
-          </View>
+          </View> */}
           <Picker
             name="category"
             items={categoriesApi.getAll()}
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
   },
   form: {
-    flex: 2,
+    flex: 1.5,
     justifyContent: 'space-evenly',
     // backgroundColor: 'grey',
   },

@@ -63,7 +63,11 @@ const TabBar = ({style}: TabBarProps) => {
           icon="handshake"
           iconStyle={styles.dealsIcon}
           isFocused={route.name === screens.DEALS_TABS}
-          onPress={() => navigation.navigate(stacks.DEALS_STACK)}
+          onPress={() =>
+            navigation.navigate(stacks.DEALS_STACK, {
+              screen: screens.DEALS_TABS,
+            })
+          }
         />
       </View>
     </View>

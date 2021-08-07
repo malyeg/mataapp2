@@ -16,7 +16,11 @@ const ProfileIcon: FC<ProfileIconProps> = ({style, size = 25}) => {
     <PressableOpacity
       hitSlop={10}
       style={[styles.container, style]}
-      onPress={() => navigation.navigate(screens.PROFILE_STACK)}>
+      onPress={() =>
+        navigation.navigate(screens.PROFILE_STACK, {
+          screen: screens.PROFILE,
+        })
+      }>
       <Icon
         name="account-outline"
         size={size}

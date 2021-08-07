@@ -73,7 +73,7 @@ function Picker<T extends Entity>({
 
   const onItemChange = useCallback(
     (item: Entity) => {
-      field.onChange(item.id.toString());
+      field.onChange(item.id?.toString());
       if (onChange) {
         onChange(item.id, true);
       }
@@ -96,7 +96,7 @@ function Picker<T extends Entity>({
   }, [name, onReset]);
 
   const selectedItem = useMemo(
-    () => items.find(i => i.id.toString() === field.value),
+    () => items.find(i => i?.id?.toString() === field.value),
     [field.value, items],
   );
 
