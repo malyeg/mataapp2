@@ -255,9 +255,11 @@ const ItemDetailsScreen = () => {
         <Sheet ref={sheetRef} />
         {loader}
       </Screen>
-      <Pressable style={styles.swapContainer} onPress={swapHandler}>
-        <Text style={styles.swapButton}>Send swap offer</Text>
-      </Pressable>
+      {item.userId !== user.id && (
+        <Pressable style={styles.swapContainer} onPress={swapHandler}>
+          <Text style={styles.swapButton}>Send swap offer</Text>
+        </Pressable>
+      )}
     </>
   ) : (
     <Loader />
