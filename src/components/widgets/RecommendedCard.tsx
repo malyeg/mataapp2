@@ -11,7 +11,8 @@ import {Image, Text} from '../core';
 import SwapIcon from './SwapIcon';
 import Icon from '../core/Icon';
 import categoriesApi from '../../api/categoriesApi';
-import {screens} from '../../config/constants';
+import {screens, stacks} from '../../config/constants';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 
 interface ItemCardProps extends ViewProps {
   item: Item;
@@ -23,12 +24,13 @@ interface ItemCardProps extends ViewProps {
 const windowWidth = Dimensions.get('window').width * 0.8;
 
 const RecommendedCard = ({item, style}: ItemCardProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationHelpers>();
 
   const openItemDetails = useCallback(() => {
     // TODO refactor to constant
-    navigation.navigate(screens.ITEM_DETAILS, {
-      id: item.id,
+    navigation.navigate(stacks.ITEMS_STACK, {
+      screen: screens.ITEM_DETAILS,
+      params: {id: item.id, fromScreen: screens.HOME},
     });
   }, [item, navigation]);
 

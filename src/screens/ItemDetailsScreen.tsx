@@ -3,6 +3,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -34,7 +35,7 @@ const ItemDetailsScreen = () => {
   const [item, setItem] = useState<Item>();
   const {loader, request} = useApi();
   const {user} = useAuth();
-  const navigation = useNavigation<NavigationHelpers>();
+  const navigation = useNavigation<StackNavigationHelpers>();
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
   const {showToast} = useToast();
@@ -43,7 +44,7 @@ const ItemDetailsScreen = () => {
   const setHeader = (i: Item) => {
     navigation.setOptions({
       header: (props: any) => (
-        <Header {...props} title="Item Details">
+        <Header {...props}>
           <ItemDetailsNav
             item={i}
             onDelete={() =>
@@ -62,7 +63,7 @@ const ItemDetailsScreen = () => {
 
   const resetHeader = () => {
     navigation.setOptions({
-      header: (props: any) => <Header title="Item details" {...props} />,
+      header: (props: any) => <Header {...props} />,
     });
   };
 

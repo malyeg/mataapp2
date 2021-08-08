@@ -61,9 +61,10 @@ const ItemsStack = () => {
       <Stack.Screen
         name={screens.ITEM_DETAILS}
         component={ItemDetailsScreen}
-        options={({route}) => ({
-          headerTitle: (route.params as any)?.title ?? t('screens.itemDetails'),
-        })}
+        initialParams={{title: t('screens.itemDetails')}}
+        // options={({route}) => ({
+        //   headerTitle: (route.params as any)?.title ?? t('screens.itemDetails'),
+        // })}
       />
     </Stack.Navigator>
   );
