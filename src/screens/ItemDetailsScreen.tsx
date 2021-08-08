@@ -1,6 +1,7 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
@@ -246,7 +247,7 @@ const ItemDetailsScreen = () => {
         {loader}
       </Screen>
       {item.userId !== user.id && (
-        <Pressable style={styles.swapContainer} onPress={swapHandler}>
+        <Pressable style={[styles.swapContainer]} onPress={swapHandler}>
           <Text style={styles.swapButton}>Send swap offer</Text>
         </Pressable>
       )}
@@ -276,6 +277,7 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     marginBottom: 10,
+    textAlign: 'justify',
   },
 
   greenText: {
@@ -320,11 +322,6 @@ const styles = StyleSheet.create({
   conditionColumn: {
     flexShrink: 1,
   },
-  // rowTitle: {
-  //   color: theme.colors.salmon,
-  //   fontWeight: theme.fontWeight.semiBold,
-  //   flexShrink: 0,
-  // },
   status: {
     color: theme.colors.grey,
     fontWeight: theme.fontWeight.semiBold,
@@ -333,13 +330,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    // backgroundColor: 'grey',
-    // overflow: 'hidden',
   },
 
   location: {
-    // flexGrow: 0,
-    // flex: 1,
     height: 150,
     marginBottom: 10,
   },
@@ -377,7 +370,7 @@ const styles = StyleSheet.create({
 
   swapContainer: {
     // position: 'absolute',
-    // bottom: 0,
+    // bottom: -10,
     height: 60,
     marginHorizontal: 5,
     borderTopRightRadius: 30,
