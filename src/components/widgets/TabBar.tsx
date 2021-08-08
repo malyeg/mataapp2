@@ -22,6 +22,13 @@ const TabBar = ({style}: TabBarProps) => {
   const addItemPressHandler = () => {
     navigation.navigate(screens.ADD_ITEM);
   };
+
+  const onMyItemsPress = () => {
+    navigation.navigate(stacks.ITEMS_STACK, {
+      screen: screens.MY_ITEMS,
+      params: {fromScreen: screens.HOME},
+    });
+  };
   return (
     <View style={[styles.container, style]}>
       <View style={styles.itemsContainer}>
@@ -52,12 +59,7 @@ const TabBar = ({style}: TabBarProps) => {
           icon="view-list-outline"
           style={styles.middleItem}
           isFocused={route.name === screens.MY_ITEMS}
-          onPress={() =>
-            navigation.navigate(stacks.ITEMS_STACK, {
-              screen: screens.MY_ITEMS,
-              params: {fromScreen: screens.HOME},
-            })
-          }
+          onPress={onMyItemsPress}
         />
         <TabBarItem
           label={t('tabBar.dealsTitle')}

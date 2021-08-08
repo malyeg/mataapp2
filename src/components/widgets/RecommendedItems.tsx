@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {ApiResponse} from '../../api/Api';
@@ -25,7 +24,6 @@ interface RecommendedItemsProps {
 // const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
-  const navigation = useNavigation();
   const {user, profile} = useAuth();
   const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
 

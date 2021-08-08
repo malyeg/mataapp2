@@ -1,12 +1,6 @@
-import {
-  NavigationHelpers,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
@@ -35,7 +29,7 @@ const ItemDetailsScreen = () => {
   const [item, setItem] = useState<Item>();
   const {loader, request} = useApi();
   const {user} = useAuth();
-  const navigation = useNavigation<StackNavigationHelpers>();
+  const navigation = useNavigation<any>();
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
   const {showToast} = useToast();
@@ -124,18 +118,18 @@ const ItemDetailsScreen = () => {
   );
 
   const swapHandler = useCallback(async () => {
-    // const existingDeals = await dealsApi.getUserDeals(user.id, item!);
-    // if (!!existingDeals && existingDeals.items.length > 0) {
-    //   showToast({
-    //     message: t('alreadyHasDealError'),
-    //     type: 'error',
-    //     options: {
-    //       duration: 5000,
-    //       autoHide: true,
-    //     },
-    //   });
-    //   return;
-    // }
+    const existingDeals = await dealsApi.getUserDeals(user.id, item!);
+    if (!!existingDeals && existingDeals.items.length > 0) {
+      showToast({
+        message: t('alreadyHasDealError'),
+        type: 'error',
+        options: {
+          duration: 5000,
+          autoHide: true,
+        },
+      });
+      return;
+    }
     show({
       header: t('swapHeader'),
       body: t('swapBody'),
@@ -230,7 +224,8 @@ const ItemDetailsScreen = () => {
           }
           content={
             item.swapOption.type === 'swapWithAnother'
-              ? item.swapOption?.category?.name ?? item.swapOption.category
+              ? (item.swapOption?.category as any)?.name ??
+                item.swapOption.category
               : swapTypes.find(type => type.id === item.swapOption.type)
                   ?.name ?? item.swapOption.type
           }

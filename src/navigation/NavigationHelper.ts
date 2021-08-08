@@ -11,8 +11,13 @@ interface GoBackProps {
   route: any;
   linkTo?: (path: string) => void;
 }
-const rootStackScreens = [screens.PROFILE, screens.DEALS, screens.ITEMS];
+const rootStackScreens = [screens.PROFILE, screens.DEALS_TABS, screens.ITEMS];
 export const goBack = ({navigation, route, linkTo}: GoBackProps) => {
+  // console.log({
+  //   state: navigation.getState(),
+  //   route,
+  //   canGoBack: navigation.canGoBack(),
+  // });
   if (route?.params?.fromLink && linkTo) {
     console.log('goBack fromLink', route?.params?.fromLink);
     linkTo(route?.params?.fromLink);
@@ -23,8 +28,11 @@ export const goBack = ({navigation, route, linkTo}: GoBackProps) => {
     console.log('goBack rootStackScreens, going to home');
     navigation.navigate(screens.HOME);
   } else if (navigation.canGoBack() && !!navigation.getState().history) {
-    console.log('goBack', navigation.getState().history);
+    console.log('goBack with history', navigation.getState().history);
     navigation.goBack();
+  } else if (navigation.getState().type === 'stack') {
+    console.log('goBack to index 0', route.name);
+    navigation.navigate(navigation.getState().routeNames[0]);
   } else {
     console.log('cannot GoBack');
     navigation.navigate(screens.HOME);

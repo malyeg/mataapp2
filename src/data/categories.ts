@@ -46,6 +46,11 @@ export default [
     parent: 'home',
     level: -1,
     path: ['home', 'home furniture'],
+    style: {
+      iconName: 'home-outline',
+      bgColor: '#ff7f78',
+      textColor: 'white',
+    },
   },
   {
     id: 'home appliances',
@@ -54,6 +59,11 @@ export default [
     parent: 'home',
     level: -1,
     path: ['home', 'home appliances'],
+    style: {
+      iconName: 'home-outline',
+      bgColor: '#ff7f78',
+      textColor: 'white',
+    },
   },
   {
     id: 'office furnitures',
@@ -62,6 +72,11 @@ export default [
     parent: 'office',
     level: -1,
     path: ['office', 'office furnitures'],
+    style: {
+      iconName: 'office-building',
+      bgColor: '#83D2C8',
+      textColor: 'white',
+    },
   },
   {
     id: 'office appliances',
@@ -70,6 +85,11 @@ export default [
     parent: 'office',
     level: -1,
     path: ['office', 'office appliances'],
+    style: {
+      iconName: 'office-building',
+      bgColor: '#83D2C8',
+      textColor: 'white',
+    },
   },
   {
     id: 'garden furnitures',
@@ -78,6 +98,11 @@ export default [
     parent: 'garden',
     level: -1,
     path: ['garden', 'garden furnitures'],
+    style: {
+      iconName: 'shovel',
+      bgColor: '#727272',
+      textColor: 'white',
+    },
   },
   {
     id: 'garden appliances',
@@ -86,14 +111,11 @@ export default [
     parent: 'garden',
     level: -1,
     path: ['garden', 'garden appliances'],
-  },
-  {
-    id: 'garage tools long name',
-    group: 'Garage',
-    name: 'Garage Tools long nameeeeee eeeeeeee eeeee eeeeeeee',
-    parent: 'garden',
-    level: -1,
-    path: ['garden', 'garage tools long name'],
+    style: {
+      iconName: 'shovel',
+      bgColor: '#727272',
+      textColor: 'white',
+    },
   },
   {
     id: 'garage tools',
@@ -102,6 +124,11 @@ export default [
     parent: 'garden',
     level: -1,
     path: ['garden', 'garage tools'],
+    style: {
+      iconName: 'shovel',
+      bgColor: '#727272',
+      textColor: 'white',
+    },
   },
   {
     id: 'miscellaneous',
