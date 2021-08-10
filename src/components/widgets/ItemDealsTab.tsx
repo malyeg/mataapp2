@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'flex-start',
     // marginTop: 20,
     // flex: 1,
+    marginBottom: 20,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -151,11 +152,12 @@ const styles = StyleSheet.create({
   },
   modalBody: {},
   card: {
-    marginBottom: 20,
+    marginBottom: 2,
   },
   cardImage: {
     width: 50,
     height: 50,
+    borderRadius: 5,
   },
   viewMoreContainer: {
     justifyContent: 'center',

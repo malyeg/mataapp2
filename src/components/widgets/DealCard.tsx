@@ -36,13 +36,15 @@ const DealCard = ({deal, style, imageStyle, onPress}: DealCardProps) => {
   return (
     <Pressable style={[styles.container, style]} onPress={onCardPress}>
       <Image uri={imageUrl} style={[styles.image, imageStyle]} />
-      <View>
+      <View style={styles.contentContainer}>
         {!!deal.timestamp && (
-          <Text style={styles.date} numberOfLines={2} ellipsizeMode="tail">
+          <Text style={styles.date}>
             {format(deal.timestamp, 'MMMM do, yyyy')}
           </Text>
         )}
-        <Text>{deal.item?.name}</Text>
+        <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
+          {deal.item?.name}
+        </Text>
       </View>
     </Pressable>
   );
@@ -55,17 +57,27 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.lightGrey,
     borderWidth: 2,
     borderRadius: 10,
-    flexDirection: 'row',
-    // justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
+    // flexDirection: 'row',
+    justifyContent: 'center',
+    // alignItems: 'center',
+    padding: 10,
+    paddingLeft: 50,
   },
   image: {
+    position: 'absolute',
     width: 80,
     height: 80,
-    marginHorizontal: 20,
+    left: 10,
+    // marginRight: 20,
+  },
+  contentContainer: {
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
   },
   date: {
     color: theme.colors.grey,
+  },
+  name: {
+    // paddingHorizontal: 20,
   },
 });
