@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
-import {Image, Loader, Screen, Text} from '../components/core';
+import {Button, Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
 import Header from '../components/widgets/Header';
 import ItemActivity from '../components/widgets/ItemActivity';
@@ -29,7 +29,7 @@ const ItemDetailsScreen = () => {
   const route = useRoute<ItemDetailsRouteProp>();
   const [item, setItem] = useState<Item>();
   const {loader, request} = useApi();
-  const {user} = useAuth();
+  const {user, profile} = useAuth();
   const navigation = useNavigation<any>();
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
@@ -120,18 +120,20 @@ const ItemDetailsScreen = () => {
   );
 
   const swapHandler = useCallback(async () => {
-    const existingDeals = await dealsApi.getUserDeals(user.id, item!);
-    if (!!existingDeals && existingDeals.items.length > 0) {
-      showToast({
-        message: t('alreadyHasDealError'),
-        type: 'error',
-        options: {
-          duration: 5000,
-          autoHide: true,
-        },
-      });
-      return;
-    }
+    // const existingDeals = await request<ApiResponse<Deal>>(() =>
+    //   dealsApi.getUserDeals(user.id, item!),
+    // );
+    // if (!!existingDeals && existingDeals.items.length > 0) {
+    //   showToast({
+    //     message: t('alreadyHasDealError'),
+    //     type: 'error',
+    //     options: {
+    //       duration: 5000,
+    //       autoHide: true,
+    //     },
+    //   });
+    //   return;
+    // }
     show({
       header: t('swapHeader'),
       body: t('swapBody'),
@@ -189,7 +191,11 @@ const ItemDetailsScreen = () => {
         {item.userId !== user.id && (
           <ItemDetailsCard
             title="Owner: "
-            content={'Mohamed Aly'}
+            content={
+              profile?.firstName
+                ? profile?.firstName + ' ' + profile?.lastName
+                : 'Guest'
+            }
             icon="account-outline"
           />
         )}
@@ -248,10 +254,15 @@ const ItemDetailsScreen = () => {
         {loader}
       </Screen>
       {item.userId !== user.id ? (
-        <Pressable style={[styles.swapContainer]} onPress={swapHandler}>
+        <Pressable style={styles.swapContainer} onPress={swapHandler}>
           <Text style={styles.swapButton}>Send swap offer</Text>
         </Pressable>
       ) : (
+        // <Button
+        //   title={'Send swap offer'}
+        //   style={styles.sendSwapButton}
+        //   onPress={swapHandler}
+        // />
         !!item && <ItemDealsTab item={item} />
       )}
     </>
@@ -266,7 +277,7 @@ const styles = StyleSheet.create({
   screen: {
     // flex: 1,
     marginTop: 10,
-    paddingBottom: 20,
+    paddingBottom: 50,
     // marginBottom: 70,
   },
   nameContainer: {
@@ -374,16 +385,20 @@ const styles = StyleSheet.create({
 
   swapContainer: {
     // position: 'absolute',
-    // bottom: -10,
+    // bottom: -30,
+    // marginBottom: 10,
+    // paddingBottom: 40,
     height: 60,
-    marginHorizontal: 5,
+    // marginHorizontal: 5,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     backgroundColor: theme.colors.salmon,
     // width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1000,
   },
+
   swapButton: {
     color: theme.colors.white,
     ...theme.styles.scale.h6,
@@ -396,5 +411,8 @@ const styles = StyleSheet.create({
   },
   free: {
     color: theme.colors.green,
+  },
+  sendSwapButton: {
+    marginHorizontal: 20,
   },
 });

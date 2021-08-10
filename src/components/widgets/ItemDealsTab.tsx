@@ -96,7 +96,7 @@ const ItemDealsTab = ({item, style}: ItemDealsTabProps) => {
   ) : null;
 };
 
-export default ItemDealsTab;
+export default React.memo(ItemDealsTab);
 
 const styles = StyleSheet.create({
   container: {

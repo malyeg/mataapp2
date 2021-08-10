@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
+import React, {useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
 import citiesApi, {City} from '../api/citiesApi';
@@ -24,7 +25,7 @@ import useLocale from '../hooks/useLocale';
 import useToast from '../hooks/useToast';
 import BackgroundScreen from './BackgroundScreen';
 
-type SignupFormValues = {
+type SignUpFormValues = {
   username: string;
   password: string;
   terms: boolean;
@@ -32,9 +33,11 @@ type SignupFormValues = {
   country: string;
   state: string;
   city: string;
+  firstName: string;
+  lastName: string;
 };
 const SignUpScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationHelpers>();
   const {t} = useLocale('signUpScreen');
   const {loader, request} = useApi();
   const [agreeOnTerms, setAgreeOnTerms] = useState(false);
@@ -49,7 +52,7 @@ const SignUpScreen = () => {
   const [states, setStates] = useState<State[]>(countriesApi.getStates('158'));
 
   const {control, handleSubmit, formState, setValue} =
-    useForm<SignupFormValues>({
+    useForm<SignUpFormValues>({
       username: yup
         .string()
         .trim()
@@ -57,6 +60,8 @@ const SignUpScreen = () => {
         .max(100)
         .required(t('username.required')),
       state: yup.string().trim().required(t('state.required')),
+      firstName: yup.string().trim().required(t('firstName.required')),
+      lastName: yup.string().trim().required(t('lastName.required')),
       city: yup.string().trim().required(t('city.required')),
       phone: yup
         .string()
@@ -122,7 +127,7 @@ const SignUpScreen = () => {
     }
   };
 
-  const onFormSuccess = async (data: SignupFormValues) => {
+  const onFormSuccess = async (data: SignUpFormValues) => {
     hideToast();
     const credentials: ICredentials = {
       username: data.username,
@@ -137,6 +142,8 @@ const SignUpScreen = () => {
         mobile: data.phone,
         state,
         city,
+        firstName: data.firstName,
+        lastName: data.lastName,
         acceptTermsFlag: data.terms ? true : false,
       };
       await request<Profile>(() => signUp(credentials, profile));
@@ -164,6 +171,30 @@ const SignUpScreen = () => {
           returnKeyType="next"
           control={control}
         />
+        <View style={styles.rowContainer}>
+          <TextInput
+            name="firstName"
+            style={styles.rowItem}
+            placeholder={t('firstName.placeholder')}
+            returnKeyType="next"
+            control={control}
+            hideError
+          />
+          <TextInput
+            name="lastName"
+            style={styles.rowItem}
+            placeholder={t('lastName.placeholder')}
+            returnKeyType="next"
+            control={control}
+            hideError
+          />
+        </View>
+        {formState.errors.firstName && (
+          <Error error={formState.errors.firstName} />
+        )}
+        {formState.errors.lastName && (
+          <Error error={formState.errors.lastName} />
+        )}
         <Picker
           style={styles.location}
           searchable
@@ -322,6 +353,9 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  rowItem: {
+    flexBasis: '48%',
   },
 });
 

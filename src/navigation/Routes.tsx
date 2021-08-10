@@ -161,7 +161,10 @@ const Routes = () => {
       linking={linking}
       onReady={navigationOnReadyHandler}
       onStateChange={onStateChange}>
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView
+        style={styles.safeAreaContainer}
+        // edges={['left', 'right', 'top']}
+      >
         {user ? <DrawerStack /> : <AuthStack />}
       </SafeAreaView>
       <Toast ref={ref => Toast.setRef(ref)} config={toastConfig} />

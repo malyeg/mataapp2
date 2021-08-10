@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     width: '100%',
     bottom: 0,
     height: 60,
-    // backgroundColor: theme.colors.white,
+    // backgroundColor: theme.colors.salmon,
     zIndex: 10000,
   },
   itemsContainer: {

@@ -2,7 +2,7 @@ import React, {FC, useCallback} from 'react';
 import {StatusBar, StyleSheet, View, ViewStyle} from 'react-native';
 import ModalBase from 'react-native-modal';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import theme from '../../styles/theme';
+import theme, {colors} from '../../styles/theme';
 import Icon from './Icon';
 import Text from './Text';
 
@@ -98,12 +98,13 @@ export default React.memo(Modal);
 
 const styles = StyleSheet.create({
   modal: {
+    // backgroundColor: 'red',
     flex: 1,
     justifyContent: 'flex-end',
     margin: 0,
   },
   container: {
-    backgroundColor: 'white',
+    backgroundColor: theme.colors.white,
   },
   fullStyle: {
     flex: 1,

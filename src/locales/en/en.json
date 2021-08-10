@@ -143,6 +143,14 @@
       "required": "Email is required",
       "invalid": "Invalid Email"
     },
+    "firstName": {
+      "placeholder": "First name",
+      "required": "First name is required"
+    },
+    "lastName": {
+      "placeholder": "Last name",
+      "required": "Last name is required"
+    },
     "phonePrefix": {
       "label": "Phone",
       "placeholder": "Prefix",
