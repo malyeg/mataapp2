@@ -1,11 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useLocale from '../../hooks/useLocale';
 import useController from '../../hooks/userController';
 import theme from '../../styles/theme';
 import {Entity} from '../../types/DataTypes';
-import {Text} from '../core';
+import {Icon, Text} from '../core';
 import Error from './Error';
 import PickerModal, {PickerModalProps} from './PickerModal';
 

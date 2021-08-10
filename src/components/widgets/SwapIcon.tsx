@@ -1,9 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
 import {Item} from '../../api/itemsApi';
-import Swap from '../../assets/svgs/icSwap.svg';
 import theme from '../../styles/theme';
-import {Text} from '../core';
+import {Icon, Text} from '../core';
 
 interface SwapIconProps extends ViewProps {
   item?: Item;
@@ -13,7 +12,12 @@ interface SwapIconProps extends ViewProps {
 const SwapIcon = ({item, iconSize = 15, style}: SwapIconProps) => {
   return (
     <View style={[styles.container, style]}>
-      <Swap width={iconSize} height={iconSize} fill={theme.colors.salmon} />
+      <Icon
+        name="swap"
+        type="svg"
+        size={iconSize}
+        color={theme.colors.salmon}
+      />
       {!!item && (
         <Text style={styles.offersText}>{item.offers ? item.offers : 0}</Text>
       )}

@@ -9,8 +9,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
 
 interface TabBarItemProps {

@@ -8,10 +8,9 @@ import {
   TextStyle,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useController from '../../hooks/userController';
 import theme from '../../styles/theme';
-import {Text} from '../core';
+import {Icon, Text} from '../core';
 import Error from './Error';
 
 interface AppTextInputProps extends TextInputProps {

@@ -1,9 +1,9 @@
 import {useLinkTo} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {StyleSheet, ViewStyle} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {goBack} from '../../navigation/NavigationHelper';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
 
 interface HeaderNavProps {

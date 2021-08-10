@@ -4,10 +4,9 @@ import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src
 import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import {Item} from '../../api/itemsApi';
-import FreeIcon from '../../assets/svgs/free.svg';
 import constants, {screens, stacks} from '../../config/constants';
 import theme from '../../styles/theme';
-import {Image, Text} from '../core';
+import {Icon, Image, Text} from '../core';
 import SwapIcon from './SwapIcon';
 
 const CARD_BORDER = 2;
@@ -52,11 +51,12 @@ const ItemCard = ({
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>
       <View style={styles.cardHeader}>
         {item?.swapOption?.type === 'free' && (
-          <FreeIcon
-            width={30}
-            height={30}
-            fill={theme.colors.salmon}
+          <Icon
+            size={30}
+            color={theme.colors.salmon}
             style={styles.freeImage}
+            name="free"
+            type="svg"
           />
         )}
         {showSwapIcon && <SwapIcon item={item} />}

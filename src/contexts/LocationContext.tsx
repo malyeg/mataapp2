@@ -7,6 +7,7 @@ import locationReducer, {
   LocationState,
 } from './locationReducer';
 import {LoggerFactory} from '../utils/logger';
+import useAuth from '../hooks/useAuth';
 
 export interface LocationContextModel {
   // state: LocationState;
@@ -20,6 +21,7 @@ const LocationContext = createContext({} as LocationContextModel);
 
 const LocationProvider: React.FC = (props: any) => {
   const loadingRef = useRef(false);
+  const {profile} = useAuth();
   const [state, dispatch] = useImmerReducer(locationReducer, {
     connected: false,
   } as LocationState);
@@ -34,6 +36,10 @@ const LocationProvider: React.FC = (props: any) => {
         });
       } else {
         logger.warn('no lastKnownLocation found');
+        dispatch({
+          type: 'SET_LOCATION',
+          location: {city: profile?.city?.name!, country: profile?.country!},
+        });
       }
     };
     let watchId: number;

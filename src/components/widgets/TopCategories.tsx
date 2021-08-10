@@ -3,11 +3,10 @@ import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src
 import React, {useCallback} from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import categoriesApi from '../../api/categoriesApi';
 import {screens, stacks} from '../../config/constants';
 import theme from '../../styles/theme';
-import {Text} from '../core';
+import {Icon, Text} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
 
 interface TopCategoriesProps extends ViewProps {}

@@ -7,8 +7,8 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../styles/theme';
+import Icon from './Icon';
 import Text from './Text';
 
 interface ListItemProps extends ViewProps {

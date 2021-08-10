@@ -75,7 +75,7 @@ const DealDetailsScreen = () => {
   return deal ? (
     <Screen style={styles.screen}>
       <Pressable style={styles.header} onPress={onHeaderPress}>
-        <Image uri={deal.item.defaultImageURL!} style={styles.image} />
+        <Image uri={deal.item?.defaultImageURL!} style={styles.image} />
         <View>
           <Text style={styles.categoryName}>{deal.item?.category?.name}</Text>
           <Text>{deal.item?.name}</Text>

@@ -3,16 +3,15 @@ import {StyleSheet, View} from 'react-native';
 import {
   Bubble,
   Composer,
-  Day,
   GiftedChat,
   IMessage,
   Send,
 } from 'react-native-gifted-chat';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Deal} from '../../api/dealsApi';
 import messagesApi from '../../api/messagesApi';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 
 interface ChatProps {
   deal: Deal;

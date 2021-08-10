@@ -6,10 +6,10 @@ import {
   GooglePlacesAutocomplete,
 } from 'react-native-google-places-autocomplete';
 import Config from 'react-native-config';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import locationApi from '../../api/locationApi';
 import theme from '../../styles/theme';
 import {Location} from '../../types/DataTypes';
+import {Icon} from '../core';
 
 const defaultQuery: {
   components: string;

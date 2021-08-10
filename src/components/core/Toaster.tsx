@@ -1,10 +1,10 @@
 import React from 'react';
 import {Pressable, View, ViewProps} from 'react-native';
 import Toast, {BaseToastProps} from 'react-native-toast-message';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import create from '../../styles/EStyleSheet';
 import theme from '../../styles/theme';
 import {Status} from '../../types/DataTypes';
+import Icon from './Icon';
 import Text from './Text';
 
 interface ToasterProps extends ViewProps, Status {

@@ -679,7 +679,7 @@ PODS:
     - React-Core
   - react-native-restart (0.0.22):
     - React-Core
-  - react-native-safe-area-context (3.2.0):
+  - react-native-safe-area-context (3.3.0):
     - React-Core
   - React-perflogger (0.64.2)
   - React-RCTActionSheet (0.64.2):
@@ -830,7 +830,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.4.0):
+  - RNScreens (3.5.0):
     - React-Core
     - React-RCTImage
   - RNSVG (12.1.1):
@@ -1129,7 +1129,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: e849fc21ca2f4128a5726c801a82fc6f4a6db50d
   react-native-pager-view: 54970cc27fdef14db2dcfedadb091d711e88065d
   react-native-restart: 733a51ad137f15b0f8dc34c4082e55af7da00979
-  react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
+  react-native-safe-area-context: 61c8c484a3a9e7d1fda19f7b1794b35bbfd2262a
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
   React-RCTAnimation: 6a2e76ab50c6f25b428d81b76a5a45351c4d77aa
@@ -1160,7 +1160,7 @@ SPEC CHECKSUMS:
   RNFBStorage: b1d69650fc4220804b082165c10023abc5efcca5
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
-  RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce
+  RNScreens: 01ab149b5dd5c27f5ff26741b1d2bdf2cee1af35
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d

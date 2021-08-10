@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, Text, TextStyle, View, ViewProps} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 
 interface ProfileHeaderProps extends ViewProps {
   profileIconSize?: number;

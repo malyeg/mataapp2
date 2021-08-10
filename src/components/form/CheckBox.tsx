@@ -1,9 +1,8 @@
 import React, {FC, useCallback} from 'react';
 import {Pressable, StyleSheet, ViewProps} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useController from '../../hooks/userController';
 import theme from '../../styles/theme';
-import {Text} from '../core';
+import {Icon, Text} from '../core';
 interface CheckBoxProps extends ViewProps {
   name: string;
   size?: number;

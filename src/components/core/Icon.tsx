@@ -1,7 +1,9 @@
 import React from 'react';
-import {Pressable, StyleProp, StyleSheet, TextStyle} from 'react-native';
+import {View} from 'react-native';
+import {StyleProp, StyleSheet, TextStyle} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SvgIcons} from '../../assets/svgs';
+import Text from './Text';
 
 // import csv from "!!raw-loader!../../assets/icons/csv_icon.svg";
 
@@ -22,8 +24,10 @@ const Icon = ({
   style,
   onPress,
 }: IconProps) => {
-  const SvgIcon = SvgIcons[name];
-  return type === 'materialCommunity' ? (
+  // console.log('icon name', name);
+  const SvgIcon = type === 'svg' ? SvgIcons[name] : undefined;
+  // const SvgDevIcon = SvgIcons.category;
+  return type === 'materialCommunity' && MaterialIcon.hasIcon(name) ? (
     <MaterialIcon
       name={name}
       style={[styles.icon, style]}
@@ -31,7 +35,7 @@ const Icon = ({
       size={size}
       onPress={onPress}
     />
-  ) : (
+  ) : SvgIcon ? (
     <SvgIcon
       width={size}
       height={size}
@@ -39,7 +43,7 @@ const Icon = ({
       style={[styles.icon, style]}
       onPress={onPress}
     />
-  );
+  ) : null;
 };
 
 export default React.memo(Icon);

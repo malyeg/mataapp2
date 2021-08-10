@@ -4,7 +4,6 @@ import {Dimensions, Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 
-import FreeIcon from '../../assets/svgs/free.svg';
 import {Item} from '../../api/itemsApi';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
@@ -44,10 +43,10 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>
       <Image uri={imageUrl!} style={styles.image} />
       {item?.swapOption?.type === 'free' && (
-        <FreeIcon
-          width={35}
-          height={35}
-          fill={theme.colors.salmon}
+        <Icon
+          name="free"
+          size={35}
+          color={theme.colors.salmon}
           style={styles.freeImage}
         />
       )}

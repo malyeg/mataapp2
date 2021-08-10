@@ -1,10 +1,10 @@
 import React, {FC} from 'react';
 import {FieldError as FieldErrorBase} from '../../types/DataTypes';
 import {StyleSheet, TextStyle, View, ViewProps} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
 import Text from '../core/Text';
+import {Icon} from '../core';
 
 interface FieldErrorProps extends ViewProps {
   name?: string;

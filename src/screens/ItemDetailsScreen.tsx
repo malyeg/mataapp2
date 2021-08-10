@@ -1,13 +1,13 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
 import Header from '../components/widgets/Header';
 import ItemActivity from '../components/widgets/ItemActivity';
+import ItemDealsTab from '../components/widgets/ItemDealsTab';
 import ItemDetailsCard from '../components/widgets/ItemDetailsCard';
 import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
 import OwnerItems from '../components/widgets/OwnerItems';
@@ -92,8 +92,8 @@ const ItemDetailsScreen = () => {
     async (id: string) => {
       try {
         console.log('delete by id', id);
-        // await request(() => itemsApi.deleteById(id));
-        await itemsApi.deleteById(id);
+        await request(() => itemsApi.deleteById(id));
+        // await itemsApi.deleteById(id);
         console.log('finish delete');
         goBack({navigation, route});
       } catch (error) {
@@ -101,6 +101,7 @@ const ItemDetailsScreen = () => {
       }
     },
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [navigation, route],
   );
 
@@ -246,10 +247,12 @@ const ItemDetailsScreen = () => {
         <Sheet ref={sheetRef} />
         {loader}
       </Screen>
-      {item.userId !== user.id && (
+      {item.userId !== user.id ? (
         <Pressable style={[styles.swapContainer]} onPress={swapHandler}>
           <Text style={styles.swapButton}>Send swap offer</Text>
         </Pressable>
+      ) : (
+        !!item && <ItemDealsTab item={item} />
       )}
     </>
   ) : (
@@ -270,10 +273,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    alignItems: 'center',
   },
   nameText: {
     color: theme.colors.salmon,
-    ...theme.styles.scale.h5,
+    ...theme.styles.scale.h6,
   },
   descriptionText: {
     marginBottom: 10,

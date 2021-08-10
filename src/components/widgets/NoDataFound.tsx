@@ -1,9 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
-import {Text} from '../core';
+import {Icon, Text} from '../core';
 
 interface NoDataFoundProps extends ViewProps {
   horizontal?: boolean;

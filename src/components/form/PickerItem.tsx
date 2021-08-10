@@ -1,8 +1,8 @@
 import React, {FC, useCallback} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../styles/theme';
 import {Entity, Nestable} from '../../types/DataTypes';
+import {Icon} from '../core';
 import Text from '../core/Text';
 
 // export type PickerItem = {value: string; label?: string};

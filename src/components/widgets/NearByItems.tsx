@@ -45,7 +45,7 @@ const NearByItems = ({location, title, style}: NearByItemsProps) => {
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
         console.log('setting nearby items');
-        setItemsResponse({items: snapshot.data});
+        setItemsResponse({items: snapshot.data ?? []});
       },
       error => {
         console.log(error);
@@ -70,10 +70,9 @@ const NearByItems = ({location, title, style}: NearByItemsProps) => {
     if (length > 20) {
       navigation.navigate(screens.ITEMS);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
-  return itemsResponse && itemsResponse.items.length > 0 ? (
+  return itemsResponse ? (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
         <Text style={styles.title}>

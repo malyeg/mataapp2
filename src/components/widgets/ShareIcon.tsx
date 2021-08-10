@@ -1,8 +1,8 @@
 import React, {useCallback} from 'react';
-import {StyleProp, TextStyle, ViewStyle} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {StyleProp, ViewStyle} from 'react-native';
 import useSocial from '../../hooks/useSocial';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
 
 interface ShareIconProps {

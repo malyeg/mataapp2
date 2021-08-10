@@ -52,7 +52,7 @@ const Modal: FC<ModalProps> = ({
           barStyle="dark-content"
         />
         <View style={[styles.modalHeader]}>
-          {showHeaderNav && (
+          {showHeaderNav && position === 'full' && (
             <Icon
               name="chevron-left"
               color={theme.colors.grey}
@@ -60,9 +60,18 @@ const Modal: FC<ModalProps> = ({
               onPress={onBack}
             />
           )}
-          {title && (
+          {!!title && (
             <View style={styles.modalTitleContainer}>
               <Text style={styles.modalTitle}>{title}</Text>
+              {position === 'bottom' && (
+                <Icon
+                  name="chevron-down"
+                  color={theme.colors.grey}
+                  size={35}
+                  style={styles.chevronDownIcon}
+                  onPress={onBack}
+                />
+              )}
             </View>
           )}
         </View>
@@ -70,7 +79,12 @@ const Modal: FC<ModalProps> = ({
         <View
           style={[
             styles.body,
-            position === 'full' ? styles.positionFull : styles.positionBottom,
+            position === 'full'
+              ? styles.positionFull
+              : !title
+              ? styles.positionBottom
+              : {},
+
             containerStyle,
           ]}>
           {children}
@@ -101,14 +115,14 @@ const styles = StyleSheet.create({
   },
   body: {
     paddingHorizontal: 20,
-    paddingTop: 30,
+    // paddingTop: 30,
   },
   positionFull: {
     flex: 1,
-    marginTop: 30,
+    // marginTop: 30,
   },
   positionBottom: {
-    // marginTop: 30,
+    marginTop: 30,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -116,11 +130,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalTitleContainer: {
-    // alignSelf: 'flex-end',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingRight: 35,
+    // marginTop: 30,
   },
   modalTitle: {
     ...theme.styles.scale.h6,
@@ -128,5 +141,10 @@ const styles = StyleSheet.create({
     color: theme.colors.salmon,
     // alignSelf: 'center',
     marginVertical: 20,
+  },
+  chevronDownIcon: {
+    color: theme.colors.salmon,
+    position: 'absolute',
+    right: 20,
   },
 });

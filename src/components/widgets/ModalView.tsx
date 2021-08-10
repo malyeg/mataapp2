@@ -8,8 +8,8 @@ import {
   ViewProps,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 
 interface ModalViewProps extends ViewProps {
   title?: string;

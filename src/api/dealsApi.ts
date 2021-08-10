@@ -1,5 +1,3 @@
-import firestore from '@react-native-firebase/firestore';
-import Config from 'react-native-config';
 import {DataSearchable, Entity, QueryBuilder} from '../types/DataTypes';
 import {APIOptions} from './Api';
 import {DataApi} from './DataApi';

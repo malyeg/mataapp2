@@ -12,12 +12,11 @@ import {
 import * as ImagePickerBase from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import itemsApi, {ImageSource} from '../../api/itemsApi';
 import useAuth from '../../hooks/useAuth';
 import useMountedRef from '../../hooks/useMountRef';
 import theme from '../../styles/theme';
-import {Separator, Text} from '../core';
+import {Icon, Separator, Text} from '../core';
 import ListItem from '../core/ListItem';
 import useLocale from '../../hooks/useLocale';
 import useController from '../../hooks/userController';

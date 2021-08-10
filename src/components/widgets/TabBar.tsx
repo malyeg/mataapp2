@@ -2,10 +2,10 @@ import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/s
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React from 'react';
 import {Platform, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screens, stacks} from '../../config/constants';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
 import TabBarItem from './TabBarItem';
 

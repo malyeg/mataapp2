@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {StyleSheet, TextInput, TextStyle, View, ViewProps} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 
 interface SearchInputProps extends ViewProps {
   placeholder?: string;

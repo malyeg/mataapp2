@@ -2,9 +2,9 @@ import {useNavigation} from '@react-navigation/core';
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import React, {FC} from 'react';
 import {StyleSheet, ViewProps} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
+import {Icon} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
 
 interface ProfileIconProps extends ViewProps {
