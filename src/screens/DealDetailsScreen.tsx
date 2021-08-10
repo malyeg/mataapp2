@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   image: {
     width: 80,
     height: 80,
-    borderRadius: 40,
+    borderRadius: 10,
     overflow: 'hidden',
     marginHorizontal: 20,
   },

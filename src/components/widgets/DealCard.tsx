@@ -65,8 +65,9 @@ const styles = StyleSheet.create({
   },
   image: {
     position: 'absolute',
-    width: 80,
-    height: 80,
+    width: 50,
+    height: 50,
+    borderRadius: 5,
     left: 10,
     // marginRight: 20,
   },

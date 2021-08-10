@@ -23,6 +23,7 @@ const ItemsScreen = () => {
   const [state, dispatch] = useImmerReducer(ItemsReducer, {
     loading: false,
   } as ItemsState);
+  ø;
   const {itemsResponse, loading, query} = state;
 
   useEffect(() => {

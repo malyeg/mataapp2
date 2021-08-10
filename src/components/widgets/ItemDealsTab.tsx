@@ -154,11 +154,7 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: 2,
   },
-  cardImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-  },
+  cardImage: {},
   viewMoreContainer: {
     justifyContent: 'center',
     alignItems: 'center',
