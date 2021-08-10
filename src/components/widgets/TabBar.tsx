@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     bottom: 0,
-    height: 75,
+    height: 60,
     // backgroundColor: theme.colors.white,
     zIndex: 10000,
   },
@@ -102,7 +102,11 @@ const styles = StyleSheet.create({
       ios: {
         borderColor: theme.colors.lightGrey,
         borderWidth: 2,
-        paddingBottom: 10,
+        borderBottomWidth: 0,
+        shadowColor: theme.colors.dark,
+        shadowOffset: {width: 1, height: 1},
+        shadowOpacity: 0.1,
+        shadowRadius: 1,
       },
       android: {
         shadowColor: 'rgba(0, 0, 0, 0.5)',
