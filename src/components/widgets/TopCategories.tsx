@@ -17,20 +17,16 @@ const categories = categoriesApi
 
 const TopCategories = ({style}: TopCategoriesProps) => {
   const navigation = useNavigation<StackNavigationHelpers>();
-  const onPress = useCallback(
-    (categoryId: string) => {
-      navigation.navigate(stacks.ITEMS_STACK, {
-        screen: screens.ITEMS,
-        params: {categoryId},
-      });
-    },
-    [navigation],
-  );
 
   const renderItem = useCallback(
     ({item}) => (
       <PressableOpacity
-        onPress={() => onPress(item.id)}
+        onPress={() => {
+          navigation.navigate(stacks.ITEMS_STACK, {
+            screen: screens.ITEMS,
+            params: {categoryId: item.id},
+          });
+        }}
         key={item.id}
         style={styles.categoryContainer}>
         <View style={[styles.category, {backgroundColor: item.style?.bgColor}]}>
@@ -44,7 +40,7 @@ const TopCategories = ({style}: TopCategoriesProps) => {
         <Text style={styles.name}>{item.name}</Text>
       </PressableOpacity>
     ),
-    [onPress],
+    [navigation],
   );
   return (
     <View style={[styles.container, style]}>
@@ -54,26 +50,6 @@ const TopCategories = ({style}: TopCategoriesProps) => {
         horizontal
         showsHorizontalScrollIndicator={false}
       />
-      {/* {categories.map(category => (
-        <PressableObacity
-          onPress={() => onPress(category.id)}
-          key={category.id}
-          style={styles.categoryContainer}>
-          <View
-            style={[
-              styles.category,
-              {backgroundColor: category.style?.bgColor},
-            ]}>
-            <Icon
-              name={category.style?.iconName ?? 'home'}
-              // color="#F2A39C"
-              color="white"
-              size={35}
-            />
-          </View>
-          <Text style={styles.name}>{category.name}</Text>
-        </PressableObacity>
-      ))} */}
     </View>
   );
 };

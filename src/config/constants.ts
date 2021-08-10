@@ -10,6 +10,8 @@ export const firebase = {
   ITEM_UPLOAD_PATH: 'images/items',
   MAX_IMAGE_SIZE: 1000 * 1000,
   MAX_QUERY_LIMIT: 100,
+  TEMP_IMAGE_URL:
+    'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.smartdatajob.com%2Findex.php%2Fen%2F&psig=AOvVaw1MzxSql0s6MvMQQsPKug7q&ust=1628587135925000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCKCbv_PQo_ICFQAAAAAdAAAAABAD',
 };
 
 export const DOMAINS = [

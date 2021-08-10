@@ -30,6 +30,7 @@ export interface DataListProps<T>
   HeaderComponent?: React.ReactElement;
   containerStyle?: ViewStyle;
   listStyle?: ViewStyle;
+  hideLoader?: boolean;
   onEndReached?: (info: any, length: number) => void;
 }
 
@@ -46,6 +47,7 @@ function DataList<T extends Entity>({
   showsVerticalScrollIndicator = false,
   showsHorizontalScrollIndicator = false,
   onEndReached,
+  hideLoader = false,
   ...props
 }: DataListProps<T>) {
   const initialState: DataListInitState = {
@@ -142,7 +144,7 @@ function DataList<T extends Entity>({
         <ActivityIndicator color={theme.colors.salmon} size="large" />
       </View>
     ) : null;
-  }, [hasMore, horizontal, loading, pageable, reloading]);
+  }, [hasMore, horizontal, loading, pageable]);
 
   const NoDataHandler = useCallback(() => {
     if (props.ListEmptyComponent) {

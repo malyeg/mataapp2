@@ -1,6 +1,5 @@
-import React, {Children, ReactNode} from 'react';
+import React, {ReactNode} from 'react';
 import {Platform, StyleProp, StyleSheet, TextStyle, View} from 'react-native';
-
 import theme from '../../styles/theme';
 import {Icon, Text} from '../core';
 import {IconType} from '../core/Icon';
@@ -36,7 +35,13 @@ const ItemDetailsCard = ({
       <View>
         <View style={styles.header}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={[styles.content, contentStyle]}>{content}</Text>
+          <Text
+            style={[styles.content, contentStyle]}
+            // numberOfLines={2}
+            // adjustsFontSizeToFit
+          >
+            {content}
+          </Text>
         </View>
         {!!children && children}
       </View>
@@ -57,18 +62,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 10,
     backgroundColor: theme.colors.white,
+    borderColor: theme.colors.lightGrey,
+    borderWidth: 1,
     ...Platform.select({
       ios: {
-        borderColor: theme.colors.lightGrey,
-        // borderWidth: 2,
-        // paddingBottom: 10,
+        shadowColor: theme.colors.grey,
+        shadowOffset: {width: 1, height: 1},
+        shadowOpacity: 0.6,
+        shadowRadius: 1,
       },
       android: {
         shadowColor: theme.colors.grey,
-        shadowOffset: {
-          width: 1,
-          height: 1,
-        },
+        shadowOffset: {width: 1, height: 1},
         shadowOpacity: 0.3,
         elevation: 3,
       },
@@ -84,9 +89,16 @@ const styles = StyleSheet.create({
   title: {
     color: theme.colors.salmon,
     width: 85,
+    // fontWeight: '700',
     // marginLeft: 5,
   },
   content: {
     textTransform: 'capitalize',
+    width: '70%',
+    textAlign: 'justify',
+    // flex: 1,
+    // flexWrap: 'wrap',
+    // textAlign: 'justify',
+    // flexShrink: 1,
   },
 });

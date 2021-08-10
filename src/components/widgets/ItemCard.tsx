@@ -1,13 +1,11 @@
 import {useNavigation} from '@react-navigation/core';
-import {useLinkTo, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import {Item} from '../../api/itemsApi';
 import FreeIcon from '../../assets/svgs/free.svg';
-import {screens, stacks} from '../../config/constants';
-import useAuth from '../../hooks/useAuth';
-import Routes from '../../navigation/Routes';
+import constants, {screens, stacks} from '../../config/constants';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
 import SwapIcon from './SwapIcon';
@@ -43,7 +41,10 @@ const ItemCard = ({
     // linkTo('/items/' + item.id);
   }, [item.id, navigation, route.name]);
 
-  const imageUrl = item.defaultImageURL ?? item.images[0].downloadURL;
+  const imageUrl =
+    item.defaultImageURL ?? (!!item?.images && !!item?.images[0]?.downloadURL)
+      ? item?.images[0].downloadURL
+      : constants.firebase.TEMP_IMAGE_URL;
 
   // console.log(item.status);
 

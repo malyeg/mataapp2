@@ -109,13 +109,20 @@ export class QueryBuilder<T> {
   ) => {
     return {field, operation, value} as Filter<T>;
   };
-  static queryFrom = <T>(
+  static queryFrom<T>(
     filters: Filter<T>[],
     limit: number = 100,
     orderBy?: Sort[],
-  ) => {
+  ) {
     return {filters, limit, orderBy};
-  };
+  }
+
+  static equal<I>(q1?: Query<I>, q2?: Query<I>) {
+    if (!!q1 && !!q2) {
+      return JSON.stringify(q1) === JSON.stringify(q2);
+    }
+    return false;
+  }
 }
 export interface DataSearchable {
   searchArray?: string[];

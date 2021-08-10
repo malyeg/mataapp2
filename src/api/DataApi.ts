@@ -300,17 +300,19 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   ) => {
     if (query.filters && query.filters.length > 0) {
       for (const filter of query.filters) {
-        const idField = filter.field === 'id' ? '__name__' : filter.field;
-        const newFilter: Filter<T> = {...filter, field: idField};
-        const operation: Operation = newFilter.operation
-          ? newFilter.operation
-          : Operation.EQUAL;
+        if (!!filter.field && !!filter.value) {
+          const idField = filter.field === 'id' ? '__name__' : filter.field;
+          const newFilter: Filter<T> = {...filter, field: idField};
+          const operation: Operation = newFilter.operation
+            ? newFilter.operation
+            : Operation.EQUAL;
 
-        collectionQuery = collectionQuery.where(
-          newFilter.field as any,
-          operation.toString() as FirebaseFirestoreTypes.WhereFilterOp,
-          newFilter.value,
-        );
+          collectionQuery = collectionQuery.where(
+            newFilter.field as any,
+            operation.toString() as FirebaseFirestoreTypes.WhereFilterOp,
+            newFilter.value,
+          );
+        }
       }
     }
     if (query.orderBy && query.orderBy.length > 0) {

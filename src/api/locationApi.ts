@@ -1,17 +1,32 @@
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import Geolocation, {GeoPosition} from 'react-native-geolocation-service';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {
   AddressComponent,
   GooglePlaceDetail,
 } from 'react-native-google-places-autocomplete';
-import {Coordinate, Location} from '../types/DataTypes';
+import {Coordinate} from '../types/DataTypes';
+import {Country} from './countriesApi';
 
 const opt = {
   timeout: 5000,
   maximumAge: 60000,
   enableHighAccuracy: false,
 };
+
+export interface Location {
+  coordinate: Coordinate;
+  address?: {
+    name: string;
+    formattedAddress: string;
+  };
+  city?: string;
+  country?: Country;
+  placeId?: string;
+  position?: {x: number; y: number};
+}
 
 class LocationApi {
   hasPermission = async () => {
@@ -34,7 +49,17 @@ class LocationApi {
     });
   };
 
-  // @Cacheable
+  getLastKnownLocation = async () => {
+    const locationJson = await AsyncStorage.getItem('location');
+    if (locationJson) {
+      return JSON.parse(locationJson) as Location;
+    }
+  };
+
+  saveLastKnownLocation = (location: Location) => {
+    return AsyncStorage.setItem('location', JSON.stringify(location));
+  };
+
   getCurrentLocation = async () => {
     try {
       const position = await this.getCurrentPosition();
@@ -69,7 +94,7 @@ class LocationApi {
       },
       placeId: detail.place_id,
       city: add.locality ?? add.state?.replace('Governorate', '').trim(),
-      country: add.country,
+      country: add.country as Country,
     };
     return loc;
   };

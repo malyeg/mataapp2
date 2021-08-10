@@ -1,12 +1,11 @@
 import React, {createContext, useEffect, useMemo, useRef} from 'react';
 import {GeoPosition} from 'react-native-geolocation-service';
 import {useImmerReducer} from 'use-immer';
-import locationApi from '../api/locationApi';
+import locationApi, {Location} from '../api/locationApi';
 import locationReducer, {
   LocationActions,
   LocationState,
 } from './locationReducer';
-import {Location} from '../types/DataTypes';
 import {LoggerFactory} from '../utils/logger';
 
 export interface LocationContextModel {
@@ -26,13 +25,27 @@ const LocationProvider: React.FC = (props: any) => {
   } as LocationState);
 
   useEffect(() => {
-    logger.debug('useEffect', state);
+    const loadLocation = async () => {
+      const lastKnownLocation = await locationApi.getLastKnownLocation();
+      if (lastKnownLocation) {
+        dispatch({
+          type: 'SET_LOCATION',
+          location: lastKnownLocation,
+        });
+      } else {
+        logger.warn('no lastKnownLocation found');
+      }
+    };
     let watchId: number;
-    const init = async () => {
+    logger.debug('useEffect');
+    const watchLocation = async () => {
+      logger.debug('useEffect, init');
       const hasPermission = await locationApi.hasPermission();
       if (hasPermission) {
+        logger.debug('hasPermission', hasPermission);
         watchId = locationApi.watch(
           async (position: GeoPosition) => {
+            logger.debug('position', position);
             if (
               positionChanged(position, state.location) &&
               !loadingRef.current
@@ -42,10 +55,14 @@ const LocationProvider: React.FC = (props: any) => {
                 position.coords,
               );
               if (location) {
+                logger.debug('location found', location);
+                await locationApi.saveLastKnownLocation(location);
                 dispatch({
                   type: 'SET_LOCATION',
                   location,
                 });
+              } else {
+                console.warn('no location found', location);
               }
               loadingRef.current = false;
             } else {
@@ -61,10 +78,12 @@ const LocationProvider: React.FC = (props: any) => {
           },
         );
       } else {
-        console.warn('no location permission');
+        // TODO show error/warning
+        logger.warn('no location permission');
       }
     };
-    init();
+    loadLocation();
+    watchLocation();
     return () => {
       if (watchId) {
         locationApi.clearWatch(watchId);

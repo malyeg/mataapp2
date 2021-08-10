@@ -1,99 +1,106 @@
-import {useRoute} from '@react-navigation/native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import React, {useCallback, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {ApiResponse} from '../api/Api';
+import {useImmerReducer} from 'use-immer';
 import itemsApi, {Item, ItemStatus} from '../api/itemsApi';
 import {Loader, Screen} from '../components/core';
 import ItemsFilter from '../components/widgets/data/ItemsFilter';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
-import useApi from '../hooks/useApi';
 import useLocation from '../hooks/useLocation';
 import {ItemsRouteProp} from '../navigation/ItemsStack';
-import {Filter, Operation, Query, QueryBuilder} from '../types/DataTypes';
+import ItemsReducer, {ItemsState} from '../reducers/ItemsReducer';
+import {Filter, Operation, QueryBuilder} from '../types/DataTypes';
 
 const ItemsScreen = () => {
+  const navigation = useNavigation();
   const {location} = useLocation();
   const route = useRoute<ItemsRouteProp>();
-  const initialQueryRef = useRef<Filter<Item>[]>([
-    {
-      field: 'status',
-      value: 'online' as ItemStatus,
-    },
-    {
-      field: 'location.city',
-      value: location?.city,
-    },
-  ]);
-  const [query, setQuery] = useState<Query<Item>>();
-  const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
-  const {loader} = useApi();
+  const [state, dispatch] = useImmerReducer(ItemsReducer, {
+    loading: false,
+  } as ItemsState);
+  const {itemsResponse, loading, query} = state;
 
   useEffect(() => {
-    const builder = new QueryBuilder<Item>();
-    builder.filters(initialQueryRef.current);
+    console.log('navigation state', navigation.getState());
+    let newQuery;
+    if (route.params) {
+      const builder = new QueryBuilder<Item>();
+      builder.filters([
+        {
+          field: 'status',
+          value: 'online' as ItemStatus,
+        },
+        {
+          field: 'location.city',
+          value: location?.city,
+        },
+      ]);
 
-    !!route.params?.categoryId &&
-      builder.filter(
-        'category.path',
-        route.params?.categoryId,
-        Operation.CONTAINS,
+      !!route.params?.categoryId &&
+        builder.filter(
+          'category.path',
+          route.params?.categoryId,
+          Operation.CONTAINS,
+        );
+
+      newQuery = builder.build();
+      if (!QueryBuilder.equal(query, newQuery)) {
+        dispatch({
+          type: 'SET_QUERY',
+          query: newQuery,
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location?.city, route.params]);
+
+  useEffect(() => {
+    console.log('useEffect query');
+    let unsubscribe;
+    if (query) {
+      unsubscribe = itemsApi.onQuerySnapshot(
+        snapshot => {
+          dispatch({
+            type: 'SET_ITEMS',
+            itemsResponse: {items: snapshot.data},
+          });
+        },
+        error => {
+          console.error(error);
+        },
+        query,
       );
-
-    // !!route.params?.swapType &&
-    //   builder.filter('swapOption.type', route.params?.swapType);
-    // !!route.params?.status && builder.filter('status', route.params?.status);
-    // !!route.params?.conditionType &&
-    //   builder.filter('condition.type', route.params?.conditionType);
-
-    // if (route.params?.userId) {
-    //   builder.filter('userId', route.params?.userId);
-    // }
-    // if (route.params?.city) {
-    //   builder.filter('location.city', route.params?.city);
-    // }
-    const newQuery = builder.build();
-    console.log('newQuery', newQuery);
-    setQuery(newQuery);
-  }, [route.params]);
-
-  useEffect(() => {
-    const unsubscribe = itemsApi.onQuerySnapshot(
-      snapshot => {
-        setItemsResponse({items: snapshot.data});
-      },
-      error => {
-        console.error(error);
-      },
-      query,
-    );
-
+    }
     return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
 
-  const renderItem = useCallback(
-    ({item}: any) => (
-      <ItemCard style={styles.card} item={item as Item} showActivityStatus />
-    ),
-    [],
+  const renderItem = ({item}: any) => (
+    <ItemCard style={styles.card} item={item as Item} showActivityStatus />
   );
 
   const onFilterChange = useCallback((filters?: Filter<Item>[]) => {
     console.log('onFilterChange', filters);
+    let newQuery;
     if (filters && filters.length > 0) {
-      const newFilters = initialQueryRef.current
-        ? [...initialQueryRef.current, ...filters]
+      const newFilters = query?.filters
+        ? [...query.filters, ...filters]
         : [...filters];
-      const newQuery = new QueryBuilder<Item>().filters(newFilters).build();
-      console.log('newQuery', newQuery);
-      setQuery(newQuery);
+      newQuery = new QueryBuilder<Item>().filters(newFilters).build();
     } else {
-      const newQuery = new QueryBuilder<Item>()
-        .filters(initialQueryRef.current)
-        .build();
-      console.log('else new query', newQuery);
-      setQuery(newQuery);
+      newQuery = new QueryBuilder<Item>().filters(query?.filters ?? []).build();
     }
+    !QueryBuilder.equal(query, newQuery) &&
+      dispatch({
+        type: 'SET_QUERY',
+        query: newQuery,
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -105,7 +112,7 @@ const ItemsScreen = () => {
           filters={query?.filters}
         />
       </View>
-      {query && itemsResponse ? (
+      {!loading && !!itemsResponse ? (
         <DataList
           containerStyle={styles.datalist}
           listStyle={styles.datalist}
@@ -119,7 +126,6 @@ const ItemsScreen = () => {
       ) : (
         <Loader />
       )}
-      {loader}
     </Screen>
   );
 };
