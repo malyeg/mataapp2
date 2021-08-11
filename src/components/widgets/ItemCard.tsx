@@ -18,11 +18,13 @@ interface ItemCardProps extends ViewProps {
   showActivityStatus?: boolean;
   onSwap?: (item: Item) => void;
   showSwapIcon?: boolean;
+  onPress?: (item: Item) => void;
 }
 const ItemCard = ({
   item,
   style,
   showActivityStatus,
+  onPress,
   showSwapIcon = false,
 }: ItemCardProps) => {
   const navigation = useNavigation<StackNavigationHelpers>();
@@ -30,15 +32,20 @@ const ItemCard = ({
   // const linkTo = useLinkTo();
 
   const openItemDetails = useCallback(() => {
-    navigation.navigate(stacks.ITEMS_STACK, {
-      screen: screens.ITEM_DETAILS,
-      params: {
-        id: item.id,
-        fromScreen: route.name,
-      },
-    });
+    if (onPress) {
+      onPress(item);
+    } else {
+      navigation.navigate(stacks.ITEMS_STACK, {
+        screen: screens.ITEM_DETAILS,
+        params: {
+          id: item.id,
+          fromScreen: route.name,
+        },
+      });
+    }
+
     // linkTo('/items/' + item.id);
-  }, [item.id, navigation, route.name]);
+  }, [item, navigation, onPress, route.name]);
 
   const imageUrl =
     item.defaultImageURL ?? (!!item?.images && !!item?.images[0]?.downloadURL)

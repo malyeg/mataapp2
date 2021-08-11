@@ -59,7 +59,8 @@
       "searchItemsLabel": "Search items",
       "dealsLabel": "Deals",
       "faqLabel": "FAQ",
-      "contactUsLabel": "Contact us"
+      "contactUsLabel": "Contact us",
+      "supportUsLabel": "Support us"
     },
     "screens": {
       "profile": "Profile",
@@ -74,7 +75,8 @@
       "deals":"Deals",
       "dealDetails":"Deal details",
       "faq": "FAQ",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "supportUs": "Support us"
     },
     "location": {
       "title": "Select location",

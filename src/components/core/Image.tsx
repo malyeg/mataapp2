@@ -1,14 +1,14 @@
 import React, {FC} from 'react';
-import {ImageStyle, StyleSheet} from 'react-native';
+import {ImageStyle, StyleProp, StyleSheet} from 'react-native';
 import FastImage, {ResizeMode} from 'react-native-fast-image';
 interface ImageProps {
   uri: string;
   cache?: 'immutable' | 'web' | 'cacheOnly';
-  style?: ImageStyle;
+  style?: StyleProp<ImageStyle>;
   resizeMode?: ResizeMode;
 }
 
-const Image: FC<ImageProps> = ({style, cache, uri, resizeMode, ...props}) => {
+const Image = ({style, cache, uri, resizeMode, ...props}: ImageProps) => {
   const styleList = [styles.image, style];
   return (
     <FastImage

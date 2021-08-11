@@ -51,7 +51,11 @@ const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
         label={t('drawer.faqLabel')}
         icon="help"
         onPress={() => navigation.navigate(screens.FAQ)}
-        style={styles.lastItem}
+      />
+      <DrawerItem
+        label={t('drawer.supportUsLabel')}
+        icon="gift-outline"
+        onPress={() => navigation.navigate(screens.SUPPORT_US)}
       />
       <DrawerItem
         label={t('drawer.contactUsLabel')}

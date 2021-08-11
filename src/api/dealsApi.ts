@@ -14,6 +14,7 @@ export interface Deal extends DataSearchable, Entity {
   id: string;
   userId: string;
   item: Item;
+  swapItem?: Item;
   status: DealStatus;
   statusChanges?: {status: DealStatus; userId: string}[];
 }
@@ -22,17 +23,21 @@ class DealsApi extends DataApi<Deal> {
     super('deals');
   }
 
-  createOffer = async (userId: string, item: Item) => {
+  createOffer = async (userId: string, item: Item, swapItem?: Item) => {
     const deal: Omit<Deal, 'id'> = {
       item,
       userId,
       status: 'new',
     };
+    if (swapItem) {
+      deal.swapItem = swapItem;
+    }
     const options: APIOptions = {
       cache: {
         evict: [`${itemsApi.MY_ITEMS_CACHE_KEY}_${userId}`, item.id],
       },
     };
+    console.log('new deal', deal);
     return await this.add(deal, options);
   };
 

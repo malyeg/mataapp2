@@ -1,3 +1,6 @@
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
+import {useNavigation} from '@react-navigation/native';
+import {format} from 'date-fns';
 import React, {useCallback} from 'react';
 import {
   ImageStyle,
@@ -7,13 +10,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {format} from 'date-fns';
 import {Deal} from '../../api/dealsApi';
+import itemsApi from '../../api/itemsApi';
+import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
-import {Image, Text} from '../core';
-import {useNavigation} from '@react-navigation/native';
-import {screens, stacks} from '../../config/constants';
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
+import {Icon, Image, Text} from '../core';
 
 interface DealCardProps {
   deal: Deal;
@@ -30,12 +31,28 @@ const DealCard = ({deal, style, imageStyle, onPress}: DealCardProps) => {
       navigation.navigate(screens.DEAL_DETAILS, {id: deal.id});
     }
   }, [deal.id, navigation, onPress]);
-  const imageUrl = deal.item?.defaultImageURL
-    ? deal.item.defaultImageURL
-    : deal.item?.images[0].downloadURL;
+  const imageUrl = itemsApi.getImageUrl(deal.item)!;
+  const swapImageUrl = deal.swapItem
+    ? itemsApi.getImageUrl(deal.swapItem)
+    : undefined;
+
   return (
     <Pressable style={[styles.container, style]} onPress={onCardPress}>
-      <Image uri={imageUrl} style={[styles.image, imageStyle]} />
+      <View style={styles.imageContainer}>
+        <Image uri={imageUrl} style={[styles.image, imageStyle]} />
+        {!!deal.swapItem && (
+          <>
+            <Icon
+              name="swap"
+              type="svg"
+              size={20}
+              color={theme.colors.salmon}
+            />
+            <Image uri={swapImageUrl!} style={[styles.image, imageStyle]} />
+          </>
+        )}
+      </View>
+
       <View style={styles.contentContainer}>
         {!!deal.timestamp && (
           <Text style={styles.date}>
@@ -63,17 +80,24 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 50,
   },
-  image: {
+  imageContainer: {
     position: 'absolute',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    // position: 'absolute',
     width: 50,
     height: 50,
     borderRadius: 5,
-    left: 10,
+    // left: 10,
     // marginRight: 20,
   },
   contentContainer: {
     paddingHorizontal: 10,
     marginHorizontal: 10,
+    marginLeft: 70,
   },
   date: {
     color: theme.colors.grey,

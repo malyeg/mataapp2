@@ -14,6 +14,10 @@ export const firebase = {
     'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.smartdatajob.com%2Findex.php%2Fen%2F&psig=AOvVaw1MzxSql0s6MvMQQsPKug7q&ust=1628587135925000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCKCbv_PQo_ICFQAAAAAdAAAAABAD',
 };
 
+export const payment = {
+  SUPPORT_US_URL: 'https://www.buymeacoffee.com/matastore',
+};
+
 export const DOMAINS = [
   'mataapp://',
   'http://*.mataup.com',
@@ -88,6 +92,7 @@ export const screens = {
 
   SETTINGS: 'SettingsScreen' as 'SettingsScreen',
   FAQ: 'FAQScreen' as 'FAQScreen',
+  SUPPORT_US: 'SupportUsScreen' as 'SupportUsScreen',
 };
 
 const constants = {
@@ -102,6 +107,7 @@ const constants = {
   auth,
   DOMAINS,
   screens,
+  payment,
 };
 
 export default constants;

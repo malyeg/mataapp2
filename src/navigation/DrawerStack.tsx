@@ -11,6 +11,7 @@ import FAQScreen from '../screens/FAQScreen';
 import HomeScreen from '../screens/HomeScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import SupportUsScreen from '../screens/SupportUsScreen';
 import DealsStack from './DealsStack';
 import DrawerContent from './DrawerContent';
 import HomeTabs from './HomeTabs';
@@ -27,6 +28,7 @@ export type StackParams = {
   [screens.FAQ]: undefined;
   [screens.SETTINGS]: undefined;
   [screens.NOTIFICATIONS]: undefined;
+  [screens.SUPPORT_US]: undefined;
 };
 
 const drawerOptions: DrawerNavigationOptions = {
@@ -86,6 +88,11 @@ const DrawerStack = () => {
         name={screens.FAQ}
         component={FAQScreen}
         options={{headerTitle: t('screens.faq')}}
+      />
+      <Drawer.Screen
+        name={screens.SUPPORT_US}
+        component={SupportUsScreen}
+        options={{headerTitle: t('screens.supportUs')}}
       />
     </Drawer.Navigator>
   );

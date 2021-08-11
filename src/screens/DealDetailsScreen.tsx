@@ -5,6 +5,7 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import dealsApi, {Deal, DealStatus} from '../api/dealsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Chat from '../components/widgets/Chat';
+import DealCard from '../components/widgets/DealCard';
 import {screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
@@ -22,9 +23,10 @@ const DealDetailsScreen = () => {
       if (route.params?.id) {
         const freshDeal = await request<Deal>(() =>
           dealsApi.getById(route.params?.id!, {
-            cache: {enabled: true},
+            cache: {enabled: false},
           }),
         );
+        console.log('freshDeal', freshDeal);
         if (freshDeal) {
           setDeal(freshDeal);
           return;
@@ -74,7 +76,7 @@ const DealDetailsScreen = () => {
   }, [deal?.item.id, navigation]);
   return deal ? (
     <Screen style={styles.screen}>
-      <Pressable style={styles.header} onPress={onHeaderPress}>
+      {/* <Pressable style={styles.header} onPress={onHeaderPress}>
         <Image uri={deal.item?.defaultImageURL!} style={styles.image} />
         <View>
           <Text style={styles.categoryName}>{deal.item?.category?.name}</Text>
@@ -82,36 +84,11 @@ const DealDetailsScreen = () => {
           {/* <View style={styles.typeContainer}>
             <SwapIcon style={styles.swapIcon} />
             <Text>{deal.item?.swapOption?.type}</Text>
-          </View> */}
-        </View>
-      </Pressable>
-      {/* {isOpen &&
-        (deal.userId === user.id ? (
-          <View />
-        ) : (
-          <View style={styles.actionContainer}>
-            {deal.status === 'new' && (
-              <Button
-                title="Accept"
-                style={styles.actionButton}
-                onPress={acceptHandler}
-              />
-            )}
-
-            <Button
-              title="Reject"
-              style={styles.actionButton}
-              onPress={rejectHandler}
-            />
-            {deal.status === 'accepted' && (
-              <Button
-                title="Finish deal"
-                style={styles.actionButton}
-                onPress={finishHandler}
-              />
-            )}
           </View>
-        ))} */}
+        </View>
+      </Pressable> */}
+      <DealCard deal={deal} onPress={() => null} />
+
       <Chat deal={deal} disableComposer={!isOpen} />
       {loader}
     </Screen>

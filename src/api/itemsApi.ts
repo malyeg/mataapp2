@@ -118,6 +118,13 @@ class ItemsApi extends DataApi<Item> {
   };
 
   readonly MY_ITEMS_CACHE_KEY = 'my_items';
+
+  getImageUrl(item: Item) {
+    return item.defaultImageURL ??
+      (!!item?.images && !!item?.images[0]?.downloadURL)
+      ? item?.images[0].downloadURL
+      : constants.firebase.TEMP_IMAGE_URL;
+  }
 }
 
 const itemsApi = new ItemsApi();

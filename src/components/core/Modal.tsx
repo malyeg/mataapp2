@@ -2,7 +2,7 @@ import React, {FC, useCallback} from 'react';
 import {StatusBar, StyleSheet, View, ViewStyle} from 'react-native';
 import ModalBase from 'react-native-modal';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import theme, {colors} from '../../styles/theme';
+import theme from '../../styles/theme';
 import Icon from './Icon';
 import Text from './Text';
 
@@ -135,13 +135,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // marginTop: 30,
+    // backgroundColor: 'grey',
   },
   modalTitle: {
     ...theme.styles.scale.h6,
     fontWeight: theme.fontWeight.semiBold,
     color: theme.colors.salmon,
-    // alignSelf: 'center',
     marginVertical: 20,
+    paddingRight: 35, // same size as the nav icon
   },
   chevronDownIcon: {
     color: theme.colors.salmon,

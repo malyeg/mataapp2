@@ -1,6 +1,7 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
+import {Category} from '../api/categoriesApi';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Button, Image, Loader, Screen, Text} from '../components/core';
@@ -10,6 +11,7 @@ import ItemActivity from '../components/widgets/ItemActivity';
 import ItemDealsTab from '../components/widgets/ItemDealsTab';
 import ItemDetailsCard from '../components/widgets/ItemDetailsCard';
 import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
+import ItemPicker from '../components/widgets/ItemPicker';
 import OwnerItems from '../components/widgets/OwnerItems';
 import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
@@ -28,6 +30,7 @@ export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
 const ItemDetailsScreen = () => {
   const route = useRoute<ItemDetailsRouteProp>();
   const [item, setItem] = useState<Item>();
+  const [showItemPicker, setShowItemPicker] = useState(false);
   const {loader, request} = useApi();
   const {user, profile} = useAuth();
   const navigation = useNavigation<any>();
@@ -134,13 +137,43 @@ const ItemDetailsScreen = () => {
     //   });
     //   return;
     // }
+    if (item?.swapOption.type === 'free') {
+      show({
+        header: t('swapHeader'),
+        body: t('swapBody'),
+        confirmCallback: async () => {
+          try {
+            const offer = await request<Deal>(() =>
+              dealsApi.createOffer(user.id, item!),
+            );
+            refreshItem.current = true;
+            navigation.navigate(stacks.DEALS_STACK, {
+              screen: screens.DEAL_DETAILS,
+              params: {
+                id: offer.id,
+                toastType: 'newOffer',
+              },
+            });
+          } catch (error) {}
+        },
+      });
+    } else {
+      setShowItemPicker(true);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item, navigation, show, t, user.id]);
+
+  const onItemPicker = (swapItem: Item) => {
+    setShowItemPicker(false);
     show({
       header: t('swapHeader'),
-      body: t('swapBody'),
+      // body: t('swapBody'),
+      body: 'swap ' + item?.name + ' with ' + swapItem.name,
       confirmCallback: async () => {
         try {
           const offer = await request<Deal>(() =>
-            dealsApi.createOffer(user.id, item!),
+            dealsApi.createOffer(user.id, item!, swapItem),
           );
           refreshItem.current = true;
           navigation.navigate(stacks.DEALS_STACK, {
@@ -153,8 +186,7 @@ const ItemDetailsScreen = () => {
         } catch (error) {}
       },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item, navigation, show, t, user.id]);
+  };
 
   const conditionName = conditionList.find(
     i => i.id === item?.condition?.type,
@@ -251,6 +283,16 @@ const ItemDetailsScreen = () => {
         )}
 
         <Sheet ref={sheetRef} />
+        {showItemPicker && (
+          <ItemPicker
+            isVisible={showItemPicker}
+            categoryId={
+              (item.swapOption.category as any)?.id ?? item.swapOption.category
+            }
+            onClose={() => setShowItemPicker(false)}
+            onChange={onItemPicker}
+          />
+        )}
         {loader}
       </Screen>
       {item.userId !== user.id ? (
@@ -258,11 +300,6 @@ const ItemDetailsScreen = () => {
           <Text style={styles.swapButton}>Send swap offer</Text>
         </Pressable>
       ) : (
-        // <Button
-        //   title={'Send swap offer'}
-        //   style={styles.sendSwapButton}
-        //   onPress={swapHandler}
-        // />
         !!item && <ItemDealsTab item={item} />
       )}
     </>
