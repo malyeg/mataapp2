@@ -60,7 +60,7 @@
       "dealsLabel": "Deals",
       "faqLabel": "FAQ",
       "contactUsLabel": "Contact us",
-      "supportUsLabel": "Support us"
+      "supportUsLabel": "Support mata"
     },
     "screens": {
       "profile": "Profile",
@@ -76,7 +76,7 @@
       "dealDetails":"Deal details",
       "faq": "FAQ",
       "notifications": "Notifications",
-      "supportUs": "Support us"
+      "supportUs": "Support mata"
     },
     "location": {
       "title": "Select location",
@@ -373,6 +373,10 @@
     "swapTypeTitle": "Swap type: ",
     "swapCategoryTitle": "Swap Category: ",
     "statusTitle": "Status: "
+  },
+
+  "SupportUsScreen": {
+    "content": "Support mata and buy us a coffee"
   },
 
 
