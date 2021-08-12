@@ -1,13 +1,19 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Platform, Pressable, StyleProp, ViewStyle} from 'react-native';
-import {StyleSheet, View} from 'react-native';
+import {
+  Platform,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ApiResponse} from '../../api/Api';
 import dealsApi, {Deal} from '../../api/dealsApi';
 import {Item} from '../../api/itemsApi';
-import {screens, stacks} from '../../config/constants';
+import {screens} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
 import {Operation, QueryBuilder} from '../../types/DataTypes';
@@ -48,9 +54,9 @@ const ItemDealsTab = ({item, style}: ItemDealsTabProps) => {
         imageStyle={styles.cardImage}
         onPress={() => {
           setVisible(false);
-          navigation.navigate(stacks.DEALS_STACK, {
-            screen: screens.DEAL_DETAILS,
-            params: {id: item.id, fromScreen: screens.ITEM_DETAILS},
+          navigation.navigate(screens.DEAL_DETAILS, {
+            id: item.id,
+            fromScreen: screens.ITEM_DETAILS,
           });
         }}
       />

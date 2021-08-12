@@ -18,23 +18,28 @@ export const goBack = ({navigation, route, linkTo}: GoBackProps) => {
   //   route,
   //   canGoBack: navigation.canGoBack(),
   // });
-  if (route?.params?.fromLink && linkTo) {
-    console.log('goBack fromLink', route?.params?.fromLink);
-    linkTo(route?.params?.fromLink);
-  } else if (route?.params?.fromScreen) {
-    console.log('goBack fromScreen', route?.params?.fromScreen);
-    navigation.navigate(route?.params?.fromScreen);
-  } else if (rootStackScreens.includes(route.name)) {
-    console.log('goBack rootStackScreens, going to home');
-    navigation.navigate(screens.HOME);
-  } else if (navigation.canGoBack() && !!navigation.getState().history) {
-    console.log('goBack with history', navigation.getState().history);
+  // if (route?.params?.fromLink && linkTo) {
+  //   console.log('goBack fromLink', route?.params?.fromLink);
+  //   linkTo(route?.params?.fromLink);
+  // } else if (route?.params?.fromScreen) {
+  //   console.log('goBack fromScreen', route?.params?.fromScreen);
+  //   navigation.navigate(route?.params?.fromScreen);
+  // } else if (rootStackScreens.includes(route.name)) {
+  //   console.log('goBack rootStackScreens, going to home');
+  //   navigation.navigate(screens.HOME);
+  // } else if (navigation.canGoBack() && !!navigation.getState().history) {
+  //   console.log('goBack with history', navigation.getState().history);
+  //   navigation.goBack();
+  // } else if (navigation.getState().type === 'stack') {
+  //   console.log('goBack to index 0', route.name);
+  //   navigation.navigate(navigation.getState().routeNames[0]);
+  // } else {
+  //   console.log('cannot GoBack');
+  //   navigation.navigate(screens.HOME);
+  // }
+  if (navigation.canGoBack()) {
     navigation.goBack();
-  } else if (navigation.getState().type === 'stack') {
-    console.log('goBack to index 0', route.name);
-    navigation.navigate(navigation.getState().routeNames[0]);
   } else {
-    console.log('cannot GoBack');
     navigation.navigate(screens.HOME);
   }
 };

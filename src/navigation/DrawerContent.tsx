@@ -28,13 +28,13 @@ const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
         label={t('drawer.dealsLabel')}
         icon="handshake"
         iconStyle={styles.dealsIcon}
-        onPress={() => navigation.navigate(stacks.DEALS_STACK)}
+        onPress={() => navigation.navigate(screens.DEALS_TABS)}
       />
 
       <DrawerItem
         label={t('drawer.profileLabel')}
         icon="account-outline"
-        onPress={() => navigation.navigate(stacks.PROFILE_STACK)}
+        onPress={() => navigation.navigate(screens.PROFILE)}
       />
       <DrawerItem
         label={t('drawer.settingsLabel')}

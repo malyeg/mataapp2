@@ -4,7 +4,7 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import categoriesApi from '../../api/categoriesApi';
-import {screens, stacks} from '../../config/constants';
+import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import {Icon, Text} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
@@ -21,10 +21,7 @@ const TopCategories = ({style}: TopCategoriesProps) => {
     ({item}) => (
       <PressableOpacity
         onPress={() => {
-          navigation.navigate(stacks.ITEMS_STACK, {
-            screen: screens.ITEMS,
-            params: {categoryId: item.id},
-          });
+          navigation.navigate(screens.ITEMS, {categoryId: item.id});
         }}
         key={item.id}
         style={styles.categoryContainer}>

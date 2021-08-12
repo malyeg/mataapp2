@@ -59,16 +59,12 @@ export const cart = {
 };
 
 export const stacks = {
-  DEALS_STACK: 'DealsStack' as 'DealsStack',
-  PROFILE_STACK: 'ProfileStack' as 'ProfileStack',
-  ITEMS_STACK: 'ItemsStack' as 'ItemsStack',
+  HOME_STACK: 'HomeStack' as 'HomeStack',
 };
 export const screens = {
   SIGN_IN: 'SignInScreen' as 'SignInScreen',
   SIGN_UP: 'SignUpScreen' as 'SignUpScreen',
   FORGOT_PASSWORD: 'ForgotPasswordScreen' as 'ForgotPasswordScreen',
-
-  HOME_TABS: 'HomeTabs' as 'HomeTabs',
   HOME: 'HomeScreen' as 'HomeScreen',
 
   ITEMS: 'ItemsScreen' as 'ItemsScreen',
@@ -83,7 +79,6 @@ export const screens = {
 
   NOTIFICATIONS: 'NotificationsScreen' as 'NotificationsScreen',
 
-  PROFILE_STACK: 'ProfileStack' as 'ProfileStack',
   PROFILE: 'ProfileScreen' as 'ProfileScreen',
   EDIT_PROFILE: 'EditProfileScreen' as 'EditProfileScreen',
   CHANGE_PASSWORD: 'ChangePasswordScreen' as 'ChangePasswordScreen',
@@ -108,6 +103,7 @@ const constants = {
   DOMAINS,
   screens,
   payment,
+  stacks,
 };
 
 export default constants;

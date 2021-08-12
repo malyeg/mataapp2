@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React from 'react';
 import {ImageStyle, StyleProp, StyleSheet} from 'react-native';
 import FastImage, {ResizeMode, Source} from 'react-native-fast-image';
 interface ImageProps {

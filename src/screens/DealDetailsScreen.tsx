@@ -1,9 +1,9 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import dealsApi, {Deal, DealStatus} from '../api/dealsApi';
-import {Image, Loader, Screen, Text} from '../components/core';
+import {Loader, Screen} from '../components/core';
 import Chat from '../components/widgets/Chat';
 import DealCard from '../components/widgets/DealCard';
 import {screens} from '../config/constants';
@@ -38,32 +38,32 @@ const DealDetailsScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, route.params]);
 
-  const acceptHandler = useCallback(async () => {
-    console.log('acceptHandler');
-    await request<Deal>(() =>
-      dealsApi.updateStatus(deal!, user.id, 'accepted'),
-    );
-    setDeal(d => {
-      return {...d, status: 'accepted'} as Deal;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const rejectHandler = useCallback(async () => {
-    const status: DealStatus = 'rejected';
-    await request<Deal>(() => dealsApi.updateStatus(deal!, user.id, status));
-    setDeal(d => {
-      return {...d, status} as Deal;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const finishHandler = useCallback(async () => {
-    const status: DealStatus = 'finished';
-    await request<Deal>(() => dealsApi.updateStatus(deal!, user.id, status));
-    setDeal(d => {
-      return {...d, status} as Deal;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // const acceptHandler = useCallback(async () => {
+  //   console.log('acceptHandler');
+  //   await request<Deal>(() =>
+  //     dealsApi.updateStatus(deal!, user.id, 'accepted'),
+  //   );
+  //   setDeal(d => {
+  //     return {...d, status: 'accepted'} as Deal;
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+  // const rejectHandler = useCallback(async () => {
+  //   const status: DealStatus = 'rejected';
+  //   await request<Deal>(() => dealsApi.updateStatus(deal!, user.id, status));
+  //   setDeal(d => {
+  //     return {...d, status} as Deal;
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+  // const finishHandler = useCallback(async () => {
+  //   const status: DealStatus = 'finished';
+  //   await request<Deal>(() => dealsApi.updateStatus(deal!, user.id, status));
+  //   setDeal(d => {
+  //     return {...d, status} as Deal;
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const isOpen =
     !!deal && (deal.status === 'new' || deal.status === 'accepted');
@@ -76,17 +76,6 @@ const DealDetailsScreen = () => {
   }, [deal?.item.id, navigation]);
   return deal ? (
     <Screen style={styles.screen}>
-      {/* <Pressable style={styles.header} onPress={onHeaderPress}>
-        <Image uri={deal.item?.defaultImageURL!} style={styles.image} />
-        <View>
-          <Text style={styles.categoryName}>{deal.item?.category?.name}</Text>
-          <Text>{deal.item?.name}</Text>
-          {/* <View style={styles.typeContainer}>
-            <SwapIcon style={styles.swapIcon} />
-            <Text>{deal.item?.swapOption?.type}</Text>
-          </View>
-        </View>
-      </Pressable> */}
       <DealCard deal={deal} onPress={() => null} />
 
       <Chat deal={deal} disableComposer={!isOpen} />

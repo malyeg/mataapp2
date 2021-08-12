@@ -1,10 +1,9 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import {Category} from '../api/categoriesApi';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
-import {Button, Image, Loader, Screen, Text} from '../components/core';
+import {Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
 import Header from '../components/widgets/Header';
 import ItemActivity from '../components/widgets/ItemActivity';
@@ -15,7 +14,7 @@ import ItemPicker from '../components/widgets/ItemPicker';
 import OwnerItems from '../components/widgets/OwnerItems';
 import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
-import {screens, stacks} from '../config/constants';
+import {screens} from '../config/constants';
 import swapTypes from '../data/swapTypes';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
@@ -67,7 +66,7 @@ const ItemDetailsScreen = () => {
 
   useEffect(() => {
     if (!route.params?.id) {
-      navigation.navigate(stacks.ITEMS_STACK);
+      navigation.navigate(screens.ITEMS);
       return;
     }
     if (!!item && route.params?.id !== item.id) {
@@ -147,12 +146,9 @@ const ItemDetailsScreen = () => {
               dealsApi.createOffer(user.id, item!),
             );
             refreshItem.current = true;
-            navigation.navigate(stacks.DEALS_STACK, {
-              screen: screens.DEAL_DETAILS,
-              params: {
-                id: offer.id,
-                toastType: 'newOffer',
-              },
+            navigation.navigate(screens.DEAL_DETAILS, {
+              id: offer.id,
+              toastType: 'newOffer',
             });
           } catch (error) {}
         },
@@ -176,12 +172,9 @@ const ItemDetailsScreen = () => {
             dealsApi.createOffer(user.id, item!, swapItem),
           );
           refreshItem.current = true;
-          navigation.navigate(stacks.DEALS_STACK, {
-            screen: screens.DEAL_DETAILS,
-            params: {
-              id: offer.id,
-              toastType: 'newOffer',
-            },
+          navigation.navigate(screens.DEAL_DETAILS, {
+            id: offer.id,
+            toastType: 'newOffer',
           });
         } catch (error) {}
       },

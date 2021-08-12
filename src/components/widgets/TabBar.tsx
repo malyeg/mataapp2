@@ -2,7 +2,7 @@ import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/s
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React from 'react';
 import {Platform, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {screens, stacks} from '../../config/constants';
+import {screens} from '../../config/constants';
 import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
 import {Icon} from '../core';
@@ -24,10 +24,7 @@ const TabBar = ({style}: TabBarProps) => {
   };
 
   const onMyItemsPress = () => {
-    navigation.navigate(stacks.ITEMS_STACK, {
-      screen: screens.MY_ITEMS,
-      params: {fromScreen: screens.HOME},
-    });
+    navigation.navigate(screens.MY_ITEMS, {fromScreen: screens.HOME});
   };
   return (
     <View style={[styles.container, style]}>
@@ -66,11 +63,7 @@ const TabBar = ({style}: TabBarProps) => {
           icon="handshake"
           iconStyle={styles.dealsIcon}
           isFocused={route.name === screens.DEALS_TABS}
-          onPress={() =>
-            navigation.navigate(stacks.DEALS_STACK, {
-              screen: screens.DEALS_TABS,
-            })
-          }
+          onPress={() => navigation.navigate(screens.DEALS_TABS)}
         />
       </View>
     </View>

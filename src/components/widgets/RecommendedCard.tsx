@@ -1,17 +1,16 @@
 import {useNavigation} from '@react-navigation/core';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback} from 'react';
 import {Dimensions, Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
-
+import categoriesApi from '../../api/categoriesApi';
 import {Item} from '../../api/itemsApi';
+import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
-import SwapIcon from './SwapIcon';
 import Icon from '../core/Icon';
-import categoriesApi from '../../api/categoriesApi';
-import {screens, stacks} from '../../config/constants';
-import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
+import SwapIcon from './SwapIcon';
 
 interface ItemCardProps extends ViewProps {
   item: Item;
@@ -27,9 +26,9 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
 
   const openItemDetails = useCallback(() => {
     // TODO refactor to constant
-    navigation.navigate(stacks.ITEMS_STACK, {
-      screen: screens.ITEM_DETAILS,
-      params: {id: item.id, fromScreen: screens.HOME},
+    navigation.navigate(screens.ITEM_DETAILS, {
+      id: item.id,
+      fromScreen: screens.HOME,
     });
   }, [item, navigation]);
 

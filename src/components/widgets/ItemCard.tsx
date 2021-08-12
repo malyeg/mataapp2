@@ -4,7 +4,7 @@ import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src
 import React, {useCallback} from 'react';
 import {Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import {Item} from '../../api/itemsApi';
-import constants, {screens, stacks} from '../../config/constants';
+import constants, {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import {Icon, Image, Text} from '../core';
 import SwapIcon from './SwapIcon';
@@ -35,12 +35,9 @@ const ItemCard = ({
     if (onPress) {
       onPress(item);
     } else {
-      navigation.navigate(stacks.ITEMS_STACK, {
-        screen: screens.ITEM_DETAILS,
-        params: {
-          id: item.id,
-          fromScreen: route.name,
-        },
+      navigation.navigate(screens.ITEM_DETAILS, {
+        id: item.id,
+        fromScreen: route.name,
       });
     }
 

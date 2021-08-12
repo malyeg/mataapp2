@@ -4,7 +4,7 @@ import React, {FC, useEffect, useState} from 'react';
 import {Pressable, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Button, Icon, Modal, Screen, Text} from '../components/core';
 import ProfileHeader from '../components/widgets/ProfileHeader';
-import {screens, stacks} from '../config/constants';
+import {screens} from '../config/constants';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 // import useSocial from '../hooks/useSocial';
@@ -36,12 +36,7 @@ const ProfileScreen = () => {
       />
       <ProfileItem
         title={t('myItemsLink')}
-        onPress={() =>
-          navigation.navigate(stacks.ITEMS_STACK, {
-            screen: screens.MY_ITEMS,
-            params: {fromScreen: stacks.PROFILE_STACK},
-          })
-        }
+        onPress={() => navigation.navigate(screens.MY_ITEMS)}
       />
 
       <ProfileItem

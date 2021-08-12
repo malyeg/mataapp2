@@ -20,6 +20,7 @@ export interface Profile extends DataSearchable, Entity {
   interests?: string[];
   targetCategories?: string[];
   token?: string;
+  appRated?: boolean;
 }
 
 class ProfilesApi extends DataApi<Profile> {
