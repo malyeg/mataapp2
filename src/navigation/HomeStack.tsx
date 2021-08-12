@@ -50,7 +50,7 @@ export type StackParams = {
   [screens.CHANGE_PASSWORD]: undefined;
 
   [screens.DEALS_TABS]: undefined;
-  [screens.DEAL_DETAILS]: undefined;
+  [screens.DEAL_DETAILS]: {id: string; title: string} | undefined;
 
   [screens.SETTINGS]: undefined;
   [screens.NOTIFICATIONS]: undefined;

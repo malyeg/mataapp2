@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
@@ -9,11 +9,12 @@ import DealCard from '../components/widgets/DealCard';
 import {screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
-import {DealDetailsRouteProp} from '../navigation/DealsStack';
+import {StackParams} from '../navigation/HomeStack';
 import theme from '../styles/theme';
 
+type DealDetailsRoute = RouteProp<StackParams, typeof screens.DEAL_DETAILS>;
 const DealDetailsScreen = () => {
-  const route = useRoute<DealDetailsRouteProp>();
+  const route = useRoute<DealDetailsRoute>();
   const navigation = useNavigation<StackNavigationHelpers>();
   const {request, loader} = useApi();
   const {user} = useAuth();

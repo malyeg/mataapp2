@@ -333,6 +333,9 @@
       "required": "Status is required",
       "invalid": "Invalid Status"
     },
+    "isPublic": {
+      "label": "Allow others to see my profile"
+    },
     "submitBtnTitle": "Update",
     "changeSuccess": "Profile updated successfully 👋"
   },

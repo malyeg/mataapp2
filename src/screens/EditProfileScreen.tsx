@@ -43,8 +43,8 @@ const EditProfileScreen = () => {
 
   const {control, formState, handleSubmit, reset, setValue} =
     useForm<EditProfileFormValues>({
-      firstName: yup.string().trim().max(200),
-      lastName: yup.string().trim().max(200),
+      firstName: yup.string().trim().max(200).required(t('firstName.required')),
+      lastName: yup.string().trim().max(200).required(t('lastName.required')),
       country: yup.string().trim().required(t('country.required')),
       phoneCode: yup.string().trim().required(t('phoneCode.required')),
       phone: yup
@@ -182,6 +182,7 @@ const EditProfileScreen = () => {
             returnKeyType="next"
             defaultValue={profile?.firstName}
             control={control}
+            hideError
           />
           <TextInput
             style={styles.rowItem}
@@ -190,8 +191,14 @@ const EditProfileScreen = () => {
             returnKeyType="next"
             defaultValue={profile?.lastName}
             control={control}
+            hideError
           />
         </View>
+        {(!!formState.errors.firstName || !!formState.errors.lastName) && (
+          <Error
+            error={formState.errors.firstName! ?? formState.errors.lastName!}
+          />
+        )}
         <TextInput
           disabled
           defaultValue={user.email}
@@ -270,6 +277,12 @@ const EditProfileScreen = () => {
           defaultValue={profile?.acceptMarketingFlag}
           control={control}
         />
+        {/* <CheckBox
+          name="isPublic"
+          label={t('isPublic.label')}
+          defaultValue={profile?.isPublic}
+          control={control}
+        /> */}
         <Button
           disabled={!formState.isDirty}
           title={t('submitBtnTitle')}

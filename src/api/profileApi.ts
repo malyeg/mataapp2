@@ -21,6 +21,7 @@ export interface Profile extends DataSearchable, Entity {
   targetCategories?: string[];
   token?: string;
   appRated?: boolean;
+  isPublic: boolean;
 }
 
 class ProfilesApi extends DataApi<Profile> {

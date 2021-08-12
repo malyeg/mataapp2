@@ -1,4 +1,4 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useImmerReducer} from 'use-immer';
@@ -7,15 +7,17 @@ import {Loader, Screen} from '../components/core';
 import ItemsFilter from '../components/widgets/data/ItemsFilter';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
+import {screens} from '../config/constants';
 import useLocation from '../hooks/useLocation';
-import {ItemsRouteProp} from '../navigation/ItemsStack';
+import {StackParams} from '../navigation/HomeStack';
 import ItemsReducer, {ItemsState} from '../reducers/ItemsReducer';
 import {Filter, Operation, QueryBuilder} from '../types/DataTypes';
 
+type ItemsRoute = RouteProp<StackParams, typeof screens.ITEMS>;
 const ItemsScreen = () => {
   const navigation = useNavigation();
   const {location} = useLocation();
-  const route = useRoute<ItemsRouteProp>();
+  const route = useRoute<ItemsRoute>();
   const [state, dispatch] = useImmerReducer(ItemsReducer, {
     loading: false,
   } as ItemsState);

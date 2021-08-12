@@ -1,6 +1,7 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
+import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
@@ -21,13 +22,14 @@ import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useSheet from '../hooks/useSheet';
 import useToast from '../hooks/useToast';
-import {ItemDetailsRouteProp} from '../navigation/ItemsStack';
+import {StackParams} from '../navigation/HomeStack';
 import {goBack} from '../navigation/NavigationHelper';
 import theme from '../styles/theme';
 
+type ItemDetailsRoute = RouteProp<StackParams, typeof screens.ITEM_DETAILS>;
 export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
 const ItemDetailsScreen = () => {
-  const route = useRoute<ItemDetailsRouteProp>();
+  const route = useRoute<ItemDetailsRoute>();
   const [item, setItem] = useState<Item>();
   const [showItemPicker, setShowItemPicker] = useState(false);
   const {loader, request} = useApi();
@@ -122,20 +124,20 @@ const ItemDetailsScreen = () => {
   );
 
   const swapHandler = useCallback(async () => {
-    // const existingDeals = await request<ApiResponse<Deal>>(() =>
-    //   dealsApi.getUserDeals(user.id, item!),
-    // );
-    // if (!!existingDeals && existingDeals.items.length > 0) {
-    //   showToast({
-    //     message: t('alreadyHasDealError'),
-    //     type: 'error',
-    //     options: {
-    //       duration: 5000,
-    //       autoHide: true,
-    //     },
-    //   });
-    //   return;
-    // }
+    const existingDeals = await request<ApiResponse<Deal>>(() =>
+      dealsApi.getUserDeals(user.id, item!),
+    );
+    if (!!existingDeals && existingDeals.items.length > 0) {
+      showToast({
+        message: t('alreadyHasDealError'),
+        type: 'error',
+        options: {
+          duration: 5000,
+          autoHide: true,
+        },
+      });
+      return;
+    }
     if (item?.swapOption.type === 'free') {
       show({
         header: t('swapHeader'),
@@ -216,11 +218,7 @@ const ItemDetailsScreen = () => {
         {item.userId !== user.id && (
           <ItemDetailsCard
             title="Owner: "
-            content={
-              profile?.firstName
-                ? profile?.firstName + ' ' + profile?.lastName
-                : 'Guest'
-            }
+            content={item?.user?.name ?? item.user?.email ?? 'Guest'}
             icon="account-outline"
           />
         )}

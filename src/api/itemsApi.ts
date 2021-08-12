@@ -1,12 +1,9 @@
-import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import constants from '../config/constants';
 import {DataSearchable, Entity, Location} from '../types/DataTypes';
-import {DataApi} from './DataApi';
-
-import Config from 'react-native-config';
-import {Category} from './categoriesApi';
 import {APIOptions} from './Api';
+import {Category} from './categoriesApi';
+import {DataApi} from './DataApi';
 
 export type ItemStatus = 'draft' | 'online';
 export type ConditionType = 'new' | 'goodAsNew' | 'used' | 'usedWithIssues';
@@ -50,7 +47,13 @@ export type ImageSource = {
 };
 export interface Item extends DataSearchable, Entity {
   id: string;
-  userId: string;
+  userId: string; // deprecated
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    isProfilePublic: boolean;
+  };
   name: string;
   category: Category;
   // status: {type: string; desc?: string};

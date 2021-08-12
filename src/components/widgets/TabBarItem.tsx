@@ -1,6 +1,4 @@
-import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import React from 'react';
-
 import {
   StyleProp,
   StyleSheet,

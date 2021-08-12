@@ -62,7 +62,13 @@ const Modal: FC<ModalProps> = ({
           )}
           {!!title && (
             <View style={styles.modalTitleContainer}>
-              <Text style={styles.modalTitle}>{title}</Text>
+              <Text
+                style={[
+                  styles.modalTitle,
+                  position === 'bottom' ? {marginLeft: 35} : {},
+                ]}>
+                {title}
+              </Text>
               {position === 'bottom' && (
                 <Icon
                   name="chevron-down"

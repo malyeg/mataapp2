@@ -6,6 +6,7 @@ import {AuthActionType, ICredentials} from '../contexts/AuthReducer';
 
 const useAuth = () => {
   const authContext = useContext(AuthContext);
+  const {user, profile} = authContext.state;
 
   const signIn = async (credentials: ICredentials) => {
     try {
@@ -68,6 +69,12 @@ const useAuth = () => {
     return profile;
   };
 
+  const getName = () => {
+    return profile?.firstName
+      ? profile?.firstName + ' ' + profile?.lastName
+      : profile?.email ?? 'Guest';
+  };
+
   return {
     user: authContext.state?.user!,
     profile: authContext.state?.profile,
@@ -79,6 +86,7 @@ const useAuth = () => {
     changePassword,
     loadProfile,
     addTargetCategory,
+    getName,
   };
 };
 

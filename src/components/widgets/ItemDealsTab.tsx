@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 75,
     backgroundColor: theme.colors.white,
+    // paddingBottom: 80,
   },
   tabContainer: {
     flexDirection: 'row',
@@ -146,12 +147,13 @@ const styles = StyleSheet.create({
     // justifyContent: 'flex-start',
     // marginTop: 20,
     // flex: 1,
-    marginBottom: 20,
+    paddingBottom: 40,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+
     marginBottom: 20,
     // marginTop: 20,
   },

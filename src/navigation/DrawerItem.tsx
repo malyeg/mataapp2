@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 10,
-    // borderBottomColor: theme.colors.lightGrey,
-    // borderBottomWidth: 2,
+    // marginLeft: 10,
+    marginHorizontal: 10,
+    borderBottomColor: theme.colors.lightGrey,
+    borderBottomWidth: 2,
     height: 50,
   },
   icon: {

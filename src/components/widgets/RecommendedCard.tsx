@@ -2,8 +2,6 @@ import {useNavigation} from '@react-navigation/core';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback} from 'react';
 import {Dimensions, Pressable, StyleSheet, View, ViewProps} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import categoriesApi from '../../api/categoriesApi';
 import {Item} from '../../api/itemsApi';
 import {screens} from '../../config/constants';
@@ -73,21 +71,6 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
     </Pressable>
   );
 };
-
-export const RecommendedCardSkeleton = () => (
-  <View style={styles.shimmerContainer}>
-    <ShimmerPlaceHolder
-      LinearGradient={LinearGradient}
-      style={styles.shimmerImage}
-    />
-    <View>
-      <ShimmerPlaceHolder
-        LinearGradient={LinearGradient}
-        style={styles.categoryText}
-      />
-    </View>
-  </View>
-);
 
 export default React.memo(RecommendedCard);
 

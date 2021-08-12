@@ -42,7 +42,7 @@ const AddItemScreen = () => {
   const [uploading, setUploading] = useState<boolean>(false);
   const uploadSet = useRef(new Set()).current;
   const {loader, request} = useApi();
-  const {user, profile, addTargetCategory} = useAuth();
+  const {user, profile, addTargetCategory, getName} = useAuth();
   const {showToast, hideToast} = useToast();
 
   const {control, reset, handleSubmit} = useForm<AddItemFormValues>({
@@ -92,6 +92,12 @@ const AddItemScreen = () => {
           defaultImage.current?.downloadURL ?? data.images[0].downloadURL,
         location: data.location,
         userId: user.id,
+        user: {
+          id: user.id,
+          name: getName(),
+          email: profile?.email ?? user.username,
+          isProfilePublic: profile?.isPublic ?? false,
+        },
         status: data.status === true ? 'draft' : 'online',
         swapOption: {
           type: data.swapType,
