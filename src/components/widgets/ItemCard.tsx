@@ -37,12 +37,11 @@ const ItemCard = ({
     } else {
       navigation.navigate(screens.ITEM_DETAILS, {
         id: item.id,
-        fromScreen: route.name,
       });
     }
 
     // linkTo('/items/' + item.id);
-  }, [item, navigation, onPress, route.name]);
+  }, [item, navigation, onPress]);
 
   const imageUrl =
     item.defaultImageURL ?? (!!item?.images && !!item?.images[0]?.downloadURL)

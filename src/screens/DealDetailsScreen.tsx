@@ -71,7 +71,6 @@ const DealDetailsScreen = () => {
   const onHeaderPress = useCallback(() => {
     navigation.navigate(screens.ITEM_DETAILS, {
       id: deal?.item.id,
-      fromScreen: screens.DEAL_DETAILS,
     });
   }, [deal?.item.id, navigation]);
   return deal ? (

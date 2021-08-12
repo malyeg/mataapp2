@@ -13,15 +13,15 @@ interface GoBackProps {
 }
 const rootStackScreens = [screens.PROFILE, screens.DEALS_TABS, screens.ITEMS];
 export const goBack = ({navigation, route, linkTo}: GoBackProps) => {
-  // console.log({
-  //   state: navigation.getState(),
-  //   route,
-  //   canGoBack: navigation.canGoBack(),
-  // });
-  // if (route?.params?.fromLink && linkTo) {
-  //   console.log('goBack fromLink', route?.params?.fromLink);
-  //   linkTo(route?.params?.fromLink);
-  // } else if (route?.params?.fromScreen) {
+  if (route?.params?.fromLink && linkTo) {
+    console.log('goBack fromLink', route?.params?.fromLink);
+    linkTo(route?.params?.fromLink);
+  } else if (navigation.canGoBack()) {
+    navigation.goBack();
+  } else {
+    navigation.navigate(screens.HOME);
+  }
+  // else if (route?.params?.fromScreen) {
   //   console.log('goBack fromScreen', route?.params?.fromScreen);
   //   navigation.navigate(route?.params?.fromScreen);
   // } else if (rootStackScreens.includes(route.name)) {
@@ -37,11 +37,6 @@ export const goBack = ({navigation, route, linkTo}: GoBackProps) => {
   //   console.log('cannot GoBack');
   //   navigation.navigate(screens.HOME);
   // }
-  if (navigation.canGoBack()) {
-    navigation.goBack();
-  } else {
-    navigation.navigate(screens.HOME);
-  }
 };
 
 export default {goBack};

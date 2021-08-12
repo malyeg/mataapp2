@@ -56,7 +56,6 @@ const ItemDealsTab = ({item, style}: ItemDealsTabProps) => {
           setVisible(false);
           navigation.navigate(screens.DEAL_DETAILS, {
             id: item.id,
-            fromScreen: screens.ITEM_DETAILS,
           });
         }}
       />

@@ -28,7 +28,6 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
     // TODO refactor to constant
     navigation.navigate(screens.ITEM_DETAILS, {
       id: item.id,
-      fromScreen: screens.HOME,
     });
   }, [item, navigation]);
 

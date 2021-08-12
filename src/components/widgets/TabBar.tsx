@@ -24,7 +24,7 @@ const TabBar = ({style}: TabBarProps) => {
   };
 
   const onMyItemsPress = () => {
-    navigation.navigate(screens.MY_ITEMS, {fromScreen: screens.HOME});
+    navigation.navigate(screens.MY_ITEMS);
   };
   return (
     <View style={[styles.container, style]}>
