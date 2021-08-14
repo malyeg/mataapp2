@@ -3,17 +3,24 @@ import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import {useLinkTo} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Linking, StyleSheet} from 'react-native';
+import notificationsApi, {Notification} from '../api/notificationsApi';
 import ProfileHeader from '../components/widgets/ProfileHeader';
 import {screens, stacks} from '../config/constants';
+import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
+import useNotifications from '../hooks/useNotifications';
 import theme from '../styles/theme';
+import {QueryBuilder} from '../types/DataTypes';
 import DrawerItem from './DrawerItem';
 
 const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
   const {t} = useLocale('common');
+  // const [notificationCount, setNotificationCount] = useState(0);
   const linkTo = useLinkTo();
+  const {user} = useAuth();
+  const {getNotificationsCount} = useNotifications();
 
   return (
     <DrawerContentScrollView {...props}>
@@ -45,7 +52,7 @@ const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
         label={t('drawer.notificationsLabel')}
         icon="bell-outline"
         onPress={() => navigation.navigate(screens.NOTIFICATIONS)}
-        badge={10}
+        badge={getNotificationsCount()}
       />
       <DrawerItem
         label={t('drawer.faqLabel')}

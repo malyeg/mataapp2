@@ -47,11 +47,6 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
       ])
       .limit(100)
       .build();
-    console.log(
-      'recommended',
-      JSON.stringify(query),
-      profile?.targetCategories,
-    );
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
         console.log('setting recommended items');

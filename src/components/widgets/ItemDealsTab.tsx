@@ -15,6 +15,7 @@ import dealsApi, {Deal} from '../../api/dealsApi';
 import {Item} from '../../api/itemsApi';
 import {screens} from '../../config/constants';
 import useAuth from '../../hooks/useAuth';
+import useLocale from '../../hooks/useLocale';
 import theme from '../../styles/theme';
 import {Operation, QueryBuilder} from '../../types/DataTypes';
 import {Icon, Modal, Text} from '../core';
@@ -31,6 +32,7 @@ const ItemDealsTab = ({item, style}: ItemDealsTabProps) => {
   const [deals, setDeals] = useState<ApiResponse<Deal> | undefined>();
   const insets = useSafeAreaInsets();
   const {user} = useAuth();
+  const {t} = useLocale('widgets');
 
   useEffect(() => {
     const query = new QueryBuilder<Deal>()
@@ -89,7 +91,7 @@ const ItemDealsTab = ({item, style}: ItemDealsTabProps) => {
         isVisible={isVisible}
         containerStyle={styles.modal}
         showHeaderNav={true}
-        title="Item Deals"
+        title={t('itemDealsTab.modalTitle')}
         onClose={() => setVisible(false)}>
         <DataList
           data={deals}

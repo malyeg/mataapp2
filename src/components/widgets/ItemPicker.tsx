@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../../api/Api';
 import itemsApi, {Item} from '../../api/itemsApi';
 import useAuth from '../../hooks/useAuth';
 import {QueryBuilder} from '../../types/DataTypes';
-import {Loader, Modal} from '../core';
+import {Loader, Modal, Text} from '../core';
 import DataList from './DataList';
 import ItemCard from './ItemCard';
+import NoDataFound from './NoDataFound';
 
 interface ItemPickerProps {
   isVisible: boolean;
@@ -31,7 +32,11 @@ const ItemPicker = ({
     ]);
     !!categoryId && query.filter('category.id', categoryId);
     itemsApi.getAll(query.build()).then(itemResp => {
-      setItems(itemResp);
+      if (itemResp && itemResp.items.length > 0) {
+        setItems(itemResp);
+      } else {
+        setItems({items: []});
+      }
     });
   }, [categoryId, user.id]);
 
@@ -55,7 +60,6 @@ const ItemPicker = ({
           renderItem={renderItem}
         />
       ) : (
-        // </View>
         <Loader />
       )}
     </Modal>
@@ -71,4 +75,10 @@ const styles = StyleSheet.create({
   card: {
     flexBasis: '48%',
   },
+  noDataFound: {
+    flex: 1,
+    backgroundColor: 'grey',
+    height: 500,
+  },
+  datalist: {flex: 1},
 });

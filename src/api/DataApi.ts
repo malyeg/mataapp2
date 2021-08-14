@@ -300,7 +300,8 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   ) => {
     if (query.filters && query.filters.length > 0) {
       for (const filter of query.filters) {
-        if (!!filter.field && !!filter.value) {
+        if (!!filter.field && filter.value !== undefined) {
+          console.log('filter', filter);
           const idField = filter.field === 'id' ? '__name__' : filter.field;
           const newFilter: Filter<T> = {...filter, field: idField};
           const operation: Operation = newFilter.operation

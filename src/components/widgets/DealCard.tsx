@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {Deal} from '../../api/dealsApi';
 import itemsApi from '../../api/itemsApi';
-import {screens} from '../../config/constants';
+import {patterns, screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import {Icon, Image, Text} from '../core';
 
@@ -56,7 +56,7 @@ const DealCard = ({deal, style, imageStyle, onPress}: DealCardProps) => {
       <View style={styles.contentContainer}>
         {!!deal.timestamp && (
           <Text style={styles.date}>
-            {format(deal.timestamp, 'MMMM do, yyyy')}
+            {format(deal.timestamp, patterns.DATE)}
           </Text>
         )}
         <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">

@@ -112,8 +112,6 @@ const ItemsScreen = () => {
       </View>
       {!loading && !!itemsResponse ? (
         <DataList
-          containerStyle={styles.datalist}
-          listStyle={styles.datalist}
           showsVerticalScrollIndicator={false}
           data={itemsResponse}
           columnWrapperStyle={styles.columnWrapper}

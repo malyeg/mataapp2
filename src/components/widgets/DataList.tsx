@@ -162,7 +162,12 @@ function DataList<T extends Entity>({
 
   return !loading ? (
     items ? (
-      <View style={[styles.container, containerStyle]}>
+      <View
+        style={[
+          styles.container,
+          !horizontal ? styles.vertical : {},
+          containerStyle,
+        ]}>
         {HeaderComponent}
         <FlatList
           {...props}
@@ -200,8 +205,10 @@ const styles = StyleSheet.create({
   horizontal: {
     flexGrow: 0,
   },
+  vertical: {
+    flex: 1,
+  },
   flatList: {
-    // flexGrow: 0,
     // flex: 1,
   },
   listActivityContainer: {

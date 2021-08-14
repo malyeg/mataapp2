@@ -14,6 +14,11 @@ export const firebase = {
     'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.smartdatajob.com%2Findex.php%2Fen%2F&psig=AOvVaw1MzxSql0s6MvMQQsPKug7q&ust=1628587135925000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCKCbv_PQo_ICFQAAAAAdAAAAABAD',
 };
 
+export const patterns = {
+  DATE: 'MMMM do, yyyy',
+  DATE_TIME: 'MMMM do, yyyy HH:MM',
+};
+
 export const payment = {
   SUPPORT_US_URL: 'https://www.buymeacoffee.com/matastore',
 };
@@ -104,6 +109,7 @@ const constants = {
   screens,
   payment,
   stacks,
+  patterns,
 };
 
 export default constants;

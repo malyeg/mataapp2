@@ -11,6 +11,7 @@ import {Linking, StyleSheet} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
+import notificationsApi from '../api/notificationsApi';
 import {toastConfig} from '../components/core/Toaster';
 import Sheet from '../components/widgets/Sheet';
 import constants from '../config/constants';
@@ -68,6 +69,10 @@ const Routes = () => {
           message => {
             console.log('onNotificationOpenedApp', message);
             let url = (message.data as any)?.url as string;
+            const id = (message.data as any)?.id as string;
+            if (id) {
+              notificationsApi.updateDelivery(id);
+            }
 
             if (url) {
               const fullUrl = url.includes('//') ? url : `mataapp://${url}`;

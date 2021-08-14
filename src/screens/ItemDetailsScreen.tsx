@@ -1,7 +1,6 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
@@ -33,7 +32,7 @@ const ItemDetailsScreen = () => {
   const [item, setItem] = useState<Item>();
   const [showItemPicker, setShowItemPicker] = useState(false);
   const {loader, request} = useApi();
-  const {user, profile} = useAuth();
+  const {user} = useAuth();
   const navigation = useNavigation<any>();
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
@@ -95,10 +94,7 @@ const ItemDetailsScreen = () => {
   const deleteItem = useCallback(
     async (id: string) => {
       try {
-        console.log('delete by id', id);
         await request(() => itemsApi.deleteById(id));
-        // await itemsApi.deleteById(id);
-        console.log('finish delete');
         goBack({navigation, route});
       } catch (error) {
         console.error(error);
@@ -158,7 +154,6 @@ const ItemDetailsScreen = () => {
     } else {
       setShowItemPicker(true);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, navigation, show, t, user.id]);
 
@@ -166,8 +161,9 @@ const ItemDetailsScreen = () => {
     setShowItemPicker(false);
     show({
       header: t('swapHeader'),
-      // body: t('swapBody'),
-      body: 'swap ' + item?.name + ' with ' + swapItem.name,
+      body: t('swapCategoryBody', {
+        params: {source: item?.name!, destination: swapItem.name},
+      }),
       confirmCallback: async () => {
         try {
           const offer = await request<Deal>(() =>
@@ -288,7 +284,7 @@ const ItemDetailsScreen = () => {
       </Screen>
       {item.userId !== user.id ? (
         <Pressable style={styles.swapContainer} onPress={swapHandler}>
-          <Text style={styles.swapButton}>Send swap offer</Text>
+          <Text style={styles.swapButton}>{t('sendSwapButton')}</Text>
         </Pressable>
       ) : (
         !!item && <ItemDealsTab item={item} />

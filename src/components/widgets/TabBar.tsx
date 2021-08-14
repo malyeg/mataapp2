@@ -4,6 +4,7 @@ import React from 'react';
 import {Platform, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {screens} from '../../config/constants';
 import useLocale from '../../hooks/useLocale';
+import useNotifications from '../../hooks/useNotifications';
 import theme from '../../styles/theme';
 import {Icon} from '../core';
 import PressableOpacity from '../core/PressableOpacity';
@@ -18,6 +19,7 @@ const TabBar = ({style}: TabBarProps) => {
   const {t} = useLocale('common');
   const navigation = useNavigation<DrawerNavigationHelpers>();
   const route = useRoute();
+  const {getNotificationsCount} = useNotifications();
 
   const addItemPressHandler = () => {
     navigation.navigate(screens.ADD_ITEM);
@@ -49,6 +51,7 @@ const TabBar = ({style}: TabBarProps) => {
           style={styles.middleItem}
           isFocused={route.name === screens.NOTIFICATIONS}
           onPress={() => navigation.navigate(screens.NOTIFICATIONS)}
+          badge={getNotificationsCount()}
         />
 
         <TabBarItem

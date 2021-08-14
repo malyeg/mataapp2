@@ -6,6 +6,7 @@
     "android": "react-native run-android",
     "a": "react-native run-android",
     "i": "react-native run-ios",
+    "iphone": "react-native run-ios --device=\"iphone1\"",
     "start": "react-native start",
     "clean": "concurrently 'cd android;./gradlew clean' 'cd ios;pod cache clean --all'",
     "uninstall": "adb uninstall com.mataapp",
