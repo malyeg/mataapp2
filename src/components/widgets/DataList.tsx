@@ -101,7 +101,6 @@ function DataList<T extends Entity>({
 
   const loadMoreHandler = useMemo(
     () => async (info: {distanceFromEnd: number}) => {
-      console.log('loadMoreHandler');
       if (!pageable && onEndReached) {
         onEndReached(info, items?.length);
         return;

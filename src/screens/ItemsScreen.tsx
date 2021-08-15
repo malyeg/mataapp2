@@ -24,7 +24,7 @@ const ItemsScreen = () => {
   const {itemsResponse, loading, query} = state;
 
   useEffect(() => {
-    console.log('navigation state', navigation.getState());
+    console.log('ItemsScreen => useEffect');
     let newQuery;
     if (route.params) {
       const builder = new QueryBuilder<Item>();

@@ -24,7 +24,7 @@ export type Filter<T> = {
   operation?: Operation;
 };
 
-export type Page<T> = {
+export type Page = {
   size: number;
   index?: number;
 };
@@ -32,8 +32,8 @@ export interface Query<T> {
   filters?: Filter<T>[];
   limit?: number;
   orderBy?: Sort[];
-  page?: Page<T>;
-  afterDoc?: FirebaseFirestoreTypes.QueryDocumentSnapshot<T>;
+  page?: Page;
+  // afterDoc?: FirebaseFirestoreTypes.QueryDocumentSnapshot<T>;
 }
 
 export type Sort = {
@@ -56,8 +56,17 @@ export class QueryBuilder<T> {
   }
 
   // eslint-disable-next-line no-shadow
-  static from<T>(query: Query<T>) {
+  static fromQuery<T>(query: Query<T>) {
     return new QueryBuilder(query);
+  }
+  // eslint-disable-next-line no-shadow
+  static from<T extends Entity>(query: Partial<Query<T>>) {
+    const qb = new QueryBuilder<T>(query);
+    !!query.limit && qb.limit(query.limit);
+    !!query.filters && qb.filters(query.filters);
+    // !!query.orderBy && qb.orderBy(query.orderBy);
+    // !!query.page && qb.page(query.page);
+    return qb.build();
   }
 
   filter(
@@ -122,6 +131,10 @@ export class QueryBuilder<T> {
       return JSON.stringify(q1) === JSON.stringify(q2);
     }
     return false;
+  }
+
+  static emptyQuery<T extends Entity>() {
+    return new QueryBuilder<T>().build();
   }
 }
 export interface DataSearchable {

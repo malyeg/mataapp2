@@ -3,7 +3,7 @@ import {differenceInSeconds} from 'date-fns';
 import {LoggerFactory} from '../logger';
 
 const PREFIX = '';
-const REGISTERY = 'registery';
+const REGISTRY = 'registry';
 const EXPIRE_IN_SECONDS = 60 * 1;
 const CACHE_DISABLED = false;
 
@@ -18,7 +18,7 @@ export interface CacheItem<T> {
   timestamp: number;
   expireInSeconds?: number;
 }
-export interface Registery {
+export interface Registry {
   key: string;
   timestamp: number;
   expireInSeconds?: number;
@@ -32,7 +32,7 @@ class Cache {
       return;
     }
     try {
-      logger.debug('store', key);
+      logger.trace('store', key);
       const cacheKey = PREFIX + key;
       const cacheObj: CacheItem<typeof value> = {
         value,
@@ -54,15 +54,15 @@ class Cache {
       const cacheKey = PREFIX + key;
       const item = await AsyncStorage.getItem(cacheKey);
       if (!item) {
-        logger.debug('no cache found', key);
+        logger.trace('no cache found', key);
         return;
       }
-      logger.debug('getting data from cache', key);
+      logger.trace('getting data from cache', key);
       const cacheItem: CacheItem<T> = JSON.parse(item);
       if (this.isExpired(cacheItem)) {
         await AsyncStorage.removeItem(cacheKey);
         await this.removeFromRegistry(cacheKey);
-        logger.debug('cache expired');
+        logger.trace('cache expired');
       } else {
         return cacheItem.value;
       }
@@ -83,11 +83,11 @@ class Cache {
       return;
     }
     try {
-      logger.debug('remove', key);
+      logger.trace('remove', key);
       if (key instanceof RegExp) {
-        const registeryKey = await this.getFromRegistery(key);
-        if (registeryKey) {
-          await AsyncStorage.removeItem(registeryKey.key);
+        const registryKey = await this.getFromRegistry(key);
+        if (registryKey) {
+          await AsyncStorage.removeItem(registryKey.key);
         }
       } else {
         await AsyncStorage.removeItem(PREFIX + key);
@@ -105,7 +105,7 @@ class Cache {
       if (!keys || keys.length === 0) {
         return;
       }
-      logger.debug('removeBatch', keys);
+      logger.trace('removeBatch', keys);
       // Promise.all([
       let promises: Promise<any>[] = [];
       for (const key in keys) {
@@ -122,35 +122,33 @@ class Cache {
       return;
     }
     try {
-      const registryArray = await this.getRegistery();
+      const registryArray = await this.getRegistry();
       await AsyncStorage.multiRemove(
-        registryArray.map(registery => registery.key),
+        registryArray.map(registry => registry.key),
       );
-      await AsyncStorage.removeItem(REGISTERY);
+      await AsyncStorage.removeItem(REGISTRY);
     } catch (error) {
       console.error(error);
     }
   };
 
-  private getRegistery = async () => {
+  private getRegistry = async () => {
     try {
-      const registry = await AsyncStorage.getItem(REGISTERY);
-      const registryArray: Registery[] = registry ? JSON.parse(registry) : [];
+      const registry = await AsyncStorage.getItem(REGISTRY);
+      const registryArray: Registry[] = registry ? JSON.parse(registry) : [];
       return registryArray;
     } catch (error) {}
     return [];
   };
 
-  private getFromRegistery = async (key: string | RegExp) => {
+  private getFromRegistry = async (key: string | RegExp) => {
     try {
-      const registryArray = await this.getRegistery();
+      const registryArray = await this.getRegistry();
       let foundKey;
       if (key instanceof RegExp) {
-        foundKey = await registryArray.find(registery =>
-          key.test(registery.key),
-        );
+        foundKey = await registryArray.find(registry => key.test(registry.key));
       } else {
-        foundKey = await registryArray.find(registery => key === registery.key);
+        foundKey = await registryArray.find(registry => key === registry.key);
       }
 
       return foundKey;
@@ -164,24 +162,24 @@ class Cache {
     cacheItem?: CacheItem<unknown>,
   ) => {
     try {
-      const registryArray = await this.getRegistery();
+      const registryArray = await this.getRegistry();
       registryArray.push({
         key,
         timestamp: cacheItem?.timestamp ?? Date.now(),
         expireInSeconds: cacheItem?.expireInSeconds,
       });
-      await AsyncStorage.setItem(REGISTERY, JSON.stringify(registryArray));
+      await AsyncStorage.setItem(REGISTRY, JSON.stringify(registryArray));
     } catch (error) {}
   };
 
   private removeFromRegistry = async (key: string) => {
     try {
-      const registryArray = await this.getRegistery();
-      var index = registryArray.findIndex(registery => registery.key === key);
+      const registryArray = await this.getRegistry();
+      var index = registryArray.findIndex(registry => registry.key === key);
       if (index > -1) {
         registryArray.splice(index, 1);
       }
-      await AsyncStorage.setItem(REGISTERY, JSON.stringify(registryArray));
+      await AsyncStorage.setItem(REGISTRY, JSON.stringify(registryArray));
     } catch (error) {}
   };
 }

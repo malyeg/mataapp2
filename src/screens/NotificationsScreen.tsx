@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import notificationsApi, {Notification} from '../api/notificationsApi';
 import {Loader, Screen} from '../components/core';

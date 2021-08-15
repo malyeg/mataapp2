@@ -1,6 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
+import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
@@ -71,7 +72,6 @@ const ItemDetailsScreen = () => {
       return;
     }
     if (!!item && route.params?.id !== item.id) {
-      console.log('resetting item');
       resetHeader();
       setItem(undefined);
     }

@@ -17,12 +17,6 @@ import cache, {CacheConfig} from '../utils/cache/cacheManager';
 import {allCombinations} from '../utils/CommonUtils';
 import {Api, APIOptions, ApiResponse} from './Api';
 export class DataApi<T extends DataSearchable & Entity> extends Api {
-  // constructor(
-  //   readonly collection: DataCollection<T>,
-  //   readonly cacheStore: string,
-  // ) {
-  //   super();
-  // }
   collection: DataCollection<T>;
   cacheStore: string;
   constructor(readonly collectionName: string) {
@@ -38,24 +32,18 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     observerCallback: (snapshot: any) => void,
     onError?: (error: Error) => void,
   ) => {
-    return this.collection.doc(id).onSnapshot(observerCallback, onError);
-    // try {
-    //   console.log('id', id);
-    //   return this.collection.doc(id).onSnapshot(snapshot => {
-    //     const timestamp = (snapshot.data()?.timestamp as any)?.toDate();
-    //     const doc: T = snapshot.data()
-    //       ? {
-    //           ...snapshot.data(),
-    //           id: snapshot.id,
-    //           timestamp,
-    //         }
-    //       : undefined;
-    //     observerCallback({...snapshot, doc});
-    //   });
-    // } catch (error) {
-    //   this.logger.error(error);
-    //   throw error;
-    // }
+    this.logger.debug('onDocumentSnapshot', id);
+    return this.collection.doc(id).onSnapshot(snapshot => {
+      const timestamp = (snapshot.data()?.timestamp as any)?.toDate();
+      const doc = snapshot.data()
+        ? {
+            ...snapshot.data(),
+            id: snapshot.id,
+            timestamp,
+          }
+        : undefined;
+      observerCallback({...snapshot, doc});
+    }, onError);
   };
 
   onQuerySnapshot = (
@@ -65,7 +53,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   ) => {
     try {
       let collectionQuery = query
-        ? this.fromQuery(query, this.collection)
+        ? this.getQuery(query, this.collection)
         : this.collection;
 
       return collectionQuery.onSnapshot(snapshot => {
@@ -91,14 +79,15 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   getAll = async (query?: Query<T>, options?: APIOptions) => {
     try {
       const cacheKey = this.buildKeyFrom(options?.cache!, query);
-      // if (options?.cache?.enabled && !query?.afterDoc) {
-      //   const cachedResponse = await cache.get(cacheKey);
-      //   if (cachedResponse) {
-      //     return cachedResponse as ApiResponse<T>;
-      //   }
-      // }
+      if (options?.cache?.enabled && !query?.afterDoc) {
+        const cachedResponse = await cache.get(cacheKey);
+        if (cachedResponse) {
+          this.logger.debug('getAll query (cached):', query);
+          return cachedResponse as ApiResponse<T>;
+        }
+      }
       this.logger.debug('getAll query:', query);
-      const coll = query ? this.fromQuery(query) : this.collection;
+      const coll = query ? this.getQuery(query) : this.collection;
       const snapshot = await coll.get();
       const items = snapshot.docs.map(doc => {
         return {
@@ -112,9 +101,9 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         if (!!query?.limit && items.length === query.limit) {
           response.lastDoc = snapshot.docs.slice(-1)[0];
         }
-        // if (options?.cache?.enabled && !response.lastDoc) {
-        //   cache.store(cacheKey, response);
-        // }
+        if (options?.cache?.enabled && !response.lastDoc) {
+          cache.store(cacheKey, response);
+        }
         return response;
       }
     } catch (error) {
@@ -123,35 +112,30 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   };
 
   getById = async (id: string, options?: APIOptions) => {
+    if (options?.cache?.enabled) {
+      const doc = await cache.get(id);
+      if (doc) {
+        this.logger.debug('getById (cached):', id);
+        return doc as T;
+      }
+    }
     this.logger.debug('getById:', id);
-    // if (options?.cache?.enabled) {
-    //   const doc = await cache.get(id);
-    //   if (doc) {
-    //     console.log(doc);
-    //     return doc as T;
-    //   }
-    // }
     const snapshot = await this.collection.doc(id).get();
     if (snapshot.exists) {
       const doc = {
         ...snapshot.data(),
         timestamp: (snapshot?.data()?.timestamp as any)?.toDate(),
-        // timestamp: new Date(),
         id,
       } as T;
-      // !!options?.cache?.enabled &&
-      //   (await cache.store(id, doc, options.cache.expireInSeconds));
-      console.log('finish getbyid');
+      !!options?.cache?.enabled &&
+        (await cache.store(id, doc, options.cache.expireInSeconds));
       return doc;
     }
   };
 
-  add = async (
-    doc: Omit<T, 'id'>,
-    // searchable?: {keywords: string[]},
-    options?: APIOptions,
-  ) => {
+  add = async (doc: Omit<T, 'id'>, options?: APIOptions) => {
     try {
+      this.logger.debug('add:', doc);
       const newDoc = this.removeEmpty(doc as T);
       if (
         options &&
@@ -178,8 +162,8 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
       return createdDoc as T;
     } catch (error) {
-      // options?.analyticsEvent &&
-      //   this.callAnalytics(options?.analyticsEvent, 'error')?.then();
+      options?.analyticsEvent &&
+        this.callAnalytics(options?.analyticsEvent, 'error')?.then();
       throw error;
     }
   };
@@ -200,12 +184,12 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       const createdDoc = {...newDoc, timestamp};
       await this.collection.doc(id).set(createdDoc);
       createdDoc.id = id;
-      // options?.analyticsEvent &&
-      //   this.callAnalytics(options?.analyticsEvent)?.then();
-      // if (options?.cache?.enabled) {
-      //   await cache.store(id, createdDoc, options?.cache?.expireInSeconds);
-      // }
-      // !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
+      options?.analyticsEvent &&
+        this.callAnalytics(options?.analyticsEvent)?.then();
+      if (options?.cache?.enabled) {
+        await cache.store(id, createdDoc, options?.cache?.expireInSeconds);
+      }
+      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
       return newDoc;
     } catch (error) {
       options?.analyticsEvent &&
@@ -217,16 +201,16 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
   update = async (id: string, doc: Partial<T>, options?: APIOptions) => {
     try {
       this.logger.debug('update:', doc);
-      // cache.remove(id);
+      cache.remove(id);
       const newDoc = {...doc};
       delete newDoc.timestamp;
       await this.collection.doc(id).update(newDoc);
-      // options?.analyticsEvent &&
-      //   this.callAnalytics(options?.analyticsEvent)?.then();
+      options?.analyticsEvent &&
+        this.callAnalytics(options?.analyticsEvent)?.then();
       if (options?.cache?.enabled) {
         console.warn('not supported');
       }
-      // !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
+      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
     } catch (error) {
       options?.analyticsEvent &&
         this.callAnalytics(options?.analyticsEvent, 'error')?.then();
@@ -239,10 +223,10 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
       this.logger.debug('deleteById:', docId);
       await this.collection.doc(docId).delete();
       console.log('after delete');
-      // !!options?.analyticsEvent &&
-      //   this.callAnalytics(options?.analyticsEvent)?.then();
-      // await cache.remove(docId);
-      // !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
+      !!options?.analyticsEvent &&
+        this.callAnalytics(options?.analyticsEvent)?.then();
+      await cache.remove(docId);
+      !!options?.cache?.evict && (await this.evict(options?.cache?.evict));
     } catch (error) {
       console.error(error);
       !!options?.analyticsEvent &&
@@ -293,15 +277,28 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     return JSON.parse(JSON.stringify(obj));
   };
 
-  fromQuery = (
+  private getQuery = (
     query: Query<T>,
     collectionQuery: FirebaseFirestoreTypes.Query<T> | DataCollection<T> = this
       .collection,
   ) => {
+    return DataApi.fromQuery(query, collectionQuery);
+  };
+
+  private buildKeyFrom = (cacheConfig: CacheConfig, query?: Query<T>) => {
+    const key =
+      cacheConfig?.key ??
+      `${this.cacheStore}_${query ? JSON.stringify(query) : ''}`;
+    return key;
+  };
+
+  static fromQuery<E>(
+    query: Query<E>,
+    collectionQuery: FirebaseFirestoreTypes.Query<E> | DataCollection<E>,
+  ) {
     if (query.filters && query.filters.length > 0) {
       for (const filter of query.filters) {
         if (!!filter.field && filter.value !== undefined) {
-          console.log('filter', filter);
           const idField = filter.field === 'id' ? '__name__' : filter.field;
           const newFilter: Filter<T> = {...filter, field: idField};
           const operation: Operation = newFilter.operation
@@ -330,14 +327,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
     collectionQuery = collectionQuery.limit(
       query.limit ?? constants.firebase.MAX_QUERY_LIMIT,
     );
-    // this.logger.debug(collectionQuery.);
-    return collectionQuery;
-  };
 
-  private buildKeyFrom = (cacheConfig: CacheConfig, query?: Query<T>) => {
-    const key =
-      cacheConfig?.key ??
-      `${this.cacheStore}_${query ? JSON.stringify(query) : ''}`;
-    return key;
-  };
+    return collectionQuery;
+  }
 }

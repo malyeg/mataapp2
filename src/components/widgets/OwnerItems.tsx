@@ -40,6 +40,7 @@ const OwnerItems = ({item, style}: ItemListProps) => {
           .build();
 
         const response = await itemsApi.getAll(query, {cache: {enabled: true}});
+        console.log(response?.items.length, response?.lastDoc);
         return response;
       } catch (error) {
         console.error(error);

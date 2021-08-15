@@ -4,6 +4,7 @@ import {StyleSheet} from 'react-native';
 import notificationsApi, {Notification} from '../../api/notificationsApi';
 import {patterns} from '../../config/constants';
 import useNavigationHelper from '../../hooks/useNavigationHelper';
+import theme from '../../styles/theme';
 import {Text} from '../core';
 import Card from '../core/Card';
 
@@ -25,17 +26,22 @@ const NotificationCard = ({notification}: NotificationCardProps) => {
         name:
           notification.type === 'push' ? 'bell-outline' : 'email-alert-outline',
       }}>
-      <Text>
-        {notification.timestamp &&
-          format(notification.timestamp, patterns.DATE_TIME)}
-      </Text>
       <Text> {notification.title}</Text>
       <Text>{notification.body}</Text>
-      <Text>delivered: {notification.delivered ? 'true' : 'false'}</Text>
+      {notification.timestamp && (
+        <Text style={styles.date}>
+          {format(notification.timestamp, patterns.DATE_TIME)}
+        </Text>
+      )}
     </Card>
   );
 };
 
 export default NotificationCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  date: {
+    ...theme.styles.scale.body2,
+    color: theme.colors.grey,
+  },
+});
