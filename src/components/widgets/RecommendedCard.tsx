@@ -3,7 +3,7 @@ import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src
 import React, {useCallback} from 'react';
 import {Dimensions, Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import categoriesApi from '../../api/categoriesApi';
-import {Item} from '../../api/itemsApi';
+import itemsApi, {Item} from '../../api/itemsApi';
 import {screens} from '../../config/constants';
 import theme from '../../styles/theme';
 import {Image, Text} from '../core';
@@ -29,9 +29,7 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
     });
   }, [item, navigation]);
 
-  const imageUrl = item.defaultImageURL ?? item.images[0].downloadURL;
-
-  // console.log(item.status);
+  const imageUrl = itemsApi.getImageUrl(item);
 
   const category = categoriesApi.getAll().find(c => c.id === item.category.id);
 
@@ -50,8 +48,14 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
       <View style={styles.contentContainer}>
         <View>
           <Text style={styles.categoryText}>{item.category?.name}</Text>
-          <Text numberOfLines={1} style={styles.nameText}>
+          <Text numberOfLines={1} style={styles.nameText} ellipsizeMode="tail">
             {item.name}
+          </Text>
+          <Text
+            numberOfLines={1}
+            style={styles.descriptionText}
+            ellipsizeMode="tail">
+            {item.description}
           </Text>
         </View>
         <SwapIcon item={item} style={styles.swapIcon} />
@@ -95,28 +99,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   categoryText: {
-    ...theme.styles.scale.body2,
+    ...theme.styles.scale.body1,
     color: theme.colors.grey,
   },
   nameText: {
     ...theme.styles.scale.body2,
     fontWeight: theme.fontWeight.semiBold,
+    paddingVertical: 5,
+  },
+  descriptionText: {
+    ...theme.styles.scale.body3,
+    fontWeight: theme.fontWeight.semiBold,
     paddingBottom: 3,
   },
   freeImage: {
     position: 'absolute',
-    // marginRight: 'auto',
     right: 10,
-    // width: 70,
-    // height: 70,
-    // transform: [{rotate: '-10deg'}],
   },
-  swapIcon: {
-    // marginBottom: 'auto',
-    // flexGrow: 1,
-    // flex: 1,
-    // alignSelf: 'flex-end',
-  },
+  swapIcon: {},
   categoryIcon: {
     position: 'absolute',
     bottom: 10,

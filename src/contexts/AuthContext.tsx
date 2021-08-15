@@ -50,8 +50,8 @@ const logger = LoggerFactory.getLogger('AuthContext');
 const AuthContext = createContext({} as IAuthContextModel);
 
 const updateToken = (token: string, profile: Profile) => {
-  logger.debug('updateToken', token);
   if (profile?.token !== token) {
+    logger.debug('updating token');
     return profilesApi.updateToken(profile, token);
   }
 };

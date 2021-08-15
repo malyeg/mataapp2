@@ -51,22 +51,24 @@ const useAuth = () => {
       );
       const targetCategories = authContext.state.profile.targetCategories ?? [];
       targetCategories.push(categoryId);
+      const newProfile = {...authContext.state.profile, targetCategories};
+      profilesApi.saveToStorage(newProfile);
       authContext.dispatch({
         type: AuthActionType.SET_PROFILE,
-        payload: {profile: {...authContext.state.profile, targetCategories}},
+        payload: {profile: newProfile},
       });
     }
   };
 
   const loadProfile = async () => {
-    const profile = await profilesApi.getById(authContext.state.user?.id!);
-    if (profile) {
+    const freshProfile = await profilesApi.getById(authContext.state.user?.id!);
+    if (freshProfile) {
       authContext.dispatch({
         type: AuthActionType.SET_PROFILE,
-        payload: {profile},
+        payload: {profile: freshProfile},
       });
     }
-    return profile;
+    return freshProfile;
   };
 
   const getName = () => {

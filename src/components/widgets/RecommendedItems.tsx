@@ -21,8 +21,6 @@ interface RecommendedItemsProps {
   style?: StyleProp<ViewStyle>;
 }
 
-// const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
-
 const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
   const {user, profile} = useAuth();
   const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
@@ -39,22 +37,26 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
       .filters([
         {field: 'location.city', value: location?.city!},
         {field: 'status', value: 'online' as ItemStatus},
-        {field: 'userId', value: user.id, operation: Operation.NOT_EQUAL},
+        // {field: 'userId', value: user.id, operation: Operation.NOT_EQUAL},
         {
           field: 'category.id',
           operation: Operation.IN,
           value: targetCategories,
         },
       ])
-      .limit(100)
+      .orderBy('timestamp', 'desc')
+      .limit(20)
       .build();
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
-        console.log('setting recommended items');
-        setItemsResponse({items: snapshot.data});
+        if (snapshot.data) {
+          setItemsResponse({
+            items: snapshot.data.filter(item => item.id !== user.id), // workaround to firestore query limitation with timestamp order
+          });
+        }
       },
       error => {
-        console.log(error);
+        console.error(error);
       },
       query,
     );

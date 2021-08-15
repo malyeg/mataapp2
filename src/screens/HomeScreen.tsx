@@ -23,11 +23,6 @@ const HomeScreen = () => {
   useEffect(() => {
     console.log('profile?.targetCategories', profile?.targetCategories);
   }, [profile?.targetCategories]);
-  // useEffect(() => {
-  //   navigation.dangerouslyGetParent()?.setOptions({
-  //     headerShown: false,
-  //   });
-  // }, [navigation]);
 
   const onRefresh = useCallback(() => {
     setLastRefresh(new Date());

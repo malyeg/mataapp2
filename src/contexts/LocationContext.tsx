@@ -51,7 +51,6 @@ const LocationProvider: React.FC = (props: any) => {
         logger.debug('hasPermission', hasPermission);
         watchId = locationApi.watch(
           async (position: GeoPosition) => {
-            logger.debug('position', position);
             if (
               positionChanged(position, state.location) &&
               !loadingRef.current
@@ -61,7 +60,7 @@ const LocationProvider: React.FC = (props: any) => {
                 position.coords,
               );
               if (location) {
-                logger.debug('location found', location);
+                logger.debug('location found');
                 await locationApi.saveLastKnownLocation(location);
                 dispatch({
                   type: 'SET_LOCATION',

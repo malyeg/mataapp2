@@ -56,6 +56,7 @@ export class DataApi<T extends Entity> extends Api {
         : this.collection;
 
       return collectionQuery.onSnapshot(snapshot => {
+        this.logger.debug('onQuerySnapshot observerCallback');
         const data: T[] = snapshot.docs.map(doc => {
           const timestamp = (doc.data()?.timestamp as any)?.toDate();
           const item: T = {

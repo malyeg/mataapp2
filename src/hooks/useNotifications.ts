@@ -15,7 +15,6 @@ const useNotifications = () => {
       .build();
     const unsubscribe = notificationsApi.onQuerySnapshot(
       snapshot => {
-        console.log('useNotifications onQuerySnapshot');
         setNotificationCount(snapshot.data.length);
       },
       error => console.warn('drawerContent onQuerySnapshot error', error),
