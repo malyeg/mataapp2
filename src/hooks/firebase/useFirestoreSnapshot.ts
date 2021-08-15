@@ -1,12 +1,10 @@
 import {useEffect} from 'react';
 import {useImmerReducer} from 'use-immer';
-import {DataApi} from '../api/DataApi';
-import {DataCollection, Entity, Query} from '../types/DataTypes';
-import firestoreSnapshotReducer, {
-  DataState,
-} from './firebase/FirestoreSnapshotReducer';
+import {DataApi} from '../../api/DataApi';
+import {DataCollection, Entity, Query} from '../../types/DataTypes';
+import firestoreSnapshotReducer, {DataState} from './FirestoreSnapshotReducer';
 
-export function useFirestoreQuery<T extends Entity>(
+export function useFirestoreSnapshot<T extends Entity>(
   collection: DataCollection<T>,
   query?: Query<Entity>,
 ) {

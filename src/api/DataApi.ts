@@ -5,18 +5,17 @@ import Config from 'react-native-config';
 import constants from '../config/constants';
 import {
   DataCollection,
-  DataSearchable,
   Entity,
   Filter,
   Operation,
   Query,
 } from '../types/DataTypes';
-import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
+import {QuerySnapshot} from '../types/UtilityTypes';
 // import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
 import cache, {CacheConfig} from '../utils/cache/cacheManager';
 import {allCombinations} from '../utils/CommonUtils';
 import {Api, APIOptions, ApiResponse} from './Api';
-export class DataApi<T extends DataSearchable & Entity> extends Api {
+export class DataApi<T extends Entity> extends Api {
   collection: DataCollection<T>;
   cacheStore: string;
   constructor(readonly collectionName: string) {
@@ -97,7 +96,7 @@ export class DataApi<T extends DataSearchable & Entity> extends Api {
         } as T;
       });
       if (items && items.length > 0) {
-        const response: ApiResponse<T> = {items, query};
+        const response: ApiResponse<T> = {items, query, docs: snapshot.docs};
         if (!!query?.limit && items.length === query.limit) {
           response.lastDoc = snapshot.docs.slice(-1)[0];
         }

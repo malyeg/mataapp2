@@ -1,5 +1,5 @@
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
-import {Query} from '../types/DataTypes';
+import {Document, Query} from '../types/DataTypes';
 import Analytics, {AnalyticsEvent} from '../utils/Analytics';
 import {CacheConfig} from '../utils/cache/cacheManager';
 import {LoggerFactory} from '../utils/logger';
@@ -8,6 +8,7 @@ import {LoggerFactory} from '../utils/logger';
 
 export interface ApiResponse<T> {
   items: T[];
+  docs?: Document<T>[];
   query?: Query<T>;
   lastDoc?: FirebaseFirestoreTypes.QueryDocumentSnapshot<T>;
 }
