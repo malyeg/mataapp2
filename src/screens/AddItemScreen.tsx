@@ -158,17 +158,13 @@ const AddItemScreen = () => {
 
   const uploadHandler = useCallback(
     (image: ImageSource, status: 'started' | 'finished') => {
-      console.log('size', uploadSet.size);
       if (status === 'started') {
         uploadSet.add(image.name!);
         setUploading(true);
       } else {
         uploadSet.delete(image.name!);
-        console.log('size after delete', uploadSet.size);
         if (uploadSet.size === 0) {
           setUploading(false);
-        } else {
-          console.log('in else', uploadSet.size);
         }
       }
     },
@@ -247,7 +243,6 @@ const AddItemScreen = () => {
 
       <Button
         title={t('submitBtnTitle')}
-        style={styles.submit}
         disabled={uploading}
         onPress={handleSubmit(onFormSuccess, onFormError)}
       />
@@ -274,21 +269,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
-
-  submit: {
-    // marginVertical: 10,
-  },
   location: {
-    // flex: 1,
     marginTop: 5,
   },
   radioGroup: {
-    // flexGrow: 0.5,
-    // flexShrink: 1,
-    // flex: 0.5,
     justifyContent: 'space-between',
     paddingRight: '20%',
-    // backgroundColor: 'grey',
   },
   draftCheckBox: {
     marginVertical: 5,

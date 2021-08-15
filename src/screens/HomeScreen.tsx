@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Screen} from '../components/core';
 import Icon from '../components/core/Icon';
@@ -18,9 +18,11 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const {profile} = useAuth();
   const {location} = useLocation();
-  const [lastRefresh, setlastRefresh] = useState(new Date());
+  const [lastRefresh, setLastRefresh] = useState(new Date());
 
-  // useEffect(() => {}, [location]);
+  useEffect(() => {
+    console.log('profile?.targetCategories', profile?.targetCategories);
+  }, [profile?.targetCategories]);
   // useEffect(() => {
   //   navigation.dangerouslyGetParent()?.setOptions({
   //     headerShown: false,
@@ -28,7 +30,7 @@ const HomeScreen = () => {
   // }, [navigation]);
 
   const onRefresh = useCallback(() => {
-    setlastRefresh(new Date());
+    setLastRefresh(new Date());
   }, []);
 
   const toggleDrawer = () => {
@@ -52,7 +54,7 @@ const HomeScreen = () => {
           <Logo size={75} style={styles.logo} />
           <ProfileIcon style={styles.profile} size={30} />
         </View>
-        {location && location.city && (
+        {!!location?.city && (
           <>
             {profile?.targetCategories && (
               <RecommendedItems

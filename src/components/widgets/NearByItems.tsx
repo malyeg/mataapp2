@@ -41,7 +41,6 @@ const NearByItems = ({location, title, style}: NearByItemsProps) => {
       {field: 'userId', value: user.id, operation: Operation.NOT_EQUAL},
     ];
     const query = new QueryBuilder<Item>().filters(filters).limit(100).build();
-    console.log('recommended', query);
     const unsubscribe = itemsApi.onQuerySnapshot(
       snapshot => {
         console.log('setting nearby items');

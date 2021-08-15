@@ -30,6 +30,7 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
   const {t} = useLocale('widgets');
 
   useEffect(() => {
+    console.log('targetCategories', profile?.targetCategories);
     const targetCategories = profile?.targetCategories;
     if (!targetCategories || targetCategories.length === 0) {
       return;
