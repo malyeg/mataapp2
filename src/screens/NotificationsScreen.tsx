@@ -1,57 +1,41 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {ApiResponse} from '../api/Api';
-import notificationsApi, {Notification} from '../api/notificationsApi';
+import React from 'react';
+import {FlatList, StyleSheet} from 'react-native';
+import itemsApi from '../api/itemsApi';
+import notificationsApi from '../api/notificationsApi';
 import {Loader, Screen} from '../components/core';
-import DataList from '../components/widgets/DataList';
+import NoDataFound from '../components/widgets/NoDataFound';
 import NotificationCard from '../components/widgets/NotificationCard';
-import useApi from '../hooks/useApi';
+import {useFirestoreSnapshot} from '../hooks/firebase/useFirestoreSnapshot';
 import useAuth from '../hooks/useAuth';
 import {QueryBuilder} from '../types/DataTypes';
 
 const NotificationsScreen = () => {
-  const [notifications, setNotifications] =
-    useState<ApiResponse<Notification>>();
-  const {loader} = useApi();
   const {user} = useAuth();
 
-  useEffect(() => {
-    const query = new QueryBuilder<Notification>()
-      .filters([
-        {field: 'delivered', value: false},
+  const {data, loading} = useFirestoreSnapshot({
+    collectionName: notificationsApi.collectionName,
+    query: QueryBuilder.from({
+      filters: [
+        {field: 'delivered', value: true},
         {field: 'targetUserId', value: user.id},
-      ])
-      .build();
-    const unsubscribe = notificationsApi.onQuerySnapshot(
-      snapshot => {
-        console.log('query:', query, snapshot.data.length);
-        setNotifications({items: snapshot.data ?? []});
-      },
-      error => {
-        console.error(error);
-      },
-      query,
-    );
-
-    return unsubscribe;
-  }, [user.id]);
+      ],
+    }),
+  });
 
   const renderItem = ({item}: any) => <NotificationCard notification={item} />;
 
   return (
     <Screen style={styles.screen}>
-      {notifications ? (
-        <DataList
-          showsVerticalScrollIndicator={false}
-          data={notifications}
-          // columnWrapperStyle={styles.columnWrapper}
+      {!loading ? (
+        <FlatList
+          data={data}
           renderItem={renderItem}
-          // itemSize={ITEM_CARD_HEIGHT}
+          ListEmptyComponent={NoDataFound}
+          showsVerticalScrollIndicator={false}
         />
       ) : (
         <Loader />
       )}
-      {loader}
     </Screen>
   );
 };

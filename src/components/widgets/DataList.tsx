@@ -164,7 +164,7 @@ function DataList<T extends Entity>({
       <View
         style={[
           styles.container,
-          !horizontal ? styles.horizontal : styles.vertical,
+          horizontal ? styles.horizontal : styles.vertical,
           containerStyle,
         ]}>
         {HeaderComponent}
@@ -202,10 +202,10 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
   horizontal: {
-    flexGrow: 0,
+    // flexGrow: 0,
   },
   vertical: {
-    flex: 1,
+    // flex: 1,
   },
   flatList: {
     // flex: 1,

@@ -4,7 +4,7 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
-import {Image, Loader, Screen, Text} from '../components/core';
+import {Button, Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
 import Header from '../components/widgets/Header';
 import ItemActivity from '../components/widgets/ItemActivity';
@@ -283,10 +283,15 @@ const ItemDetailsScreen = () => {
         {loader}
       </Screen>
       {item.userId !== user.id ? (
-        <Pressable style={styles.swapContainer} onPress={swapHandler}>
-          <Text style={styles.swapButton}>{t('sendSwapButton')}</Text>
-        </Pressable>
+        <Button
+          title={t('sendSwapButton')}
+          onPress={swapHandler}
+          style={styles.sendSwapButton}
+        />
       ) : (
+        // <Pressable style={styles.swapContainer} onPress={swapHandler}>
+        //   <Text style={styles.swapButton}>{t('sendSwapButton')}</Text>
+        // </Pressable>
         !!item && <ItemDealsTab item={item} />
       )}
     </>

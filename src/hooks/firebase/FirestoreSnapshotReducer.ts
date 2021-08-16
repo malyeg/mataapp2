@@ -7,7 +7,7 @@ export type DataState = {
   error?: Error;
   query?: Query<Entity>;
   // lastDoc?: Document;
-  currentPage?: number;
+  // currentPage?: number;
 };
 
 interface SetDocsAction {
@@ -18,15 +18,11 @@ interface SetLoadingAction {
   type: 'SET_LOADING';
   loading: boolean;
 }
-
 interface SetErrorAction {
   type: 'SET_ERROR';
   error: Error;
 }
 
-// interface NextPageAction {
-//   type: 'NEXT_PAGE';
-// }
 interface UpdateQueryAction {
   type: 'UPDATE_QUERY';
   query: Query<Entity>;
@@ -42,22 +38,7 @@ export type StateActions =
 function firestoreSnapshotReducer(draftState: DataState, action: StateActions) {
   switch (action.type) {
     case 'SET_DOCS':
-      // draftState.data =
-      //   !!draftState.data && draftState.data.length > 0
-      //     ? [...draftState.data, ...action.docs.map(getDocData)]
-      //     : action.docs.map(getDocData);
       draftState.data = action.docs.map(getDocData);
-      // if (
-      //   action.docs &&
-      //   action.docs.length > 0 &&
-      //   action.docs.length < draftState?.query?.limit!
-      // ) {
-      //   draftState.lastDoc = action.docs[action.docs.length - 1];
-      //   console.log('setting lst doc to ', draftState.lastDoc.data().name);
-      // } else {
-      //   console.log('setting lst doc to undefined');
-      //   draftState.lastDoc = undefined;
-      // }
       draftState.loading = false;
       return draftState;
     case 'SET_LOADING':
@@ -89,7 +70,12 @@ function firestoreSnapshotReducer(draftState: DataState, action: StateActions) {
 }
 
 function getDocData(doc: Document<Entity>) {
-  return {...doc.data(), id: doc.id};
+  const timestamp = (doc.data()?.timestamp as any)?.toDate();
+  return {
+    ...doc.data(),
+    id: doc.id,
+    timestamp,
+  };
 }
 
 export default firestoreSnapshotReducer;

@@ -28,7 +28,7 @@ const NotificationCard = ({notification}: NotificationCardProps) => {
       }}>
       <Text> {notification.title}</Text>
       <Text>{notification.body}</Text>
-      {notification.timestamp && (
+      {!!notification.timestamp && (
         <Text style={styles.date}>
           {format(notification.timestamp, patterns.DATE_TIME)}
         </Text>

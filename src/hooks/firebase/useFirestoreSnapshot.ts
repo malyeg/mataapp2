@@ -34,17 +34,15 @@ export function useFirestoreSnapshot<T extends Entity>({
 
     return collectionQuery.onSnapshot(
       snapshot => {
+        console.log('useFirestoreQuery snapshot', snapshot.size);
         dispatch({type: 'SET_DOCS', docs: snapshot.docs});
       },
       error => {
+        console.log('useFirestoreQuery error');
         dispatch({type: 'SET_ERROR', error});
       },
     );
   }, [collectionName, dispatch, state.query]);
-
-  const loadMore = () => {
-    dispatch({type: 'NEXT_PAGE'});
-  };
 
   const updateQuery = (newQuery: Query<T>) => {
     if (!QueryBuilder.equal(newQuery, state.query)) {
@@ -53,5 +51,9 @@ export function useFirestoreSnapshot<T extends Entity>({
       console.log('queries are equal');
     }
   };
-  return {...state, loadMore, updateQuery};
+  return {
+    ...state,
+    // loadMore,
+    updateQuery,
+  };
 }
