@@ -8,6 +8,8 @@ target 'mataApp' do
   pod 'react-native-google-maps', :path => rn_maps_path
   config = use_native_modules!
 
+  $RNFirebaseAnalyticsWithoutAdIdSupport = true
+
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods

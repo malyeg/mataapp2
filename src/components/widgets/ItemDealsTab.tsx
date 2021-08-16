@@ -96,7 +96,7 @@ const ItemDealsTab = ({item, style}: ItemDealsTabProps) => {
         <DataList
           data={deals}
           renderItem={renderItem}
-          containerStyle={styles.dataList}
+          // containerStyle={styles.dataList}
         />
       </Modal>
     </>
@@ -107,6 +107,7 @@ export default React.memo(ItemDealsTab);
 
 const styles = StyleSheet.create({
   container: {
+    // flex: 1,
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
@@ -132,8 +133,6 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderBottomWidth: 0,
         paddingBottom: 10,
-        // borderBottomWith: 0,
-        // borderBottomColor: theme.colors.white,
       },
       android: {
         elevation: 2,
@@ -146,18 +145,13 @@ const styles = StyleSheet.create({
     right: 20,
   },
   modal: {
-    // justifyContent: 'flex-start',
-    // marginTop: 20,
-    // flex: 1,
     paddingBottom: 40,
   },
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-
     marginBottom: 20,
-    // marginTop: 20,
   },
   modalBody: {},
   card: {
@@ -169,7 +163,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
   },
-  dataList: {},
   tabText: {
     color: theme.colors.salmon,
   },

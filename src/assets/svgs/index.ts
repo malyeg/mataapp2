@@ -3,6 +3,7 @@ import free from './free.svg';
 import filter from './filter.svg';
 import category from './category.svg';
 import swap from './icSwap.svg';
+import profile from './profile.svg';
 import React from 'react';
 
 interface SvgIconsType {
@@ -13,4 +14,5 @@ export const SvgIcons: SvgIconsType = {
   filter,
   category,
   swap,
+  profile,
 };

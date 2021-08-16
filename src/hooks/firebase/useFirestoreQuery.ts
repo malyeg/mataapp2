@@ -4,10 +4,13 @@ import {DataApi} from '../../api/DataApi';
 import {Entity, Query} from '../../types/DataTypes';
 import firestoreQueryReducer, {DataState} from './firestoreQueryReducer';
 
-export function useFirestoreQuery<T extends Entity>(
-  collectionName: string,
-  query?: Query<T>,
-) {
+export function useFirestoreQuery<T extends Entity>({
+  collectionName,
+  query,
+}: {
+  collectionName: string;
+  query?: Query<T>;
+}) {
   const [state, dispatch] = useImmerReducer(firestoreQueryReducer, {
     query,
   } as DataState);

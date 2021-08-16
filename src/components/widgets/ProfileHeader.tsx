@@ -11,7 +11,7 @@ interface ProfileHeaderProps extends ViewProps {
 const ProfileHeader = ({
   style,
   userNameStyle,
-  profileIconSize = 60,
+  profileIconSize = 110,
 }: ProfileHeaderProps) => {
   const {user, profile} = useAuth();
   // useEffect(() => {}, [profile]);
@@ -28,13 +28,14 @@ const ProfileHeader = ({
         ]}>
         <Icon
           style={styles.profileIcon}
-          name="account-outline"
+          name="profile"
           // color="#F2A39C"
-          color={theme.colors.grey}
-          size={profileIconSize * 0.7}
+          color={theme.colors.white}
+          size={profileIconSize * 0.5}
+          type="svg"
         />
       </View>
-      <Text style={[styles.userName, userNameStyle]} numberOfLines={1}>
+      <Text style={[styles.userName, userNameStyle]} numberOfLines={2}>
         {profile?.firstName
           ? `${profile.firstName} ${profile.lastName}`
           : user.username}
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.colors.lightGrey,
+    backgroundColor: theme.colors.salmon,
     // height: 100,
     // width: 100,
     // borderRadius: 50,

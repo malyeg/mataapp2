@@ -1,3 +1,5 @@
+import theme from '../styles/theme';
+
 export default [
   {
     id: 'home',
@@ -5,8 +7,8 @@ export default [
     level: 0,
     style: {
       iconName: 'home-outline',
-      bgColor: '#ff7f78',
-      textColor: 'white',
+      bgColor: theme.colors.salmon,
+      textColor: theme.colors.white,
     },
   },
   {
@@ -25,7 +27,7 @@ export default [
     level: 0,
     style: {
       iconName: 'shovel',
-      bgColor: '#727272',
+      bgColor: theme.colors.dark,
       textColor: 'white',
     },
   },
@@ -48,8 +50,6 @@ export default [
     path: ['home', 'home furniture'],
     style: {
       iconName: 'home-outline',
-      bgColor: '#ff7f78',
-      textColor: 'white',
     },
   },
   {
@@ -61,8 +61,6 @@ export default [
     path: ['home', 'home appliances'],
     style: {
       iconName: 'home-outline',
-      bgColor: '#ff7f78',
-      textColor: 'white',
     },
   },
   {
@@ -74,8 +72,6 @@ export default [
     path: ['office', 'office furnitures'],
     style: {
       iconName: 'office-building',
-      bgColor: '#83D2C8',
-      textColor: 'white',
     },
   },
   {
@@ -87,8 +83,6 @@ export default [
     path: ['office', 'office appliances'],
     style: {
       iconName: 'office-building',
-      bgColor: '#83D2C8',
-      textColor: 'white',
     },
   },
   {
@@ -100,8 +94,6 @@ export default [
     path: ['garden', 'garden furnitures'],
     style: {
       iconName: 'shovel',
-      bgColor: '#727272',
-      textColor: 'white',
     },
   },
   {
@@ -113,8 +105,6 @@ export default [
     path: ['garden', 'garden appliances'],
     style: {
       iconName: 'shovel',
-      bgColor: '#727272',
-      textColor: 'white',
     },
   },
   {
@@ -126,8 +116,6 @@ export default [
     path: ['garden', 'garage tools'],
     style: {
       iconName: 'shovel',
-      bgColor: '#727272',
-      textColor: 'white',
     },
   },
   {

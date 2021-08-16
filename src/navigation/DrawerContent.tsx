@@ -3,16 +3,14 @@ import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import {useLinkTo} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Linking, StyleSheet} from 'react-native';
-import notificationsApi, {Notification} from '../api/notificationsApi';
 import ProfileHeader from '../components/widgets/ProfileHeader';
-import {screens, stacks} from '../config/constants';
+import {screens} from '../config/constants';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useNotifications from '../hooks/useNotifications';
 import theme from '../styles/theme';
-import {QueryBuilder} from '../types/DataTypes';
 import DrawerItem from './DrawerItem';
 
 const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
@@ -78,10 +76,12 @@ export default React.memo(DrawerContent);
 
 const styles = StyleSheet.create({
   header: {
-    marginBottom: 10,
+    marginBottom: 40,
   },
   profileName: {
-    ...theme.styles.scale.h6,
+    ...theme.styles.scale.subtitle1,
+    color: theme.colors.salmon,
+    fontWeight: theme.fontWeight.semiBold,
   },
   lastItem: {
     borderBottomWidth: 0,

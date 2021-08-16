@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     // marginLeft: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     borderBottomColor: theme.colors.lightGrey,
     borderBottomWidth: 2,
     height: 50,
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'grey',
   },
   emptyIcon: {
-    marginRight: 10,
+    marginRight: 30,
   },
   itemText: {
     ...theme.styles.scale.body1,

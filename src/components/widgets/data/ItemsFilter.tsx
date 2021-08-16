@@ -1,11 +1,9 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import * as yup from 'yup';
 import categoriesApi from '../../../api/categoriesApi';
 import {Item, SwapType} from '../../../api/itemsApi';
-import locationApi from '../../../api/locationApi';
 import swapTypes from '../../../data/swapTypes';
-import useAuth from '../../../hooks/useAuth';
 import useForm from '../../../hooks/useForm';
 import useLocale from '../../../hooks/useLocale';
 import theme from '../../../styles/theme';
@@ -26,7 +24,6 @@ interface ItemsFilterFormValues {
   city: string;
 }
 const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
-  const {profile} = useAuth();
   const [swapType, setSwapType] = useState<SwapType | null>(null);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const {t} = useLocale('widgets');
@@ -45,6 +42,8 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
         filters.find(f => f.field === 'category.path')?.value,
       );
 
+      setValue('city', filters.find(f => f.field === 'location.city')?.value);
+
       setValue(
         'swapType',
         filters.find(f => f.field === 'swapOption.type')?.value,
@@ -55,17 +54,6 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
       );
     }
   }, [filters, setValue]);
-
-  // const defaultData = useMemo(() => {
-  //   return filters
-  //     ? {
-  //         category: filters.find(f => f.field === 'category.path')?.value,
-  //         swapType: filters.find(f => f.field === 'swapOption.type')?.value,
-  //         swapCategory: filters.find(f => f.field === 'swapOption.category')
-  //           ?.value,
-  //       }
-  //     : undefined;
-  // }, [filters]);
 
   const onOpenModal = useCallback(() => {
     setModalVisible(true);
@@ -162,6 +150,7 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
               disabled
             />
           </View> */}
+          <TextInput control={control} name="city" disabled />
           <Picker
             name="category"
             items={categoriesApi.getAll()}

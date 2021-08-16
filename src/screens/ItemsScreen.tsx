@@ -1,103 +1,57 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import React, {useCallback, useEffect} from 'react';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useImmerReducer} from 'use-immer';
 import itemsApi, {Item, ItemStatus} from '../api/itemsApi';
 import {Loader, Screen} from '../components/core';
 import ItemsFilter from '../components/widgets/data/ItemsFilter';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
 import {screens} from '../config/constants';
+import {useFirestoreSnapshot} from '../hooks/firebase/useFirestoreSnapshot';
 import useLocation from '../hooks/useLocation';
 import {StackParams} from '../navigation/HomeStack';
-import ItemsReducer, {ItemsState} from '../reducers/ItemsReducer';
 import {Filter, Operation, QueryBuilder} from '../types/DataTypes';
 
 type ItemsRoute = RouteProp<StackParams, typeof screens.ITEMS>;
 const ItemsScreen = () => {
-  const navigation = useNavigation();
   const {location} = useLocation();
   const route = useRoute<ItemsRoute>();
-  const [state, dispatch] = useImmerReducer(ItemsReducer, {
-    loading: false,
-  } as ItemsState);
-  const {itemsResponse, loading, query} = state;
-
-  useEffect(() => {
-    console.log('ItemsScreen => useEffect');
-    let newQuery;
-    if (route.params) {
-      const builder = new QueryBuilder<Item>();
-      builder.filters([
-        {
-          field: 'status',
-          value: 'online' as ItemStatus,
-        },
-        {
-          field: 'location.city',
-          value: location?.city,
-        },
-      ]);
-
-      !!route.params?.categoryId &&
-        builder.filter(
-          'category.path',
-          route.params?.categoryId,
-          Operation.CONTAINS,
-        );
-
-      newQuery = builder.build();
-      if (!QueryBuilder.equal(query, newQuery)) {
-        dispatch({
-          type: 'SET_QUERY',
-          query: newQuery,
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location?.city, route.params]);
-
-  useEffect(() => {
-    console.log('useEffect query');
-    let unsubscribe;
-    if (query) {
-      unsubscribe = itemsApi.onQuerySnapshot(
-        snapshot => {
-          dispatch({
-            type: 'SET_ITEMS',
-            itemsResponse: {items: snapshot.data},
-          });
-        },
-        error => {
-          console.error(error);
-        },
-        query,
+  const fixedQuery = useMemo(
+    () =>
+      QueryBuilder.from({
+        filters: [
+          {field: 'status', value: 'online' as ItemStatus},
+          {field: 'location.city', value: location?.city},
+        ],
+        orderBy: [{field: 'timestamp', direction: 'asc'}],
+        limit: 50,
+      }),
+    [location?.city],
+  );
+  const queryFromRoute = useMemo(() => {
+    const builder = QueryBuilder.fromQuery(fixedQuery);
+    !!route.params?.categoryId &&
+      builder.filter(
+        'category.path',
+        route.params?.categoryId,
+        Operation.CONTAINS,
       );
-    }
-    return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+    return builder.build();
+  }, [fixedQuery, route.params?.categoryId]);
+
+  const {data, loading, query, updateQuery} = useFirestoreSnapshot({
+    collectionName: itemsApi.collectionName,
+    query: queryFromRoute,
+  });
 
   const renderItem = ({item}: any) => (
     <ItemCard style={styles.card} item={item as Item} showActivityStatus />
   );
 
   const onFilterChange = useCallback((filters?: Filter<Item>[]) => {
-    console.log('onFilterChange', filters);
-    let newQuery;
-    if (filters && filters.length > 0) {
-      const newFilters = query?.filters
-        ? [...query.filters, ...filters]
-        : [...filters];
-      newQuery = new QueryBuilder<Item>().filters(newFilters).build();
-    } else {
-      newQuery = new QueryBuilder<Item>().filters(query?.filters ?? []).build();
-    }
-    !QueryBuilder.equal(query, newQuery) &&
-      dispatch({
-        type: 'SET_QUERY',
-        query: newQuery,
-      });
+    const newQuery = QueryBuilder.fromQuery(fixedQuery);
+    !!filters && newQuery.addToFilters(filters);
+    updateQuery(newQuery.build());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -110,10 +64,10 @@ const ItemsScreen = () => {
           filters={query?.filters}
         />
       </View>
-      {!loading && !!itemsResponse ? (
+      {!loading && !!data ? (
         <DataList
           showsVerticalScrollIndicator={false}
-          data={itemsResponse}
+          data={{items: data}}
           columnWrapperStyle={styles.columnWrapper}
           numColumns={2}
           renderItem={renderItem}

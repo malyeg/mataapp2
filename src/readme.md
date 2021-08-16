@@ -66,6 +66,7 @@ https://rnfirebase.io/#2-android-setup
 https://rnfirebase.io/messaging/ios-permissions
 
 https://rnfirebase.io/messaging/usage/ios-setup
+https://rnfirebase.io/analytics/usage#disable-ad-id-usage-on-ios
 ## google maps
 https://github.com/react-native-maps/react-native-maps/blob/master/docs/installation.md
 

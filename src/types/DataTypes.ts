@@ -22,6 +22,7 @@ export type Filter<T> = {
   field: string;
   value: any;
   operation?: Operation;
+  readonly?: boolean;
 };
 
 export type Page = {
@@ -45,11 +46,16 @@ export type SortDirection = 'asc' | 'desc' | undefined;
 
 export class QueryBuilder<T> {
   private readonly _query: Query<T>;
-  private readonly filtersMap: Map<string, Filter<T>> = new Map();
+  readonly filtersMap: Map<string, Filter<T>> = new Map();
 
   constructor(query?: Query<T>) {
     if (query) {
       this._query = {...query};
+      if (query.filters) {
+        query.filters.forEach(filter =>
+          this.filtersMap.set(filter.field, filter),
+        );
+      }
     } else {
       this._query = {filters: [], orderBy: []};
     }
@@ -64,7 +70,7 @@ export class QueryBuilder<T> {
     const qb = new QueryBuilder<T>(query);
     !!query.limit && qb.limit(query.limit);
     !!query.filters && qb.filters(query.filters);
-    // !!query.orderBy && qb.orderBy(query.orderBy);
+    !!query.orderBy && qb.orderByList(query.orderBy);
     // !!query.page && qb.page(query.page);
     return qb.build();
   }
@@ -84,6 +90,10 @@ export class QueryBuilder<T> {
     filters.forEach(filter => this.filtersMap.set(filter.field, filter));
     return this;
   }
+  addToFilters(filters: Filter<T>[]): QueryBuilder<T> {
+    filters.forEach(filter => this.filtersMap.set(filter.field, filter));
+    return this;
+  }
   limit(limit: number): QueryBuilder<T> {
     this._query.limit = limit;
     return this;
@@ -100,9 +110,14 @@ export class QueryBuilder<T> {
     if (!this._query.orderBy) {
       this._query.orderBy = [];
     }
-    if (direction) {
-      this._query.orderBy.push({field, direction});
-    }
+
+    this._query.orderBy.push({field, direction});
+
+    return this;
+  }
+
+  orderByList(sortList: Sort[]): QueryBuilder<T> {
+    this._query.orderBy = sortList;
     return this;
   }
 

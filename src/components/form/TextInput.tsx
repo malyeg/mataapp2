@@ -90,6 +90,7 @@ const TextInputField = ({
                 : focused
                 ? styles.textInputActive
                 : styles.textInputBorder,
+              disabled ? styles.disabled : {},
             ]}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
@@ -149,6 +150,9 @@ const styles = StyleSheet.create({
     height: 40,
     borderBottomWidth: 1,
     color: theme.colors.dark,
+  },
+  disabled: {
+    color: theme.colors.grey,
   },
   textInputBorder: {
     borderColor: theme.colors.grey,

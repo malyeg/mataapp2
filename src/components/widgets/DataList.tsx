@@ -164,7 +164,7 @@ function DataList<T extends Entity>({
       <View
         style={[
           styles.container,
-          !horizontal ? styles.vertical : {},
+          !horizontal ? styles.horizontal : styles.vertical,
           containerStyle,
         ]}>
         {HeaderComponent}
