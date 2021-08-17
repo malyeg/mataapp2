@@ -1,4 +1,5 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import * as yup from 'yup';
 import categoriesApi from '../api/categoriesApi';
@@ -14,12 +15,14 @@ import {CheckBox, Picker, TextInput} from '../components/form';
 import ItemConditionPicker from '../components/widgets/ItemConditionPicker';
 import ItemImages from '../components/widgets/ItemImages';
 import LocationSelector from '../components/widgets/LocationSelector';
+import {screens} from '../config/constants';
 import swapTypes from '../data/swapTypes';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
 import useLocale from '../hooks/useLocale';
 import useToast from '../hooks/useToast';
+import {StackParams} from '../navigation/HomeStack';
 import {Location} from '../types/DataTypes';
 
 type AddItemFormValues = {
@@ -35,15 +38,19 @@ type AddItemFormValues = {
   status: boolean;
 };
 
+type EditItemRoute = RouteProp<StackParams, typeof screens.EDIT_ITEM>;
+
 const AddItemScreen = () => {
   const {t} = useLocale('addItemScreen');
   const defaultImage = useRef<ImageSource | null>(null);
   const [swapType, setSwapType] = useState<SwapType | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [item, setItem] = useState<Item | undefined>();
   const uploadSet = useRef(new Set()).current;
   const {loader, request} = useApi();
   const {user, profile, addTargetCategory, getName} = useAuth();
   const {showToast, hideToast} = useToast();
+  const route = useRoute<EditItemRoute>();
 
   const {control, reset, handleSubmit} = useForm<AddItemFormValues>({
     name: yup.string().trim().max(50).required(t('name.required')),
@@ -66,6 +73,23 @@ const AddItemScreen = () => {
         return true;
       }),
   });
+
+  // useEffect(() => {
+  //   const itemId = route.params?.id;
+  //   if (itemId) {
+  //     itemsApi.getById(itemId).then(i => {
+  //       console.log('item found');
+  //       setItem(i);
+  //       reset({
+  //         ...i,
+  //         category: i?.category.id,
+  //         conditionType: i?.condition.type,
+  //         swapType: i?.swapOption.type,
+  //         swapCategory: i?.swapOption.category,
+  //       });
+  //     });
+  //   }
+  // }, [route.params?.id]);
 
   const onFormError = async (data: any) => {
     console.log('onFormError', data);

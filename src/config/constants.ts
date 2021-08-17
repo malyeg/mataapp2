@@ -76,6 +76,7 @@ export const screens = {
   ITEM_DETAILS: 'ItemDetailsScreen' as 'ItemDetailsScreen',
   MY_ITEMS: 'MyItemsScreen' as 'MyItemsScreen',
   ADD_ITEM: 'AddItemScreen' as 'AddItemScreen',
+  EDIT_ITEM: 'AddItemScreen' as 'AddItemScreen',
 
   DEALS: 'DealsScreen' as 'DealsScreen',
   MY_DEALS: 'MyDealsScreen' as 'MyDealsScreen',

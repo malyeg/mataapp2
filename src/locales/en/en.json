@@ -370,8 +370,8 @@
     "addressTitle": "Location: ",
     "categoryTitle": "Category: ",
     "itemConditionTitle": "Condition: ",
-    "deleteConfirmationHeader": "Confirm delete",
-    "deleteConfirmationBody": "Are you sure?",
+    "deleteConfirmationHeader": "Confirm",
+    "deleteConfirmationBody": "Are you sure you want to delete item ({{itemName}})?",
     "swapHeader": "New Offer",
     "swapCategoryBody": "send swap offer for item \"{{source}}\" with \"{{destination}}\"",
     "swapBody": "Confirm sending new offer for item {{item}}",
@@ -383,6 +383,7 @@
     "sendSwapButton": "Send swap offer",
     "menu": {
       "shareLabel": "Share",
+      "editItemLabel": "Edit",
       "deleteLabel": "Delete"
     }
   },

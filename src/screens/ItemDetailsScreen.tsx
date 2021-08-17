@@ -1,4 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
@@ -34,7 +35,7 @@ const ItemDetailsScreen = () => {
   const [showItemPicker, setShowItemPicker] = useState(false);
   const {loader, request} = useApi();
   const {user} = useAuth();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<StackNavigationHelpers>();
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
   const {showToast} = useToast();
@@ -49,13 +50,22 @@ const ItemDetailsScreen = () => {
         onShare(itemsApi.getShareLink(i));
       },
     };
+    const editMenuItem: MenuItem = {
+      label: t('menu.editItemLabel'),
+      icon: {name: 'pencil', color: theme.colors.dark},
+      onPress: () => {
+        navigation.navigate(screens.EDIT_ITEM, {
+          id: i.id,
+        });
+      },
+    };
     const deleteMenuItem: MenuItem = {
       label: t('menu.deleteLabel'),
       icon: {name: 'delete', color: theme.colors.salmon},
       onPress: () => {
         show({
           header: t('deleteConfirmationHeader'),
-          body: t('deleteConfirmationBody'),
+          body: t('deleteConfirmationBody', {params: {itemName: i.name}}),
           cancelCallback: () => console.log('canceling'),
           confirmCallback: () => deleteItem(i.id),
         });
@@ -65,6 +75,7 @@ const ItemDetailsScreen = () => {
     const menuItems = [shareMenuItem];
     console.log({userId: user.id, itemId: i.userId});
     if (user.id === i.userId) {
+      menuItems.push(editMenuItem);
       menuItems.push(deleteMenuItem);
     }
 

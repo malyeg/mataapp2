@@ -1,39 +1,22 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet} from 'react-native';
-import {ApiResponse} from '../api/Api';
 import itemsApi, {Item} from '../api/itemsApi';
 import {Loader, Screen} from '../components/core';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
+import {useFirestoreSnapshot} from '../hooks/firebase/useFirestoreSnapshot';
 import useAuth from '../hooks/useAuth';
-import {Filter, QueryBuilder} from '../types/DataTypes';
+import {QueryBuilder} from '../types/DataTypes';
 
 export const MY_ITEMS_SCREEN = 'MyItemsScreen';
 const MyItemsScreen = () => {
   const {user} = useAuth();
-  const [itemsResponse, setItemsResponse] = useState<ApiResponse<Item>>();
-
-  useEffect(() => {
-    const filters: Filter<Item>[] = [{field: 'userId', value: user.id}];
-    let query = new QueryBuilder<Item>().filters(filters).limit(100).build();
-
-    // itemsApi.getAll(query).then(items => {
-    //   console.log('new myitems');
-    //   setItemsResponse(items);
-    // });
-    const unsubscribe = itemsApi.onQuerySnapshot(
-      snapshot => {
-        console.log('new snapshot');
-        setItemsResponse({items: snapshot.data});
-      },
-      error => console.error(error),
-      query,
-    );
-    return () => {
-      console.log('unsubscribe');
-      unsubscribe();
-    };
-  }, [user.id]);
+  const {data, loading} = useFirestoreSnapshot({
+    collectionName: itemsApi.collectionName,
+    query: QueryBuilder.from({
+      filters: [{field: 'userId', value: user.id}],
+    }),
+  });
 
   const renderItem = useCallback(
     ({item}: any) => (
@@ -44,12 +27,12 @@ const MyItemsScreen = () => {
 
   return (
     <Screen scrollable={false} style={styles.screen}>
-      {itemsResponse ? (
+      {!loading ? (
         <DataList
           containerStyle={styles.datalist}
           listStyle={styles.datalist}
           showsVerticalScrollIndicator={false}
-          data={itemsResponse}
+          data={{items: data}}
           columnWrapperStyle={styles.columnWrapper}
           numColumns={2}
           renderItem={renderItem}
