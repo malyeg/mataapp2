@@ -51,7 +51,7 @@ const RecommendedItems = ({location, title, style}: RecommendedItemsProps) => {
       snapshot => {
         if (snapshot.data) {
           setItemsResponse({
-            items: snapshot.data.filter(item => item.id !== user.id), // workaround to firestore query limitation with timestamp order
+            items: snapshot.data.filter(item => item.userId !== user.id), // workaround to firestore query limitation with timestamp order
           });
         }
       },

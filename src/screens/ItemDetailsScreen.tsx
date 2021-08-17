@@ -1,16 +1,15 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Button, Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
-import Header from '../components/widgets/Header';
+import Header, {MenuItem} from '../components/widgets/Header';
 import ItemActivity from '../components/widgets/ItemActivity';
 import ItemDealsTab from '../components/widgets/ItemDealsTab';
 import ItemDetailsCard from '../components/widgets/ItemDetailsCard';
-import ItemDetailsNav from '../components/widgets/ItemDetailsNav';
 import ItemPicker from '../components/widgets/ItemPicker';
 import OwnerItems from '../components/widgets/OwnerItems';
 import Sheet from '../components/widgets/Sheet';
@@ -21,6 +20,7 @@ import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useSheet from '../hooks/useSheet';
+import useSocial from '../hooks/useSocial';
 import useToast from '../hooks/useToast';
 import {StackParams} from '../navigation/HomeStack';
 import {goBack} from '../navigation/NavigationHelper';
@@ -39,23 +39,43 @@ const ItemDetailsScreen = () => {
   const {show, sheetRef} = useSheet();
   const {showToast} = useToast();
   const refreshItem = useRef(false);
+  const {onShare} = useSocial();
 
   const setHeader = (i: Item) => {
+    const shareMenuItem: MenuItem = {
+      label: t('menu.shareLabel'),
+      icon: {name: 'share-variant', color: theme.colors.dark},
+      onPress: () => {
+        onShare(itemsApi.getShareLink(i));
+      },
+    };
+    const deleteMenuItem: MenuItem = {
+      label: t('menu.deleteLabel'),
+      icon: {name: 'delete', color: theme.colors.salmon},
+      onPress: () => {
+        show({
+          header: t('deleteConfirmationHeader'),
+          body: t('deleteConfirmationBody'),
+          cancelCallback: () => console.log('canceling'),
+          confirmCallback: () => deleteItem(i.id),
+        });
+      },
+    };
+
+    const menuItems = [shareMenuItem];
+    console.log({userId: user.id, itemId: i.userId});
+    if (user.id === i.userId) {
+      menuItems.push(deleteMenuItem);
+    }
+
     navigation.setOptions({
       header: (props: any) => (
-        <Header {...props}>
-          <ItemDetailsNav
-            item={i}
-            onDelete={() =>
-              show({
-                header: t('deleteConfirmationHeader'),
-                body: t('deleteConfirmationBody'),
-                cancelCallback: () => console.log('canceling'),
-                confirmCallback: () => deleteItem(i.id),
-              })
-            }
-          />
-        </Header>
+        <Header
+          {...props}
+          menu={{
+            items: menuItems,
+          }}
+        />
       ),
     });
   };

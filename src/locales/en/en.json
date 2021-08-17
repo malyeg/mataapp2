@@ -380,7 +380,11 @@
     "swapTypeTitle": "Swap type: ",
     "swapCategoryTitle": "Swap Category: ",
     "statusTitle": "Status: ",
-    "sendSwapButton": "Send swap offer"
+    "sendSwapButton": "Send swap offer",
+    "menu": {
+      "shareLabel": "Share",
+      "deleteLabel": "Delete"
+    }
   },
 
   "SupportUsScreen": {

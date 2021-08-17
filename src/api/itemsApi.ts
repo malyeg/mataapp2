@@ -128,6 +128,10 @@ class ItemsApi extends DataApi<Item> {
       ? item?.images[0].downloadURL
       : constants.firebase.TEMP_IMAGE_URL;
   }
+
+  getShareLink(item: Item) {
+    return `https://mataapp.page.link/?link=https%3A%2F%2Fmataup.com/items%3Fid%3D${item.id}&apn=com.mataapp`;
+  }
 }
 
 const itemsApi = new ItemsApi();
