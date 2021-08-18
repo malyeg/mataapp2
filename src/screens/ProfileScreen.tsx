@@ -25,7 +25,12 @@ const ProfileScreen = () => {
   };
   return (
     <Screen style={styles.container} scrollable={false}>
-      <ProfileHeader />
+      <ProfileHeader
+        style={styles.profileHeader}
+        userNameStyle={styles.profileNameText}
+        icon={{color: theme.colors.grey}}
+        iconContainerStyle={styles.iconContainer}
+      />
       <ProfileItem
         title={t('editProfileLink')}
         onPress={() => navigation.navigate(screens.EDIT_PROFILE)}
@@ -119,6 +124,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 200,
   },
+  profileHeader: {
+    marginBottom: 40,
+  },
+  profileNameText: {
+    ...theme.styles.scale.h6,
+    // color: theme.colors.salmon,
+    fontWeight: theme.fontWeight.semiBold,
+    // marginHorizontal: 20,
+  },
+  iconContainer: {
+    backgroundColor: theme.colors.lightGrey,
+  },
+  profileIcon: {
+    color: theme.colors.dark,
+  },
   itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -127,19 +147,7 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.colors.lightGrey,
     borderBottomWidth: 2,
   },
-  iconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.colors.lightGrey,
-    height: 100,
-    width: 100,
-    borderRadius: 50,
-    overflow: 'hidden',
-    marginBottom: 10,
-  },
-  profileIcon: {
-    // borderWidth: 2,
-  },
+
   userName: {
     ...theme.styles.scale.h5,
   },
@@ -148,11 +156,9 @@ const styles = StyleSheet.create({
     fontWeight: theme.fontWeight.semiBold,
   },
   chevronIcon: {
-    // backgroundColor: 'grey',
     marginRight: -10,
   },
   logout: {
-    // marginTop: 20,
     borderBottomWidth: 0,
   },
   logoutText: {

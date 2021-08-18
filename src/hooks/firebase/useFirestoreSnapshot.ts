@@ -1,19 +1,21 @@
 import {useEffect} from 'react';
 import {useImmerReducer} from 'use-immer';
 import {DataApi} from '../../api/DataApi';
-import {Entity, Query, QueryBuilder} from '../../types/DataTypes';
+import {Document, Entity, Query, QueryBuilder} from '../../types/DataTypes';
 import firestoreSnapshotReducer, {DataState} from './FirestoreSnapshotReducer';
 
 export function useFirestoreSnapshot<T extends Entity>({
   collectionName,
   query,
+  docMapper,
 }: {
   collectionName: string;
   query?: Query<T>;
+  docMapper?: (doc: Document<T>) => T;
 }) {
   const [state, dispatch] = useImmerReducer(firestoreSnapshotReducer, {
     query,
-  } as DataState);
+  } as DataState<T>);
 
   useEffect(() => {
     console.log('useFirestoreQuery useEffect', state.query);
@@ -25,7 +27,7 @@ export function useFirestoreSnapshot<T extends Entity>({
 
     const dataApi = new DataApi<T>(collectionName);
     let collectionQuery = state.query
-      ? DataApi.fromQuery<Entity>({...state.query}, dataApi.collection)
+      ? DataApi.fromQuery<T>({...state.query}, dataApi.collection)
       : dataApi.collection;
 
     // if (state.lastDoc) {
@@ -35,14 +37,14 @@ export function useFirestoreSnapshot<T extends Entity>({
     return collectionQuery.onSnapshot(
       snapshot => {
         console.log('useFirestoreQuery snapshot', snapshot.size);
-        dispatch({type: 'SET_DOCS', docs: snapshot.docs});
+        dispatch({type: 'SET_DOCS', docs: snapshot.docs, docMapper});
       },
       error => {
         console.log('useFirestoreQuery error');
         dispatch({type: 'SET_ERROR', error});
       },
     );
-  }, [collectionName, dispatch, state.query]);
+  }, [collectionName, dispatch, docMapper, state.query]);
 
   const updateQuery = (newQuery: Query<T>) => {
     if (!QueryBuilder.equal(newQuery, state.query)) {

@@ -1,18 +1,20 @@
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {Document, Entity, Query} from '../../types/DataTypes';
 
-export type DataState = {
-  data?: Entity[];
+export type DataState<T> = {
+  data?: T[];
   loading?: boolean;
   error?: Error;
-  query?: Query<Entity>;
+  query?: Query<T>;
+  docMapper?: (doc: Document<T>) => T;
   // lastDoc?: Document;
   // currentPage?: number;
 };
 
-interface SetDocsAction {
+interface SetDocsAction<T> {
   type: 'SET_DOCS';
   docs: FirebaseFirestoreTypes.QueryDocumentSnapshot<Entity>[];
+  docMapper: DataState<T>['docMapper'];
 }
 interface SetLoadingAction {
   type: 'SET_LOADING';
@@ -28,17 +30,20 @@ interface UpdateQueryAction {
   query: Query<Entity>;
 }
 
-export type StateActions =
-  | SetDocsAction
+export type StateActions<T> =
+  | SetDocsAction<T>
   | SetErrorAction
   | SetLoadingAction
   // | NextPageAction
   | UpdateQueryAction;
 
-function firestoreSnapshotReducer(draftState: DataState, action: StateActions) {
+function firestoreSnapshotReducer<T>(
+  draftState: DataState<T>,
+  action: StateActions<T>,
+) {
   switch (action.type) {
     case 'SET_DOCS':
-      draftState.data = action.docs.map(getDocData);
+      draftState.data = action.docs.map(action.docMapper ?? getDocData);
       draftState.loading = false;
       return draftState;
     case 'SET_LOADING':
@@ -53,23 +58,12 @@ function firestoreSnapshotReducer(draftState: DataState, action: StateActions) {
       draftState.error = action.error;
       draftState.loading = false;
       return draftState;
-    // case 'NEXT_PAGE':
-    //   console.log('NEXT_PAGE reducer');
-    //   if (draftState.lastDoc) {
-    //     console.log('increment current page');
-    //     draftState.currentPage = draftState.currentPage
-    //       ? draftState.currentPage + 1
-    //       : 1;
-    //   } else {
-    //     console.log('no lst doc found');
-    //   }
-    //   return draftState;
     default:
       return draftState;
   }
 }
 
-function getDocData(doc: Document<Entity>) {
+function getDocData<T extends Entity>(doc: Document<T>) {
   const timestamp = (doc.data()?.timestamp as any)?.toDate();
   return {
     ...doc.data(),

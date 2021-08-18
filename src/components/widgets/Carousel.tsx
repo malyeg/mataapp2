@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from 'react';
+import {StyleProp, ViewStyle} from 'react-native';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import CarouselBase, {
   CarouselProperties,
@@ -8,15 +9,16 @@ import CarouselBase, {
 import {ImageSource} from '../../api/itemsApi';
 import theme from '../../styles/theme';
 import {Image} from '../core';
-
-type RenderItemType = CarouselProperties<ImageSource>['renderItem'];
+import {ImageProps} from '../core/Image';
 
 interface CarouselProps
   extends Omit<CarouselBaseProps<ImageSource>, 'renderItem' | 'data'> {
   images: ImageSource[];
   layout?: CarouselProperties<ImageSource>['layout'];
-  // renderItem?: ListRenderItem<ImageSource>;
   renderItem?: CarouselBaseProps<ImageSource>['renderItem'];
+  style?: StyleProp<ViewStyle>;
+  resizeMode?: ImageProps['resizeMode'];
+  viewImageInFullScreen?: boolean;
 }
 
 const windowWidth = Dimensions.get('window').width;
@@ -24,24 +26,32 @@ const itemWidth = windowWidth - theme.defaults.SCREEN_PADDING * 4;
 // const itemWidth = 100;
 const itemHeight = itemWidth;
 
-const Carousel = ({images, layout = 'default', renderItem}: CarouselProps) => {
+const Carousel = ({
+  images,
+  layout = 'default',
+  style,
+  resizeMode = 'cover',
+  renderItem,
+  viewImageInFullScreen = false,
+}: CarouselProps) => {
   const [activeSlide, setActiveSlide] = useState<number>(0);
 
   const renderItemHandler: any = useCallback(
     (itemInfo: {item: ImageSource; index: number}) => {
       if (renderItem) {
         return renderItem(itemInfo);
+      } else {
+        return (
+          <Image
+            uri={itemInfo.item.downloadURL!}
+            style={styles.image}
+            resizeMode={resizeMode}
+            onPressViewInFullScreen={viewImageInFullScreen}
+          />
+        );
       }
-
-      return (
-        <Image
-          uri={itemInfo.item.downloadURL!}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      );
     },
-    [renderItem],
+    [renderItem, resizeMode, viewImageInFullScreen],
   );
 
   const onSnapToItem = useCallback(
@@ -50,7 +60,7 @@ const Carousel = ({images, layout = 'default', renderItem}: CarouselProps) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <CarouselBase
         layout={layout}
         data={images}
@@ -90,7 +100,11 @@ const styles = StyleSheet.create({
     // height: itemHeight,
   },
   image: {
-    borderRadius: 20,
+    borderRadius: 10,
+    backgroundColor: theme.colors.lightGrey,
+    overflow: 'hidden',
+    width: '100%',
+    height: '100%',
   },
   PaginationContainer: {
     // backgroundColor: 'rgba(0, 0, 0, 0.75)'

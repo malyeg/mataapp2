@@ -20,7 +20,7 @@ export const patterns = {
 };
 
 export const payment = {
-  SUPPORT_US_URL: 'https://www.buymeacoffee.com/matastore',
+  SUPPORT_US_URL: 'https://www.buymeacoffee.com/MataApp',
 };
 
 export const DOMAINS = [

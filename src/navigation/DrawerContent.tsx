@@ -7,7 +7,6 @@ import React from 'react';
 import {Linking, StyleSheet} from 'react-native';
 import ProfileHeader from '../components/widgets/ProfileHeader';
 import {screens} from '../config/constants';
-import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useNotifications from '../hooks/useNotifications';
 import theme from '../styles/theme';
@@ -17,7 +16,6 @@ const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
   const {t} = useLocale('common');
   // const [notificationCount, setNotificationCount] = useState(0);
   const linkTo = useLinkTo();
-  const {user} = useAuth();
   const {getNotificationsCount} = useNotifications();
 
   return (
@@ -82,6 +80,7 @@ const styles = StyleSheet.create({
     ...theme.styles.scale.subtitle1,
     color: theme.colors.salmon,
     fontWeight: theme.fontWeight.semiBold,
+    marginHorizontal: 30,
   },
   lastItem: {
     borderBottomWidth: 0,

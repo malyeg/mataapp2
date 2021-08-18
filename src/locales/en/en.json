@@ -364,6 +364,11 @@
     },
     "submitSuccess": "Password changed successfully 👋"
   },
+  "dealDetailsScreen": {
+    "approveBtnTitle": "Accept",
+    "rejectBtnTitle": "Reject",
+    "cancelBtnTitle": "Cancel"
+  },
   "itemDetailsScreen": {
     "ownerItemsTitle": "Owner other items",
     "itemDescriptionTitle": "Description: ",

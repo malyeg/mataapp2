@@ -1,5 +1,11 @@
 import React, {useCallback} from 'react';
-import {GestureResponderEvent, StyleSheet, TextStyle} from 'react-native';
+import {
+  GestureResponderEvent,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import theme, {ColorProps} from '../../styles/theme';
 import PressableOpacity, {PressableOpacityProps} from './PressableOpacity';
 import Text from './Text';
@@ -9,11 +15,18 @@ import Text from './Text';
 export interface ButtonProps extends ColorProps, PressableOpacityProps {
   title: string;
   icon?: string;
+  themeType?: 'primary' | 'secondary' | 'dark' | 'white';
   metaData?: {[key: string]: unknown};
-  textStyle?: TextStyle;
+  textStyle?: StyleProp<TextStyle>;
 }
 
-const AppButton = ({disabled, textStyle, onPress, ...props}: ButtonProps) => {
+const AppButton = ({
+  disabled,
+  themeType = 'primary',
+  textStyle,
+  onPress,
+  ...props
+}: ButtonProps) => {
   const title = props.title ?? props.children;
 
   const onPressHandler = useCallback(
@@ -25,12 +38,17 @@ const AppButton = ({disabled, textStyle, onPress, ...props}: ButtonProps) => {
     [disabled, onPress],
   );
 
+  const themeStyle = styles[themeType] ?? {};
+  const themeTextStyle =
+    themeType === 'white' ? styles.darkText : styles.whiteText;
+
   const styleList = [
     styles.container,
     disabled ? styles.disabled : null,
-    props.style,
+    props.style as StyleProp<ViewStyle>,
+    themeStyle ? themeStyle : {},
   ];
-  const styleTextList = [styles.text, textStyle];
+  const styleTextList = [styles.text, themeTextStyle, textStyle];
   return (
     <PressableOpacity
       {...props}
@@ -58,6 +76,26 @@ const styles = StyleSheet.create({
   },
   disabled: {
     backgroundColor: theme.colors.pink,
+  },
+  dark: {
+    backgroundColor: theme.colors.dark,
+  },
+  primary: {
+    backgroundColor: theme.colors.salmon,
+  },
+  secondary: {
+    backgroundColor: theme.colors.dark,
+  },
+  white: {
+    backgroundColor: theme.colors.white,
+    borderWidth: 2,
+    borderColor: theme.colors.lightGrey,
+  },
+  darkText: {
+    color: theme.colors.dark,
+  },
+  whiteText: {
+    color: theme.colors.white,
   },
 });
 

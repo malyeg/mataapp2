@@ -1,18 +1,29 @@
 import React from 'react';
-import {StyleSheet, TextStyle, View, ViewProps} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
 import {Icon, Text} from '../core';
+import {IconProps} from '../core/Icon';
 
 interface ProfileHeaderProps extends ViewProps {
-  profileIconSize?: number;
-  userNameStyle?: TextStyle;
+  userNameStyle?: StyleProp<TextStyle>;
+  icon?: Partial<IconProps>;
+  iconContainerStyle?: StyleProp<ViewStyle>;
 }
 const ProfileHeader = ({
   style,
   userNameStyle,
-  profileIconSize = 110,
+  iconContainerStyle,
+  icon,
 }: ProfileHeaderProps) => {
+  const profileIconSize = icon?.size ?? 110;
   const {user, profile} = useAuth();
   // useEffect(() => {}, [profile]);
   return (
@@ -20,6 +31,7 @@ const ProfileHeader = ({
       <View
         style={[
           styles.iconContainer,
+          iconContainerStyle,
           {
             width: profileIconSize,
             height: profileIconSize,
@@ -27,15 +39,17 @@ const ProfileHeader = ({
           },
         ]}>
         <Icon
-          style={styles.profileIcon}
-          name="profile"
-          // color="#F2A39C"
-          color={theme.colors.white}
-          size={profileIconSize * 0.5}
-          type="svg"
+          style={[styles.profileIcon, icon?.style]}
+          name={icon?.name ?? 'profile'}
+          color={icon?.color ?? theme.colors.white}
+          size={icon?.size ?? profileIconSize * 0.5}
+          type={icon?.type ?? 'svg'}
         />
       </View>
-      <Text style={[styles.userName, userNameStyle]} numberOfLines={2}>
+      <Text
+        style={[styles.userName, userNameStyle]}
+        numberOfLines={1}
+        ellipsizeMode="tail">
         {profile?.firstName
           ? `${profile.firstName} ${profile.lastName}`
           : user.username}
@@ -52,13 +66,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // height: 200,
   },
+  header: {
+    marginBottom: 40,
+  },
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.colors.salmon,
-    // height: 100,
-    // width: 100,
-    // borderRadius: 50,
     overflow: 'hidden',
     marginBottom: 10,
   },
