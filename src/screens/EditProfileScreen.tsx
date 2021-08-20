@@ -14,6 +14,7 @@ import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
 import useLocale from '../hooks/useLocale';
 import useToast from '../hooks/useToast';
+import theme from '../styles/theme';
 
 export const EDIT_PROFILE_SCREEN_NAME = 'EditProfileScreen';
 type EditProfileFormValues = {
@@ -172,7 +173,10 @@ const EditProfileScreen = () => {
   // return loader;
   return profile ? (
     <PressableScreen style={styles.screen}>
-      <ProfileHeader />
+      <ProfileHeader
+        iconContainerStyle={styles.iconContainer}
+        icon={{color: theme.colors.grey}}
+      />
       <FormView style={[styles.form]}>
         <View style={styles.nameContainer}>
           <TextInput
@@ -341,5 +345,11 @@ const styles = StyleSheet.create({
   phoneCode: {
     flexBasis: '25%',
     // backgroundColor: 'grey',
+  },
+  iconContainer: {
+    backgroundColor: theme.colors.lightGrey,
+  },
+  profileIcon: {
+    color: theme.colors.dark,
   },
 });

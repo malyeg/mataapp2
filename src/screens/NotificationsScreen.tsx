@@ -16,7 +16,7 @@ const NotificationsScreen = () => {
     collectionName: notificationsApi.collectionName,
     query: QueryBuilder.from({
       filters: [
-        {field: 'delivered', value: true},
+        {field: 'delivered', value: false},
         {field: 'targetUserId', value: user.id},
       ],
     }),

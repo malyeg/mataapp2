@@ -80,7 +80,7 @@ class Log {
 
   error(message?: any, ...optionalParams: any[]) {
     this.loggerConfig.logLevel <= LogLevel.error &&
-      console.error(
+      console.log(
         this.className + SEPARATOR + JSON.stringify(message),
         ...optionalParams,
       );

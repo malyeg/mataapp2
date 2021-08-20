@@ -1,61 +1,38 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
+import {StyleProp, ViewStyle} from 'react-native';
 import {StyleSheet, View} from 'react-native';
 import {
   Bubble,
   Composer,
   GiftedChat,
-  IMessage,
+  InputToolbar,
   Send,
 } from 'react-native-gifted-chat';
 import {Deal} from '../../api/dealsApi';
-import messagesApi from '../../api/messagesApi';
+import messagesApi, {Message} from '../../api/messagesApi';
+import {useFirestoreSnapshot} from '../../hooks/firebase/useFirestoreSnapshot';
 import useAuth from '../../hooks/useAuth';
 import theme from '../../styles/theme';
+import {QueryBuilder} from '../../types/DataTypes';
 import {Icon} from '../core';
 
 interface ChatProps {
   deal: Deal;
+  style?: StyleProp<ViewStyle>;
   disableComposer?: boolean;
   alwaysShowSend?: boolean;
 }
-const Chat = ({deal, disableComposer, alwaysShowSend}: ChatProps) => {
-  const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
-  //   const {request} = useApi();
+const Chat = ({deal, disableComposer, style, alwaysShowSend}: ChatProps) => {
+  const {data} = useFirestoreSnapshot<Message>({
+    collectionName: messagesApi.collectionName,
+    query: QueryBuilder.from({
+      filters: [{field: 'dealId', value: deal.id}],
+      orderBy: [{field: 'timestamp', direction: 'desc'}],
+    }),
+    docMapper: messagesApi.docMapper,
+  });
   const {user} = useAuth();
 
-  useEffect(() => {
-    const messagesUnsubscribe = messagesApi.collection
-      .where('dealId', '==', deal.id)
-      .orderBy('timestamp', 'desc')
-      .onSnapshot(
-        querySnapshot => {
-          const messages: IMessage[] = querySnapshot.docs.map(doc => {
-            const docData = doc.data();
-
-            const timestamp = (doc.data()?.timestamp as any)?.toDate();
-            const message: IMessage = {
-              _id: doc.id,
-              text: docData.text,
-              createdAt: timestamp,
-              user: {
-                _id: docData.user._id,
-              },
-            };
-            return message;
-          });
-
-          setChatMessages(prevMessages => {
-            if (messages?.length > 0 && messages.length > prevMessages.length) {
-              return messages;
-            }
-            return prevMessages;
-          });
-        },
-        error => console.error(error),
-      );
-
-    return messagesUnsubscribe;
-  }, [deal]);
   const renderSend = useCallback(
     props => (
       <Send {...props} containerStyle={styles.sendContainer}>
@@ -104,13 +81,20 @@ const Chat = ({deal, disableComposer, alwaysShowSend}: ChatProps) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <GiftedChat
         messagesContainerStyle={styles.messagesContainer}
         timeTextStyle={{right: styles.rightText, left: styles.leftText}}
         renderBubble={renderBubble}
         renderSend={renderSend}
-        messages={chatMessages}
+        messages={data!}
+        renderInputToolbar={props => (
+          <InputToolbar
+            {...props}
+            containerStyle={styles.toolbar}
+            // primaryStyle={styles.toolbar}
+          />
+        )}
         onSend={messages => onSend(messages)}
         user={{
           _id: user.id,
@@ -133,10 +117,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sendContainer: {
-    height: 60,
-    width: 60,
+    // height: 60,
+    // width: 60,
     justifyContent: 'center',
     alignItems: 'center',
+    // borderColor: theme.colors.dark,
+    // borderWidth: 2,
   },
   messagesContainer: {
     // backgroundColor: 'blue',
@@ -158,5 +144,22 @@ const styles = StyleSheet.create({
   },
   textInput: {
     color: theme.colors.dark,
+    // backgroundColor: 'red',
+    // borderColor: 'red',
+    // borderWidth: 2,
+  },
+  toolbar: {
+    // height: 20,
+    // backgroundColor: 'grey',
+    borderWidth: 2,
+    borderColor: theme.colors.lightGrey,
+    borderRadius: 10,
+  },
+  chatFooter: {
+    // backgroundColor: 'red',
+    // height: 5,
+    // borderColor: 'red',
+    // borderWidth: 2,
+    // marginVertical: 5,
   },
 });

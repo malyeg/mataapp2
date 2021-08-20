@@ -2,12 +2,12 @@ import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import {locale} from './constants';
 
-import en from '../locales/en/en.json';
-import ar from '../locales/ar/ar.json';
+import en from '../locales/en/en';
+// import ar from '../locales/ar/ar';
 
 const resources = {
   en: en,
-  ar: ar,
+  // ar: ar,
 };
 
 i18n

@@ -30,6 +30,7 @@
     "@react-native-firebase/crashlytics": "^12.6.0",
     "@react-native-firebase/dynamic-links": "^12.6.0",
     "@react-native-firebase/firestore": "^12.6.0",
+    "@react-native-firebase/functions": "^12.6.1",
     "@react-native-firebase/messaging": "^12.6.0",
     "@react-native-firebase/perf": "^12.6.0",
     "@react-native-firebase/remote-config": "^12.6.0",

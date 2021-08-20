@@ -1,10 +1,6 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {useRef} from 'react';
-import Sheet, {SheetProps, ShowOptions} from '../components/widgets/Sheet';
+import {useMemo, useRef} from 'react';
+import {SheetProps, ShowOptions} from '../components/widgets/Sheet';
 
-interface UseSheetProps {
-  isVisible?: boolean;
-}
 const useSheet = () => {
   const sheetRef = useRef<SheetProps>();
 

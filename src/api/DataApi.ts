@@ -1,7 +1,9 @@
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
+import firebase from '@react-native-firebase/app';
 import Config from 'react-native-config';
+import '@react-native-firebase/functions';
 import constants from '../config/constants';
 import {
   DataCollection,
@@ -15,11 +17,14 @@ import {QuerySnapshot} from '../types/UtilityTypes';
 import cache, {CacheConfig} from '../utils/cache/cacheManager';
 import {allCombinations} from '../utils/CommonUtils';
 import {Api, APIOptions, ApiResponse} from './Api';
+import {FirebaseFunctionsTypes} from '@react-native-firebase/functions';
 export class DataApi<T extends Entity> extends Api {
   collection: DataCollection<T>;
   cacheStore: string;
+  functions: FirebaseFunctionsTypes.Module;
   constructor(readonly collectionName: string) {
     super();
+    this.functions = firebase.app().functions(constants.firebase.REGION);
     this.collection = firestore().collection<T>(
       Config.SCHEMA_PREFIX + collectionName,
     );

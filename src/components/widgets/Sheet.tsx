@@ -60,12 +60,14 @@ const Sheet = ({...props}: SheetProps, ref: any) => {
         <Button
           title={sheetContent?.cancelTitle ?? t('sheet.cancelBtnText')}
           style={[styles.modalButton]}
+          themeType="white"
           onPress={cancelHandler}
         />
         <Button
           title={sheetContent?.confirmTitle ?? t('sheet.confirmBtnText')}
           style={[styles.modalButton, styles.confirmButton]}
-          textStyle={styles.confirmText}
+          // textStyle={styles.confirmText}
+          themeType="primary"
           onPress={confirmHandler}
         />
       </View>

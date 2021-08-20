@@ -371,6 +371,9 @@ PODS:
   - Firebase/Firestore (8.5.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 8.5.0)
+  - Firebase/Functions (8.5.0):
+    - Firebase/CoreOnly
+    - FirebaseFunctions (~> 8.5.0)
   - Firebase/Messaging (8.5.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 8.5.0)
@@ -430,6 +433,9 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 2.30908.0)
+  - FirebaseFunctions (8.5.0):
+    - FirebaseCore (~> 8.0)
+    - GTMSessionFetcher/Core (~> 1.5)
   - FirebaseInstallations (8.5.0):
     - FirebaseCore (~> 8.0)
     - GoogleUtilities/Environment (~> 7.4)
@@ -888,6 +894,10 @@ PODS:
     - Firebase/Firestore (= 8.5.0)
     - React-Core
     - RNFBApp
+  - RNFBFunctions (12.6.1):
+    - Firebase/Functions (= 8.5.0)
+    - React-Core
+    - RNFBApp
   - RNFBMessaging (12.6.0):
     - Firebase/Messaging (= 8.5.0)
     - React-Core
@@ -1004,6 +1014,7 @@ DEPENDENCIES:
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
+  - "RNFBFunctions (from `../node_modules/@react-native-firebase/functions`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFBPerf (from `../node_modules/@react-native-firebase/perf`)"
   - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
@@ -1029,6 +1040,7 @@ SPEC REPOS:
     - FirebaseCrashlytics
     - FirebaseDynamicLinks
     - FirebaseFirestore
+    - FirebaseFunctions
     - FirebaseInstallations
     - FirebaseMessaging
     - FirebasePerformance
@@ -1149,6 +1161,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/dynamic-links"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
+  RNFBFunctions:
+    :path: "../node_modules/@react-native-firebase/functions"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFBPerf:
@@ -1186,6 +1200,7 @@ SPEC CHECKSUMS:
   FirebaseCrashlytics: 8e7cf678cb149d421198388c6fc3d3acfd266539
   FirebaseDynamicLinks: 6e406b3bb669f8c8a63e7254bb63251fa3f88a43
   FirebaseFirestore: 9aa10de35bb76a5fe40fdf5c858669f0eac88a99
+  FirebaseFunctions: eb1fedf8eb25c144ef72ff68d78259d79eb29ae5
   FirebaseInstallations: f2bc590b291d25fb40a9a05b8281c02a881b5117
   FirebaseMessaging: 0705ec705c21705efc51c071fba924c8e25c63e7
   FirebasePerformance: f714a631ddef36758d34107ebb60ce324c7428cc
@@ -1251,6 +1266,7 @@ SPEC CHECKSUMS:
   RNFBCrashlytics: 629aeb5619dd7501a28a3be42d0728de8f3d7bf8
   RNFBDynamicLinks: ef3c14bff6d716959999119161924005227e9059
   RNFBFirestore: b817db23e6cc021e60644efc04803be807fb07f1
+  RNFBFunctions: 6376a08f448bc8f40ce6bf2459fb4282cc79dffa
   RNFBMessaging: 18158b22e06e2297df9628486193455eb619b46d
   RNFBPerf: 5d5d4a6a8a5506703c119b8742e8a12a5af2caa9
   RNFBRemoteConfig: 60c686bd4e6227ac5a013378be2f2e34d76c7803

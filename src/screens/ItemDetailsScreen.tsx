@@ -138,16 +138,13 @@ const ItemDetailsScreen = () => {
 
   const itemImage = useCallback(
     (itemInfo: {item: ImageSource}) => (
-      <View style={styles.imageContainer}>
-        <Image
-          uri={itemInfo.item.downloadURL!}
-          style={styles.image}
-          resizeMode="cover"
-        />
-        <ItemActivity item={item!} style={styles.activityContainer} />
-      </View>
+      <Image
+        uri={itemInfo.item.downloadURL!}
+        style={styles.image}
+        // resizeMode="cover"
+      />
     ),
-    [item],
+    [],
   );
 
   const swapHandler = useCallback(async () => {
@@ -232,16 +229,12 @@ const ItemDetailsScreen = () => {
           <Text style={styles.descriptionText}>{item.description}</Text>
         )}
 
-        {item.images && item.images.length === 1 ? (
-          <Image
-            uri={item.images[0].downloadURL!}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        ) : (
-          <Carousel images={item.images!} renderItem={itemImage} />
-        )}
-
+        <Carousel
+          images={item.images!}
+          style={styles.carousel}
+          resizeMode="center"
+          viewImageInFullScreen
+        />
         {item.userId !== user.id && (
           <ItemDetailsCard
             title="Owner: "
@@ -357,6 +350,11 @@ const styles = StyleSheet.create({
 
   greenText: {
     color: theme.colors.green,
+  },
+  carousel: {
+    // flex: 1,
+    height: 200,
+    marginBottom: 10,
   },
   imageContainer: {
     marginBottom: 10,

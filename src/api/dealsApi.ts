@@ -70,6 +70,18 @@ class DealsApi extends DataApi<Deal> {
     );
   };
 
+  acceptOffer = async (dealId: string) => {
+    return await this.functions.httpsCallable('acceptOffer')({dealId});
+  };
+
+  rejectOffer = async (dealId: string, reason: string) => {
+    return await this.functions.httpsCallable('rejectOffer')({dealId, reason});
+  };
+
+  cancelOffer = async (dealId: string, reason?: string) => {
+    return await this.functions.httpsCallable('cancelOffer')({dealId, reason});
+  };
+
   readonly DEALS_CACHE_KEY = 'deals';
 }
 

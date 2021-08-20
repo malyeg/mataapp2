@@ -68,7 +68,7 @@ const ChangePasswordScreen = () => {
     <Screen style={styles.screen}>
       <FormView style={styles.formContainer}>
         <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>{t('oldPasswordtitleText')}</Text>
+          <Text style={styles.headerText}>{t('oldPasswordTitleText')}</Text>
         </View>
         <TextInput
           secureTextEntry
@@ -78,7 +78,7 @@ const ChangePasswordScreen = () => {
           control={control}
         />
         <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>{t('newPasswordtitleText')}</Text>
+          <Text style={styles.headerText}>{t('newPasswordTitleText')}</Text>
         </View>
 
         <TextInput
