@@ -20,6 +20,7 @@ import NotificationsScreen from '../screens/NotificationsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SupportUsScreen from '../screens/SupportUsScreen';
+import {Status} from '../types/DataTypes';
 import DealsTabs from './DealsTabs';
 
 const screenOptions: StackNavigationOptions = {
@@ -43,7 +44,9 @@ export type StackParams = {
     | undefined;
   [screens.MY_ITEMS]: undefined;
   [screens.ADD_ITEM]: {id: string; title: string} | undefined;
-  [screens.ITEM_DETAILS]: {id: string; title: string} | undefined;
+  [screens.ITEM_DETAILS]:
+    | {id: string; title: string; toast: Status}
+    | undefined;
 
   [screens.PROFILE]: undefined;
   [screens.EDIT_PROFILE]: undefined;

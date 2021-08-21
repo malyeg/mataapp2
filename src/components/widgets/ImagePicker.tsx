@@ -1,25 +1,22 @@
 import storage from '@react-native-firebase/storage';
 import React, {FC, useEffect, useState} from 'react';
-import Modal from 'react-native-modal';
 import {
   ActivityIndicator,
   Image,
-  StatusBar,
   StyleSheet,
   View,
   ViewProps,
 } from 'react-native';
 import * as ImagePickerBase from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import itemsApi, {ImageSource} from '../../api/itemsApi';
 import useAuth from '../../hooks/useAuth';
-import useMountedRef from '../../hooks/useMountRef';
-import theme from '../../styles/theme';
-import {Icon, Separator, Text} from '../core';
-import ListItem from '../core/ListItem';
 import useLocale from '../../hooks/useLocale';
+import useMountedRef from '../../hooks/useMountRef';
 import useController from '../../hooks/userController';
+import theme from '../../styles/theme';
+import {Icon, Modal, Separator} from '../core';
+import ListItem from '../core/ListItem';
 import PressableOpacity from '../core/PressableOpacity';
 
 interface ItemImageProps extends ViewProps {
@@ -102,17 +99,18 @@ const ImagePicker: FC<ItemImageProps> = ({
           response.errorMessage,
         );
       }
-
-      setUploading(true);
-      const s: ImageSource = {
-        name: response.assets[0].fileName,
-        type: response.assets[0].type,
-        uri: response.assets[0].uri!,
-        size: response.assets[0].fileSize,
-        width: response.assets[0].width,
-        height: response.assets[0].height,
-      };
-      upload(s);
+      if (response.assets && response.assets.length > 0) {
+        setUploading(true);
+        const s: ImageSource = {
+          name: response.assets[0].fileName,
+          type: response.assets[0].type,
+          uri: response.assets[0].uri!,
+          size: response.assets[0].fileSize,
+          width: response.assets[0].width,
+          height: response.assets[0].height,
+        };
+        upload(s);
+      }
     });
   };
 
@@ -152,22 +150,23 @@ const ImagePicker: FC<ItemImageProps> = ({
 
   const resizeImage = async (image: ImageSource) => {
     try {
-      const response = await ImageResizer.createResizedImage(
-        image.uri!,
-        300,
-        300,
-        'JPEG',
-        100,
-        0,
-        undefined,
-        false,
-        {mode: 'contain', onlyScaleDown: true},
-      );
-      if (maxSize && onMaxSize && response.size > maxSize) {
-        onMaxSize(maxSize, response.size);
-        return;
-      }
-      return {...image, ...response} as ImageSource;
+      // const response = await ImageResizer.createResizedImage(
+      //   image.uri!,
+      //   600,
+      //   600,
+      //   'JPEG',
+      //   100,
+      //   0,
+      //   undefined,
+      //   false,
+      //   {mode: 'contain', onlyScaleDown: true},
+      // );
+      // if (maxSize && onMaxSize && response.size > maxSize) {
+      //   onMaxSize(maxSize, response.size);
+      //   return;
+      // }
+      // return {...image, ...response} as ImageSource;
+      return image;
       // response.uri is the URI of the new image that can now be displayed, uploaded...
       // response.path is the path of the new image
       // response.name is the name of the new image with the extension
@@ -213,29 +212,11 @@ const ImagePicker: FC<ItemImageProps> = ({
       </PressableOpacity>
 
       <Modal
-        // {...props}
-        style={[styles.modalContainer]}
-        useNativeDriver={true}
-        swipeDirection={['down']}
-        hideModalContentWhileAnimating={true}
+        position="bottom"
+        onClose={closeModal}
         isVisible={isModalVisible}
-        onSwipeComplete={closeModal}
-        onBackdropPress={closeModal}
-        // scrollTo={handleScrollTo}
-        // scrollOffset={scrollOffset}
-        onBackButtonPress={closeModal}
-        propagateSwipe>
-        <SafeAreaView style={[styles.safeAreaContainer]}>
-          <StatusBar
-            translucent
-            backgroundColor="transparent"
-            barStyle="dark-content"
-          />
-          <View style={[styles.headerContainer]}>
-            <Text style={styles.modalTitle}>
-              {t('imagePicker.imageAction')}
-            </Text>
-          </View>
+        title={t('imagePicker.imageAction')}>
+        <View style={styles.modalContainer}>
           <ListItem
             text={t('imagePicker.deleteText')}
             icon="trash-can-outline"
@@ -261,7 +242,7 @@ const ImagePicker: FC<ItemImageProps> = ({
               setModalVisible(false);
             }}
           />
-        </SafeAreaView>
+        </View>
       </Modal>
     </>
   );
@@ -303,9 +284,7 @@ const styles = StyleSheet.create({
 
   // Modal styles
   modalContainer: {
-    margin: 0,
-    flex: 1,
-    justifyContent: 'flex-end',
+    paddingBottom: 50,
   },
   safeAreaContainer: {
     flex: 0.5,

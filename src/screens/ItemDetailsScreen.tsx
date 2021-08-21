@@ -8,7 +8,6 @@ import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
 import {Button, Image, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
 import Header, {MenuItem} from '../components/widgets/Header';
-import ItemActivity from '../components/widgets/ItemActivity';
 import ItemDealsTab from '../components/widgets/ItemDealsTab';
 import ItemDetailsCard from '../components/widgets/ItemDetailsCard';
 import ItemPicker from '../components/widgets/ItemPicker';
@@ -66,14 +65,14 @@ const ItemDetailsScreen = () => {
         show({
           header: t('deleteConfirmationHeader'),
           body: t('deleteConfirmationBody', {params: {itemName: i.name}}),
-          cancelCallback: () => console.log('canceling'),
+          cancelCallback: () => null,
           confirmCallback: () => deleteItem(i.id),
         });
       },
     };
 
     const menuItems = [shareMenuItem];
-    console.log({userId: user.id, itemId: i.userId});
+
     if (user.id === i.userId) {
       menuItems.push(editMenuItem);
       menuItems.push(deleteMenuItem);
@@ -116,6 +115,10 @@ const ItemDetailsScreen = () => {
         if (i) {
           setHeader(i);
           setItem(i);
+          if (route.params?.toast) {
+            showToast(route.params.toast);
+          }
+          console.log(i.images[0]);
         }
       });
 
@@ -128,7 +131,7 @@ const ItemDetailsScreen = () => {
         await request(() => itemsApi.deleteById(id));
         goBack({navigation, route});
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     },
 

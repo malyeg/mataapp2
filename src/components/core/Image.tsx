@@ -1,6 +1,12 @@
 import React from 'react';
 import {useState} from 'react';
-import {ImageStyle, Pressable, StyleProp, StyleSheet} from 'react-native';
+import {
+  Dimensions,
+  ImageStyle,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+} from 'react-native';
 import FastImage, {ResizeMode, Source} from 'react-native-fast-image';
 import Modal from './Modal';
 export interface ImageProps {
@@ -12,6 +18,8 @@ export interface ImageProps {
   onPressViewInFullScreen?: boolean;
 }
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 const Image = ({
   style,
   cache,
@@ -54,7 +62,7 @@ const Image = ({
               cache: cache ?? FastImage.cacheControl.immutable,
             }
           }
-          resizeMode={resizeMode ?? FastImage.resizeMode.cover}
+          resizeMode={FastImage.resizeMode.center}
         />
       </Modal>
     </>
@@ -82,6 +90,9 @@ const styles = StyleSheet.create({
   fullScreenImage: {
     height: '100%',
     width: '100%',
+    // height: windowHeight,
+    // width: windowWidth,
+    // backgroundColor: 'red',
   },
 });
 

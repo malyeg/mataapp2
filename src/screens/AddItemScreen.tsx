@@ -1,4 +1,5 @@
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import * as yup from 'yup';
@@ -51,6 +52,7 @@ const AddItemScreen = () => {
   const {user, profile, addTargetCategory, getName} = useAuth();
   const {showToast, hideToast} = useToast();
   const route = useRoute<EditItemRoute>();
+  const navigation = useNavigation<StackNavigationHelpers>();
 
   const {control, reset, handleSubmit} = useForm<AddItemFormValues>({
     name: yup.string().trim().max(50).required(t('name.required')),
@@ -132,7 +134,7 @@ const AddItemScreen = () => {
         (item.condition.desc = data.usedWithIssuesDesc);
       const evict = `${itemsApi.MY_ITEMS_CACHE_KEY}_${user.id}`;
 
-      await request<Item>(() =>
+      const newItem = await request<Item>(() =>
         itemsApi.add(item, {
           cache: {
             enabled: false,
@@ -154,11 +156,21 @@ const AddItemScreen = () => {
         }
       }
       reset();
-      showToast({
-        type: 'success',
-        message: t('addItemSuccess'),
-        options: {
-          duration: 5000,
+      // showToast({
+      //   type: 'success',
+      //   message: t('addItemSuccess'),
+      //   options: {
+      //     duration: 5000,
+      //   },
+      // });
+      navigation.navigate(screens.ITEM_DETAILS, {
+        id: newItem.id,
+        toast: {
+          type: 'success',
+          message: t('addItemSuccess'),
+          options: {
+            duration: 5000,
+          },
         },
       });
     } catch (err) {

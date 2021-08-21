@@ -32,7 +32,6 @@ const OwnerItems = ({item, style}: ItemListProps) => {
           {field: 'id', value: item?.id, operation: Operation.NOT_EQUAL},
           {field: 'status', value: 'online'},
         ];
-        console.log('itemList loadData');
         const query = new QueryBuilder<Item>()
           .filters(filters)
           .after(doc)
@@ -40,7 +39,7 @@ const OwnerItems = ({item, style}: ItemListProps) => {
           .build();
 
         const response = await itemsApi.getAll(query, {cache: {enabled: true}});
-        console.log(response?.items.length, response?.lastDoc);
+
         return response;
       } catch (error) {
         console.error(error);
@@ -53,8 +52,6 @@ const OwnerItems = ({item, style}: ItemListProps) => {
     ({item}) => <ItemCard item={item} showSwapIcon />,
     [],
   );
-
-  console.log('itemList render');
 
   return (
     <View style={[styles.container, style]}>
