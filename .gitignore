@@ -79,6 +79,9 @@ ios/*.cer
 ios/*.mobileprovision
 ios/*.p12
 
+# eclipse
+.project
+
 # vscode
 *.xcsettings
 .vscode
