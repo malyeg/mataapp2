@@ -10,7 +10,7 @@ import {
 import {useImmerReducer} from 'use-immer';
 import {ApiResponse} from '../../api/Api';
 import theme from '../../styles/theme';
-import {Document, Entity} from '../../types/DataTypes';
+import {Entity} from '../../types/DataTypes';
 import dataListReducer, {DataListInitState} from './dataListReducer';
 import ListLoader from './ListLoader';
 import NoDataFound from './NoDataFound';
@@ -47,7 +47,6 @@ function DataList<T extends Entity>({
   showsVerticalScrollIndicator = false,
   showsHorizontalScrollIndicator = false,
   onEndReached,
-  hideLoader = false,
   ...props
 }: DataListProps<T>) {
   const initialState: DataListInitState = {
@@ -205,7 +204,7 @@ const styles = StyleSheet.create({
     // flexGrow: 0,
   },
   vertical: {
-    // flex: 1,
+    flex: 1,
   },
   flatList: {
     // flex: 1,

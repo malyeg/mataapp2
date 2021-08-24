@@ -1,4 +1,9 @@
-import {DataSearchable, Entity, QueryBuilder} from '../types/DataTypes';
+import {
+  DataSearchable,
+  Entity,
+  Operation,
+  QueryBuilder,
+} from '../types/DataTypes';
 import {APIOptions} from './Api';
 import {DataApi} from './DataApi';
 import itemsApi, {Item} from './itemsApi';
@@ -43,15 +48,17 @@ class DealsApi extends DataApi<Deal> {
 
   getUserDeals = async (userId: string, item: Item) => {
     const query = new QueryBuilder<Deal>()
-      .filter('userId', userId)
-      .filter('item.id', item.id)
+      .filters([
+        {field: 'userId', value: userId},
+        {field: 'item.id', value: item.id},
+        {
+          field: 'status',
+          operation: Operation.IN,
+          value: ['accepted', 'new'] as DealStatus[],
+        },
+      ])
       .build();
-    return await this.getAll(query, {
-      cache: {
-        enabled: true,
-        key: `deals_${userId}_${item.id}`,
-      },
-    });
+    return await this.getAll(query);
   };
 
   // TODO replace with FB function

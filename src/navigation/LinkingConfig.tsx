@@ -11,6 +11,7 @@ const LinkingConfig: LinkingOptions<LinkingParamList>['config'] = {
         [screens.ITEMS]: 'items',
         [screens.PROFILE]: 'profile',
         [screens.MY_ITEMS]: 'items/myItems',
+        [screens.ADD_ITEM]: 'items/add',
         [screens.ITEM_DETAILS]: 'items/:id',
         [screens.DEALS_TABS]: 'deals',
         [screens.DEAL_DETAILS]: 'deals/:id',

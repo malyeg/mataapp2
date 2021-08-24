@@ -118,7 +118,6 @@ const ItemDetailsScreen = () => {
           if (route.params?.toast) {
             showToast(route.params.toast);
           }
-          console.log(i.images[0]);
         }
       });
 
@@ -139,31 +138,24 @@ const ItemDetailsScreen = () => {
     [navigation, route],
   );
 
-  const itemImage = useCallback(
-    (itemInfo: {item: ImageSource}) => (
-      <Image
-        uri={itemInfo.item.downloadURL!}
-        style={styles.image}
-        // resizeMode="cover"
-      />
-    ),
-    [],
-  );
-
   const swapHandler = useCallback(async () => {
-    const existingDeals = await request<ApiResponse<Deal>>(() =>
-      dealsApi.getUserDeals(user.id, item!),
-    );
-    if (!!existingDeals && existingDeals.items.length > 0) {
-      showToast({
-        message: t('alreadyHasDealError'),
-        type: 'error',
-        options: {
-          duration: 5000,
-          autoHide: true,
-        },
-      });
-      return;
+    try {
+      const itemHasDeals = await request<ApiResponse<Deal>>(() =>
+        dealsApi.itemHasDeals(user.id, item!),
+      );
+      if (itemHasDeals) {
+        showToast({
+          message: t('alreadyHasDealError'),
+          type: 'error',
+          options: {
+            duration: 5000,
+            autoHide: true,
+          },
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
     }
     if (item?.swapOption.type === 'free') {
       show({
@@ -185,8 +177,7 @@ const ItemDetailsScreen = () => {
     } else {
       setShowItemPicker(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item, navigation, show, t, user.id]);
+  }, [item, navigation, t, user.id]);
 
   const onItemPicker = (swapItem: Item) => {
     setShowItemPicker(false);
@@ -299,6 +290,7 @@ const ItemDetailsScreen = () => {
         <Sheet ref={sheetRef} />
         {showItemPicker && (
           <ItemPicker
+            title={t('itemPickerTitle')}
             isVisible={showItemPicker}
             categoryId={
               (item.swapOption.category as any)?.id ?? item.swapOption.category

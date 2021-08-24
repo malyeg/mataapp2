@@ -1,4 +1,4 @@
-import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
+// import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import React, {
   createContext,
   useEffect,
@@ -56,19 +56,6 @@ const updateToken = (token: string, profile: Profile) => {
   }
 };
 
-const onNetworkChanged = (netInfoState: NetInfoState) => {
-  try {
-    if (!netInfoState.isConnected) {
-      // showToast({code: 'app/noConnection', message: 'No Connection'});
-    } else {
-      // hideToast();
-    }
-  } catch (error) {
-    logger.error(error);
-  }
-  // TODO set  status card and connection
-};
-
 const AuthProvider: React.FC = (props: any) => {
   const [state, dispatch] = useReducer(AuthReducer, initialState);
   const [initializing, setInitializing] = useState(true);
@@ -117,11 +104,9 @@ const AuthProvider: React.FC = (props: any) => {
     };
     load();
     const authUnsubscribe = auth.onAuthStateChanged(onAuthStateChanged);
-    const netUnsubscribe = NetInfo.addEventListener(onNetworkChanged);
 
     return () => {
       authUnsubscribe();
-      netUnsubscribe();
       if (tokenUnsubscribe) {
         tokenUnsubscribe();
       }

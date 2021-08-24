@@ -31,7 +31,19 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
     useForm<ItemsFilterFormValues>({
       category: yup.string().trim(),
       swapType: yup.string().trim(),
-      swapCategory: yup.string().trim(),
+      swapCategory: yup
+        .string()
+        .trim()
+        .test(
+          'swapCategory',
+          t('itemsFilter.swapCategory.required'),
+          function (value) {
+            if (this.parent.swapType === ('swapWithAnother' as SwapType)) {
+              return !!value;
+            }
+            return true;
+          },
+        ),
       city: yup.string().trim(),
     });
 

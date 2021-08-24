@@ -18,7 +18,7 @@ export function useFirestoreSnapshot<T extends Entity>({
   } as DataState<T>);
 
   useEffect(() => {
-    console.log('useFirestoreQuery useEffect', state.query);
+    console.log('useFirestoreSnapshot useEffect', state.query);
 
     dispatch({
       type: 'SET_LOADING',
@@ -36,11 +36,11 @@ export function useFirestoreSnapshot<T extends Entity>({
 
     return collectionQuery.onSnapshot(
       snapshot => {
-        console.log('useFirestoreQuery snapshot', snapshot.size);
+        console.log('useFirestoreSnapshot snapshot', snapshot.size);
         dispatch({type: 'SET_DOCS', docs: snapshot.docs, docMapper});
       },
       error => {
-        console.log('useFirestoreQuery error');
+        console.log('useFirestoreQuery error', error);
         dispatch({type: 'SET_ERROR', error});
       },
     );

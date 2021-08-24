@@ -36,6 +36,7 @@ export const colors = {
   warn: '#FFFED1',
   lightGreen: '#65d434',
   orange: '#ff7e00',
+  error: '#CC3333',
 };
 
 // // type ColorKeys = keyof typeof Color;

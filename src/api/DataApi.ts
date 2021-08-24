@@ -83,8 +83,9 @@ export class DataApi<T extends Entity> extends Api {
 
   getAll = async (query?: Query<T>, options?: APIOptions) => {
     try {
-      const cacheKey = this.buildKeyFrom(options?.cache!, query);
-      if (options?.cache?.enabled && !query?.afterDoc) {
+      let cacheKey: string;
+      if (options?.cache?.enabled) {
+        cacheKey = this.buildKeyFrom(options?.cache!, query);
         const cachedResponse = await cache.get(cacheKey);
         if (cachedResponse) {
           this.logger.debug('getAll query (cached):', query);
@@ -106,13 +107,13 @@ export class DataApi<T extends Entity> extends Api {
         if (!!query?.limit && items.length === query.limit) {
           response.lastDoc = snapshot.docs.slice(-1)[0];
         }
-        if (options?.cache?.enabled && !response.lastDoc) {
-          cache.store(cacheKey, response);
+        if (options?.cache?.enabled) {
+          cache.store(cacheKey!, response);
         }
         return response;
       }
     } catch (error) {
-      console.error(error);
+      this.logger.error(error);
     }
   };
 

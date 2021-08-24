@@ -126,6 +126,7 @@ export default {
       swapCategory: {
         placeholder: 'Swap Category',
         modalTitle: 'Swap Category',
+        required: 'Swap category is required',
       },
       status: {
         placeholder: 'Status',
@@ -134,6 +135,10 @@ export default {
     },
     itemDealsTab: {
       modalTitle: 'Item deals',
+    },
+    itemPicker: {
+      noDataNoCategory: 'No items found under category \n"{{categoryName}}"',
+      noData: 'No items found',
     },
   },
   homeScreen: {
@@ -371,6 +376,8 @@ export default {
     menu: {
       cancelLabel: 'Cancel',
     },
+    cancelOfferConfirmationHeader: 'Canceling deal',
+    cancelOfferConfirmationBody: 'Are you sure?',
   },
   itemDetailsScreen: {
     ownerItemsTitle: 'Owner other items',
@@ -396,6 +403,7 @@ export default {
       editItemLabel: 'Edit',
       deleteLabel: 'Delete',
     },
+    itemPickerTitle: 'Select Item',
   },
   SupportUsScreen: {
     content: 'Support mata and buy us a coffee',

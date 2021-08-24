@@ -20,17 +20,21 @@ interface HeaderProps {
   title?: string;
   navigation: any;
   route: any;
+  options?: any;
   menu?: {
     items: MenuItem[];
   };
 }
-const Header = ({title, route, menu, ...props}: HeaderProps) => {
+const Header = ({title, options, route, menu, ...props}: HeaderProps) => {
   return (
     <>
       <View style={styles.container}>
         <HeaderNav style={styles.nav} route={route} {...props} />
         <Text style={styles.title} h5 numberOfLines={1}>
-          {title ?? (route?.params as {title: string})?.title ?? route.name}
+          {title ??
+            (route?.params as {title: string})?.title ??
+            options?.headerTitle ??
+            route.name}
         </Text>
         {menu && (
           <Menu style={styles.menuContainer}>

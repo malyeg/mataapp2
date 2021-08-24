@@ -7,9 +7,9 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import React, {useMemo, useRef} from 'react';
-import {MenuProvider} from 'react-native-popup-menu';
 import {Linking, StyleSheet} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
+import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import notificationsApi from '../api/notificationsApi';
@@ -167,10 +167,7 @@ const Routes = () => {
       linking={linking}
       onReady={navigationOnReadyHandler}
       onStateChange={onStateChange}>
-      <SafeAreaView
-        style={styles.safeAreaContainer}
-        // edges={['left', 'right', 'top']}
-      >
+      <SafeAreaView style={styles.safeAreaContainer}>
         <MenuProvider>{user ? <DrawerStack /> : <AuthStack />}</MenuProvider>
       </SafeAreaView>
       <Toast ref={ref => Toast.setRef(ref)} config={toastConfig} />

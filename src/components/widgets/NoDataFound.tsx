@@ -32,10 +32,11 @@ const NoDataFound = ({
       <Text h5 style={styles.title}>
         {title ?? t('noData.title')}
       </Text>
-      <Text h6 style={styles.subTitle} numberOfLines={2}>
-        {body ?? t('noData.subTitle')}
-      </Text>
-      {children}
+      {children ?? (
+        <Text h6 style={styles.subTitle} numberOfLines={2}>
+          {body ?? t('noData.subTitle')}
+        </Text>
+      )}
     </View>
   );
 };

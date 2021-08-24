@@ -38,11 +38,11 @@ const OwnerItems = ({item, style}: ItemListProps) => {
           .limit(10)
           .build();
 
-        const response = await itemsApi.getAll(query, {cache: {enabled: true}});
+        const response = await itemsApi.getAll(query);
 
         return response;
       } catch (error) {
-        console.error(error);
+        console.log('error', error);
       }
     },
     [item],

@@ -1,8 +1,10 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {ApiResponse} from '../../api/Api';
+import categoriesApi from '../../api/categoriesApi';
 import itemsApi, {Item} from '../../api/itemsApi';
 import useAuth from '../../hooks/useAuth';
+import useLocale from '../../hooks/useLocale';
 import {QueryBuilder} from '../../types/DataTypes';
 import {Loader, Modal, Text} from '../core';
 import DataList from './DataList';
@@ -25,6 +27,7 @@ const ItemPicker = ({
 }: ItemPickerProps) => {
   const [items, setItems] = useState<ApiResponse<Item>>();
   const {user} = useAuth();
+  const {t} = useLocale('widgets');
   useEffect(() => {
     console.log('loading ItemPicker');
     const query = new QueryBuilder<Item>().filters([
@@ -44,6 +47,19 @@ const ItemPicker = ({
     ({item}) => <ItemCard item={item} style={styles.card} onPress={onChange} />,
     [onChange],
   );
+  const EmptyComponent = (
+    <NoDataFound>
+      <Text style={styles.emptyBodyText}>
+        {categoryId
+          ? t('itemPicker.noDataNoCategory', {
+              params: {
+                categoryName: categoriesApi.getById(categoryId!)?.name!,
+              },
+            })
+          : t('itemPicker.noData')}
+      </Text>
+    </NoDataFound>
+  );
 
   return (
     <Modal
@@ -58,6 +74,7 @@ const ItemPicker = ({
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           renderItem={renderItem}
+          ListEmptyComponent={EmptyComponent}
         />
       ) : (
         <Loader />
@@ -81,4 +98,8 @@ const styles = StyleSheet.create({
     height: 500,
   },
   datalist: {flex: 1},
+  emptyBodyText: {
+    alignItems: 'center',
+    textAlign: 'center',
+  },
 });
