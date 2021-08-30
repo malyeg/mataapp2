@@ -65,7 +65,7 @@ const Modal: FC<ModalProps> = ({
               <Text
                 style={[
                   styles.modalTitle,
-                  position === 'bottom' ? {marginLeft: 35} : {},
+                  position === 'bottom' ? styles.titleBottom : {},
                 ]}>
                 {title}
               </Text>
@@ -110,12 +110,14 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   container: {
+    // flex: 1,
     backgroundColor: theme.colors.white,
   },
   fullStyle: {
     flex: 1,
   },
   bottomStyle: {
+    // flexGrow: 1,
     // flex: 0.5,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
@@ -155,4 +157,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
   },
+  titleBottom: {marginLeft: 35},
 });

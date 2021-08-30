@@ -1,12 +1,15 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Platform, Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet} from 'react-native';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi from '../api/itemsApi';
 import {Button, Icon, Image, Loader, Screen, Text} from '../components/core';
+import Card from '../components/core/Card';
+import Date from '../components/core/Date';
+import SwapIcon from '../components/icons/SwapIcon';
 import Chat from '../components/widgets/Chat';
-import Header from '../components/widgets/Header';
+import Header, {MenuItem} from '../components/widgets/Header';
 import Sheet from '../components/widgets/Sheet';
 import {screens} from '../config/constants';
 import useApi from '../hooks/useApi';
@@ -14,9 +17,12 @@ import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useSheet from '../hooks/useSheet';
 import {StackParams} from '../navigation/HomeStack';
+import sharedStyles from '../styles/SharedStyles';
 import theme from '../styles/theme';
 
 type DealDetailsRoute = RouteProp<StackParams, typeof screens.DEAL_DETAILS>;
+const swapImageSize = 150;
+const imageSize = 80;
 const DealDetailsScreen = () => {
   const route = useRoute<DealDetailsRoute>();
   const navigation = useNavigation<StackNavigationHelpers>();
@@ -34,7 +40,6 @@ const DealDetailsScreen = () => {
             cache: {enabled: false},
           }),
         );
-        console.log('freshDeal', freshDeal);
         if (freshDeal) {
           setDeal(freshDeal);
           return freshDeal;
@@ -44,8 +49,13 @@ const DealDetailsScreen = () => {
       }
     };
     loadData().then(d => {
-      if (d) {
-        const menuItems = [
+      if (!d) {
+        return;
+      }
+      let menuItems: MenuItem[] = [];
+      const title = user.id === d.userId ? 'Outgoing deal' : 'Incoming deal';
+      if (d.status === 'accepted' || d.status === 'new') {
+        menuItems = [
           {
             label: t('menu.cancelLabel'),
             icon: {name: 'close-circle-outline', color: theme.colors.dark},
@@ -54,45 +64,57 @@ const DealDetailsScreen = () => {
                 header: t('cancelOfferConfirmationHeader'),
                 body: t('cancelOfferConfirmationBody'),
                 cancelCallback: () => console.log('canceling'),
-                confirmCallback: () =>
-                  dealsApi.cancelOffer(d.id).then(() => {
-                    navigation.navigate(screens.DEALS_TABS);
-                  }),
+                confirmCallback: () => {
+                  console.log(d.id);
+                  dealsApi.cancelOffer(d.id).then(
+                    () => {
+                      navigation.navigate(screens.DEALS_TABS);
+                    },
+                    error => console.log(error),
+                  );
+                },
               });
             },
           },
         ];
-        navigation.setOptions({
-          header: (props: any) => (
-            <Header {...props} menu={{items: menuItems}} />
-          ),
-        });
       }
+      (navigation as any).setOptions({
+        header: (props: any) => (
+          <Header {...props} title={title} menu={{items: menuItems}} />
+        ),
+      });
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, route.params]);
 
-  const acceptHandler = useCallback(async () => {
-    // console.log('acceptHandler');
-    const response = await dealsApi.acceptOffer(deal?.id!);
-    console.log(response);
-  }, [deal?.id]);
-  const rejectHandler = useCallback(async () => {
+  const acceptHandler = async () => {
+    await request(() => dealsApi.acceptOffer(deal?.id!));
+    setDeal({...deal!, status: 'accepted'});
+  };
+  const rejectHandler = async () => {
     // TODO show rejection reason modal
-    console.log('reject handler');
-    const data = await dealsApi.rejectOffer(deal?.id!, 'other');
-    console.log('reject data', data);
-  }, [deal?.id]);
+    await request(() => dealsApi.rejectOffer(deal?.id!, 'other'));
+    navigation.navigate(screens.DEALS_TABS);
+  };
+  const closeHandler = async () => {
+    await request(() => dealsApi.closeOffer(deal?.id!));
+    navigation.navigate(screens.DEALS_TABS);
+  };
 
   const isOpen =
     !!deal && (deal.status === 'new' || deal.status === 'accepted');
 
   const onSwapItemPress = useCallback(() => {
     navigation.navigate(screens.ITEM_DETAILS, {
-      id: deal?.userId === user.id ? deal?.item?.id : deal?.swapItem?.id,
+      id: deal?.swapItem?.id,
     });
-  }, [deal, navigation, user.id]);
+  }, [deal, navigation]);
+  const onItemPress = useCallback(() => {
+    navigation.navigate(screens.ITEM_DETAILS, {
+      id: deal?.item?.id,
+    });
+  }, [deal, navigation]);
 
   const imageUrl = deal?.item ? itemsApi.getImageUrl(deal?.item) : undefined;
   const swapImageUrl = deal?.swapItem
@@ -100,37 +122,57 @@ const DealDetailsScreen = () => {
     : undefined;
   return deal ? (
     <Screen style={styles.screen}>
-      {/* <DealCard deal={deal} onPress={() => null} /> */}
-      <View style={styles.card}>
-        <View style={styles.imageContainer}>
+      <Card style={styles.card}>
+        <Text
+          style={[
+            styles.statusText,
+            deal.status === 'accepted' ? sharedStyles.greenBtn : {},
+            deal.status === 'new' ? {backgroundColor: theme.colors.orange} : {},
+            deal.status === 'closed'
+              ? {backgroundColor: theme.colors.dark}
+              : {},
+          ]}>
+          {deal.status}
+        </Text>
+        <Date date={deal.timestamp!} style={styles.dealDateText} />
+        <Pressable style={styles.imageContainer} onPress={onItemPress}>
           <Image
-            uri={deal.userId !== user.id ? imageUrl : swapImageUrl}
-            style={styles.image}
-          />
-        </View>
-        <View style={styles.iconContainer}>
-          <Icon name="swap" type="svg" size={20} color={theme.colors.white} />
-        </View>
-        <Pressable style={styles.swapImageContainer} onPress={onSwapItemPress}>
-          <Image
-            uri={deal.userId === user.id ? imageUrl : swapImageUrl}
-            style={styles.swapImage}
-            resizeMode="stretch"
+            uri={imageUrl}
+            style={
+              deal.item.swapOption.type !== 'free'
+                ? styles.image
+                : styles.swapImage
+            }
           />
         </Pressable>
-      </View>
+        {deal.item.swapOption.type !== 'free' && deal.swapItem && (
+          <>
+            <SwapIcon style={styles.swapIcon} />
+            <Pressable
+              style={styles.swapImageContainer}
+              onPress={onSwapItemPress}>
+              <Image
+                uri={swapImageUrl}
+                style={styles.swapImage}
+                resizeMode="stretch"
+              />
+            </Pressable>
+          </>
+        )}
+      </Card>
 
       <Text style={styles.chatHeaderText}>
         {t('chatHeader', {
           params: {
             userName:
-              deal.item?.user?.name ?? deal.item?.user?.email ?? 'Guest',
+              deal.item?.user?.name ??
+              deal.item?.user?.email ??
+              deal.item?.userId.substr(0, 6) + ' ...',
           },
         })}
       </Text>
-
       <Chat deal={deal} disableComposer={!isOpen} style={styles.chat} />
-      {deal.userId !== user.id && (
+      {deal.userId !== user.id && deal.status === 'new' && (
         <>
           <Button
             title={t('approveBtnTitle')}
@@ -143,6 +185,9 @@ const DealDetailsScreen = () => {
             themeType="white"
           />
         </>
+      )}
+      {deal?.status === 'accepted' && deal.userId !== user.id && (
+        <Button title={t('closeBtnTitle')} onPress={closeHandler} />
       )}
       {loader}
       <Sheet ref={sheetRef} />
@@ -163,23 +208,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   card: {
-    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: theme.colors.dark,
-        shadowOffset: {width: 1, height: 1},
-        shadowOpacity: 0.4,
-        shadowRadius: 10,
-        borderRadius: 5,
-        backgroundColor: theme.colors.white,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
     marginBottom: 10,
   },
   chatHeaderText: {
@@ -212,53 +241,56 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 20,
   },
-  iconContainer: {
-    backgroundColor: theme.colors.salmon,
-    padding: 10,
-    borderRadius: 20,
+  swapIcon: {
     marginHorizontal: -7,
     zIndex: 1000,
   },
-  swapIcon: {
-    borderWidth: 0,
-  },
-  swapImageContainer: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: theme.colors.white,
-    borderColor: theme.colors.salmon,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  imageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: theme.colors.white,
-    borderColor: theme.colors.grey,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
+  swapImageContainer: {},
+  imageContainer: {},
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
+    width: imageSize,
+    height: imageSize,
+    borderRadius: imageSize / 2,
+    backgroundColor: theme.colors.lightGrey,
   },
   swapImage: {
-    width: 100,
-    height: 100,
-    // borderColor: theme.colors.salmon,
-    borderRadius: 10,
+    width: swapImageSize,
+    height: swapImageSize,
+    borderRadius: swapImageSize / 2,
+    backgroundColor: theme.colors.lightGrey,
   },
   date: {
     color: theme.colors.grey,
   },
   acceptButton: {
     marginBottom: 10,
+  },
+  checkIcon: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+  },
+  rotateIcon: {
+    // transform: [{rotate: '-180deg'}],
+    transform: [{scaleX: -1}],
+  },
+  statusText: {
+    position: 'absolute',
+    backgroundColor: theme.colors.salmon,
+    color: theme.colors.white,
+    padding: 5,
+    borderRadius: 5,
+    // borderWidth: 2,
+    overflow: 'hidden',
+    top: 5,
+    left: 5,
+    zIndex: 1,
+  },
+  dealDateText: {
+    position: 'absolute',
+    bottom: 5,
+    left: 5,
+    zIndex: 1,
+    ...theme.styles.scale.body3,
   },
 });

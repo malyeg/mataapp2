@@ -80,20 +80,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     bottom: 0,
-    height: 60,
-    // backgroundColor: theme.colors.salmon,
     zIndex: 10000,
   },
   itemsContainer: {
     flex: 1,
-    marginTop: 10,
-    // height: 70,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-
+    paddingHorizontal: 20,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    paddingTop: 10,
     ...Platform.select({
       ios: {
         borderColor: theme.colors.lightGrey,
@@ -108,13 +105,10 @@ const styles = StyleSheet.create({
         shadowColor: 'rgba(0, 0, 0, 0.5)',
         shadowOpacity: 1,
         elevation: 3,
-        paddingBottom: 5,
       },
     }),
-    paddingHorizontal: 20,
   },
   addItemContainer: {
-    // flex: 0,
     ...StyleSheet.absoluteFillObject,
     position: 'absolute',
     top: -10,
@@ -133,7 +127,6 @@ const styles = StyleSheet.create({
   },
   middleItem: {
     marginHorizontal: 40,
-    // backgroundColor: 'grey',
   },
   dealsIcon: {
     transform: [{rotate: '40deg'}],

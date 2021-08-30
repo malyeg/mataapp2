@@ -1,12 +1,13 @@
-import React, {FC} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
-import {ErrorBoundary as EBoundary} from 'react-error-boundary';
-import RNRestart from 'react-native-restart';
 import crashlytics from '@react-native-firebase/crashlytics';
+import React from 'react';
+import {ErrorBoundary as EBoundary} from 'react-error-boundary';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import {
   setJSExceptionHandler,
   setNativeExceptionHandler,
 } from 'react-native-exception-handler';
+import RNRestart from 'react-native-restart';
+import useConnectionCheck from '../hooks/useConnectionCheck';
 
 const config = {
   allowInDevMode: true,
@@ -51,10 +52,25 @@ const errorHandler = (_error: Error, info?: {componentStack: string}) => {
   }
 };
 
-const ErrorBoundary: FC = ({children}) => {
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+const ErrorBoundary = (props: ErrorBoundaryProps) => {
+  const netInfo = useConnectionCheck();
+  // useEffect(() => {
+  //   if (netInfo.isConnected || !netInfo.isInternetReachable) {
+  //     Toast.hide();
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: `connected: ${netInfo.isConnected?.toString()}, internet: ${netInfo.isInternetReachable?.toString()}`,
+  //       autoHide: false,
+  //     });
+  //   }
+  // }, [netInfo]);
   return (
     <EBoundary FallbackComponent={ErrorFallback} onError={errorHandler}>
-      {children}
+      {props.children}
     </EBoundary>
   );
 };

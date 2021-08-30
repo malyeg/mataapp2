@@ -41,6 +41,9 @@ const sharedStyles = StyleSheet.create({
     borderColor: 'yellow',
     borderWidth: 1,
   },
+  greenBtn: {
+    backgroundColor: theme.colors.green,
+  },
 });
 
 export default sharedStyles;

@@ -1,3 +1,4 @@
+import {User} from '../contexts/user-model';
 import {
   DataSearchable,
   Entity,
@@ -13,11 +14,12 @@ export type DealStatus =
   | 'accepted'
   | 'canceled'
   | 'rejected'
-  | 'finished';
+  | 'closed';
 
 export interface Deal extends DataSearchable, Entity {
   id: string;
-  userId: string;
+  userId: string; //deprected
+  user: User;
   item: Item;
   swapItem?: Item;
   status: DealStatus;
@@ -61,6 +63,14 @@ class DealsApi extends DataApi<Deal> {
     return await this.getAll(query);
   };
 
+  itemHasDeals = async (userId: string, item: Item) => {
+    const deals = await this.getUserDeals(userId, item);
+    if (deals && deals.items.length > 0) {
+      return true;
+    }
+    return false;
+  };
+
   // TODO replace with FB function
   updateStatus = (deal: Deal, userId: string, status: DealStatus) => {
     const statusChange = {status, userId};
@@ -87,6 +97,10 @@ class DealsApi extends DataApi<Deal> {
 
   cancelOffer = async (dealId: string, reason?: string) => {
     return await this.functions.httpsCallable('cancelOffer')({dealId, reason});
+  };
+  closeOffer = async (dealId: string) => {
+    // return this.closeOffer
+    return await this.functions.httpsCallable('closeOffer')({dealId});
   };
 
   readonly DEALS_CACHE_KEY = 'deals';

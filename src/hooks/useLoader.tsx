@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
 import {Loader} from '../components/core';
 
 // interface UserLoaderProps {
@@ -19,17 +18,3 @@ const useLoader = (initValue = false) => {
 };
 
 export default useLoader;
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    zIndex: 1,
-    elevation: 10,
-    width: '100%',
-    height: '100%',
-    top: 0,
-    backgroundColor: 'red',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

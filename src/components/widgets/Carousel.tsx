@@ -9,6 +9,7 @@ import CarouselBase, {
 import {ImageSource} from '../../api/itemsApi';
 import theme from '../../styles/theme';
 import {Image} from '../core';
+import Card from '../core/Card';
 import {ImageProps} from '../core/Image';
 
 interface CarouselProps
@@ -60,7 +61,7 @@ const Carousel = ({
   );
 
   return (
-    <View style={[styles.container, style]}>
+    <Card style={[styles.container, style]}>
       <CarouselBase
         layout={layout}
         data={images}
@@ -77,13 +78,14 @@ const Carousel = ({
           dotsLength={images.length}
           activeDotIndex={activeSlide}
           containerStyle={styles.PaginationContainer}
+          dotContainerStyle={styles.dotContainer}
           dotStyle={styles.paginationActiveDot}
           inactiveDotStyle={styles.paginationDot}
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}
         />
       )}
-    </View>
+    </Card>
   );
 };
 
@@ -91,27 +93,31 @@ export default Carousel;
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    // height: 100,
-    // backgroundColor: 'red',
+    borderRadius: 10,
+    borderColor: theme.colors.lightGrey,
+    borderWidth: 2,
+    // padding: 5,
+  },
+  dotContainer: {
+    // backgroundColor: 'grey',
+    // margin: 0,
+    // padding: 0,
   },
   slideWrapper: {
     // height: itemHeight,
   },
   image: {
-    borderRadius: 10,
-    backgroundColor: theme.colors.lightGrey,
     overflow: 'hidden',
     width: '100%',
     height: '100%',
   },
   PaginationContainer: {
-    // backgroundColor: 'rgba(0, 0, 0, 0.75)'
-    // backgroundColor: 'red',
-    // height: 50,
     padding: 0,
-    marginVertical: -20,
+    marginTop: -20,
+    marginBottom: -30,
   },
   paginationDot: {
     width: 10,

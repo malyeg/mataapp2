@@ -53,8 +53,6 @@ export default ItemDetailsCard;
 
 const styles = StyleSheet.create({
   container: {
-    // borderColor: theme.colors.lightGrey,
-    // borderWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 5,

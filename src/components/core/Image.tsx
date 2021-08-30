@@ -1,13 +1,10 @@
-import React from 'react';
-import {useState} from 'react';
-import {
-  Dimensions,
+import React, {useState} from 'react';
+import {Pressable, StyleProp, StyleSheet} from 'react-native';
+import FastImage, {
   ImageStyle,
-  Pressable,
-  StyleProp,
-  StyleSheet,
-} from 'react-native';
-import FastImage, {ResizeMode, Source} from 'react-native-fast-image';
+  ResizeMode,
+  Source,
+} from 'react-native-fast-image';
 import Modal from './Modal';
 export interface ImageProps {
   uri?: string;
@@ -18,8 +15,9 @@ export interface ImageProps {
   onPressViewInFullScreen?: boolean;
 }
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+// const placeholder = require('../../assets/images/placeholder.png');
+
+const defaultCache = FastImage.cacheControl.cacheOnly;
 const Image = ({
   style,
   cache,
@@ -30,7 +28,17 @@ const Image = ({
   ...props
 }: ImageProps) => {
   const [isVisible, setVisible] = useState(false);
+  // const [imageSource, setImageSource] = useState<Source>(placeholder);
+  // const {landscape} = useDeviceOrientation();
   const styleList = [styles.image, style];
+  // const onLoadEnd = () => {
+  //   setImageSource({
+  //     uri,
+  //     priority: FastImage.priority.normal,
+  //     cache: cache ?? FastImage.cacheControl.web,
+  //   });
+  // };
+
   return onPressViewInFullScreen ? (
     <>
       <Pressable onPress={() => setVisible(true)}>
@@ -41,10 +49,11 @@ const Image = ({
             source ?? {
               uri,
               priority: FastImage.priority.normal,
-              cache: cache ?? FastImage.cacheControl.immutable,
+              cache: cache ?? defaultCache,
             }
           }
           resizeMode={resizeMode ?? FastImage.resizeMode.cover}
+          // onLoadEnd={onLoadEnd}
         />
       </Pressable>
       <Modal
@@ -59,10 +68,11 @@ const Image = ({
             source ?? {
               uri,
               priority: FastImage.priority.normal,
-              cache: cache ?? FastImage.cacheControl.immutable,
+              cache: cache ?? defaultCache,
             }
           }
-          resizeMode={FastImage.resizeMode.center}
+          resizeMode={FastImage.resizeMode.contain}
+          // onLoadEnd={onLoadEnd}
         />
       </Modal>
     </>
@@ -74,13 +84,36 @@ const Image = ({
         source ?? {
           uri,
           priority: FastImage.priority.normal,
-          cache: cache ?? FastImage.cacheControl.immutable,
+          cache: cache ?? defaultCache,
         }
       }
       resizeMode={resizeMode ?? FastImage.resizeMode.cover}
+      // onLoadEnd={onLoadEnd}
     />
   );
 };
+
+// interface ImageComponentProps {
+//   source: Source;
+//   resizeMode: ResizeMode;
+//   style?: StyleProp<ImageStyle>;
+//   onLoadEnd?: () => void;
+// }
+// const ImageComponent = ({
+//   source,
+//   resizeMode,
+//   onLoadEnd,
+//   style,
+// }: ImageComponentProps) => {
+//   return (
+//     <FastImage
+//       style={style}
+//       source={source}
+//       resizeMode={resizeMode}
+//       onLoadEnd={onLoadEnd}
+//     />
+//   );
+// };
 
 const styles = StyleSheet.create({
   image: {
@@ -90,9 +123,6 @@ const styles = StyleSheet.create({
   fullScreenImage: {
     height: '100%',
     width: '100%',
-    // height: windowHeight,
-    // width: windowWidth,
-    // backgroundColor: 'red',
   },
 });
 

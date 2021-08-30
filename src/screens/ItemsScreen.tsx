@@ -3,11 +3,13 @@ import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import itemsApi, {Item, ItemStatus} from '../api/itemsApi';
 import {Loader, Screen} from '../components/core';
+import {Error} from '../components/form';
 import ItemsFilter from '../components/widgets/data/ItemsFilter';
 import DataList from '../components/widgets/DataList';
 import ItemCard, {ITEM_CARD_HEIGHT} from '../components/widgets/ItemCard';
 import {screens} from '../config/constants';
 import {useFirestoreSnapshot} from '../hooks/firebase/useFirestoreSnapshot';
+import useAuth from '../hooks/useAuth';
 import useLocation from '../hooks/useLocation';
 import {StackParams} from '../navigation/HomeStack';
 import {Filter, Operation, QueryBuilder} from '../types/DataTypes';
@@ -16,12 +18,14 @@ type ItemsRoute = RouteProp<StackParams, typeof screens.ITEMS>;
 const ItemsScreen = () => {
   const {location} = useLocation();
   const route = useRoute<ItemsRoute>();
+  const {user} = useAuth();
   const fixedQuery = useMemo(
     () =>
       QueryBuilder.from({
         filters: [
           {field: 'status', value: 'online' as ItemStatus},
           {field: 'location.city', value: location?.city},
+          // {field: 'userId', value: user.id, operation: Operation.NOT_EQUAL},
         ],
         orderBy: [{field: 'timestamp', direction: 'asc'}],
         limit: 50,
@@ -39,7 +43,7 @@ const ItemsScreen = () => {
     return builder.build();
   }, [fixedQuery, route.params?.categoryId]);
 
-  const {data, loading, query, updateQuery} = useFirestoreSnapshot({
+  const {data, loading, query, updateQuery, error} = useFirestoreSnapshot({
     collectionName: itemsApi.collectionName,
     query: queryFromRoute,
   });
@@ -57,6 +61,7 @@ const ItemsScreen = () => {
 
   return (
     <Screen scrollable={false} style={styles.screen}>
+      <Error error={error} />
       <View style={styles.header}>
         <ItemsFilter
           style={styles.filter}
@@ -67,7 +72,7 @@ const ItemsScreen = () => {
       {!loading && !!data ? (
         <DataList
           showsVerticalScrollIndicator={false}
-          data={{items: data}}
+          data={{items: data.filter(i => (i as Item).userId !== user.id)}}
           columnWrapperStyle={styles.columnWrapper}
           numColumns={2}
           renderItem={renderItem}

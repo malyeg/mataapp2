@@ -5,16 +5,9 @@ import {APIOptions} from './Api';
 import {Category} from './categoriesApi';
 import {DataApi} from './DataApi';
 
-export type ItemStatus = 'draft' | 'online';
+export type ItemStatus = 'draft' | 'online' | 'pending' | 'archived';
 export type ConditionType = 'new' | 'goodAsNew' | 'used' | 'usedWithIssues';
 export type SwapType = 'free' | 'swapWithAnother' | 'swapWithAny';
-
-// export const conditionMap = {
-//   new: 'New',
-//   goodAsNew: 'New',
-//   used: 'New',
-//   usedWithIssues: 'New',
-// };
 
 export const conditionList: {id: ConditionType; name: string}[] = [
   {

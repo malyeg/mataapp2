@@ -134,7 +134,7 @@ export default {
       },
     },
     itemDealsTab: {
-      modalTitle: 'Item deals',
+      modalTitle: 'New deals',
     },
     itemPicker: {
       noDataNoCategory: 'No items found under category \n"{{categoryName}}"',
@@ -371,12 +371,13 @@ export default {
   dealDetailsScreen: {
     approveBtnTitle: 'Accept',
     rejectBtnTitle: 'Reject',
+    closeBtnTitle: 'Close',
     cancelBtnTitle: 'Cancel',
     chatHeader: 'Chat with "{{userName}}"',
     menu: {
       cancelLabel: 'Cancel',
     },
-    cancelOfferConfirmationHeader: 'Canceling deal',
+    cancelOfferConfirmationHeader: 'Cancel deal',
     cancelOfferConfirmationBody: 'Are you sure?',
   },
   itemDetailsScreen: {
@@ -390,10 +391,10 @@ export default {
       'Are you sure you want to delete item ({{itemName}})?',
     swapHeader: 'New Offer',
     swapCategoryBody:
-      'send swap offer for item "{{source}}" with "{{destination}}',
+      'send swap offer for item "{{source}}" with "{{destination}}"',
     swapBody: 'Confirm sending new offer for item {{item}}',
     newOfferSuccess: 'New offer sent successfully 👋',
-    alreadyHasDealError: 'you already has a deal for this item',
+    alreadyHasDealError: 'You already has a deal for this item',
     swapTypeTitle: 'Swap type: ',
     swapCategoryTitle: 'Swap Category: ',
     statusTitle: 'Status: ',

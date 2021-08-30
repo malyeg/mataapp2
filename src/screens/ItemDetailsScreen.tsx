@@ -4,8 +4,8 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
-import itemsApi, {conditionList, ImageSource, Item} from '../api/itemsApi';
-import {Button, Image, Loader, Screen, Text} from '../components/core';
+import itemsApi, {conditionList, Item} from '../api/itemsApi';
+import {Button, Loader, Screen, Text} from '../components/core';
 import Carousel from '../components/widgets/Carousel';
 import Header, {MenuItem} from '../components/widgets/Header';
 import ItemDealsTab from '../components/widgets/ItemDealsTab';
@@ -78,7 +78,7 @@ const ItemDetailsScreen = () => {
       menuItems.push(deleteMenuItem);
     }
 
-    navigation.setOptions({
+    (navigation as any).setOptions({
       header: (props: any) => (
         <Header
           {...props}
@@ -91,7 +91,7 @@ const ItemDetailsScreen = () => {
   };
 
   const resetHeader = () => {
-    navigation.setOptions({
+    (navigation as any).setOptions({
       header: (props: any) => <Header {...props} />,
     });
   };
@@ -177,7 +177,8 @@ const ItemDetailsScreen = () => {
     } else {
       setShowItemPicker(true);
     }
-  }, [item, navigation, t, user.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item, navigation, user.id]);
 
   const onItemPicker = (swapItem: Item) => {
     setShowItemPicker(false);
@@ -208,15 +209,11 @@ const ItemDetailsScreen = () => {
   return item ? (
     <>
       <Screen scrollable={true} style={styles.screen}>
+        {/* {loader} */}
         <View style={styles.nameContainer}>
           <Text style={styles.nameText}>{item.name}</Text>
           {item.userId !== user.id && (
-            <SwapButton
-              onPress={swapHandler}
-              item={item}
-              // iconStyle={styles.swapButton}
-              iconSize={20}
-            />
+            <SwapButton onPress={swapHandler} item={item} iconSize={20} />
           )}
         </View>
         {!!item.description && (
@@ -299,7 +296,6 @@ const ItemDetailsScreen = () => {
             onChange={onItemPicker}
           />
         )}
-        {loader}
       </Screen>
       {item.userId !== user.id ? (
         <Button

@@ -5,7 +5,7 @@ export default [
   },
   {
     id: 'swapWithAnother',
-    name: 'Swap with another item',
+    name: 'Swap with specific item',
   },
   {
     id: 'swapWithAny',

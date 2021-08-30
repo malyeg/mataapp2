@@ -22,7 +22,9 @@ const NotificationsScreen = () => {
     }),
   });
 
-  const renderItem = ({item}: any) => <NotificationCard notification={item} />;
+  const renderItem = ({item}: any) => (
+    <NotificationCard notification={item} style={styles.card} />
+  );
 
   return (
     <Screen style={styles.screen}>
@@ -45,5 +47,8 @@ export default NotificationsScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+  },
+  card: {
+    marginBottom: 10,
   },
 });

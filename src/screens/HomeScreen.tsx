@@ -4,6 +4,8 @@ import {StyleSheet, View} from 'react-native';
 import {Screen} from '../components/core';
 import Icon from '../components/core/Icon';
 import Logo from '../components/core/Logo';
+import SearchInput from '../components/form/SearchInput';
+import ItemsSearch from '../components/widgets/ItemsSearch';
 import NearByItems from '../components/widgets/NearByItems';
 import ProfileIcon from '../components/widgets/ProfileIcon';
 import RecommendedItems from '../components/widgets/RecommendedItems';
@@ -49,6 +51,7 @@ const HomeScreen = () => {
           <Logo size={75} style={styles.logo} />
           <ProfileIcon style={styles.profile} size={30} />
         </View>
+        <ItemsSearch style={styles.itemsSearch} />
         {!!location?.city && (
           <>
             {profile?.targetCategories && (
@@ -100,5 +103,8 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     position: 'absolute',
+  },
+  itemsSearch: {
+    marginBottom: 15,
   },
 });

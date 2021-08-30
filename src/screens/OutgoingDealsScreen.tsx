@@ -1,16 +1,22 @@
+import {format} from 'date-fns';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
-import {Loader, Screen} from '../components/core';
+import itemsApi from '../api/itemsApi';
+import {Image, Loader, Screen, Text} from '../components/core';
+import Card from '../components/core/Card';
 import DataList from '../components/widgets/DataList';
-import DealCard from '../components/widgets/DealCard';
+import {patterns, screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
+import useNavigationHelper from '../hooks/useNavigationHelper';
+import theme from '../styles/theme';
 import {QueryBuilder} from '../types/DataTypes';
 
 const OutgoingDealsScreen = () => {
   const [deals, setDeals] = useState<ApiResponse<Deal>>();
+  const {navigation} = useNavigationHelper();
   const {loader} = useApi();
   const {user} = useAuth();
 
@@ -34,7 +40,25 @@ const OutgoingDealsScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const renderItem = ({item}: any) => <DealCard deal={item} />;
+  const renderItem = ({item}: {item: Deal}) => (
+    <Card
+      onPress={() => navigation.navigate(screens.DEAL_DETAILS, {id: item.id})}>
+      <Image
+        uri={itemsApi.getImageUrl(item.item)}
+        style={[styles.image]}
+        resizeMode="contain"
+      />
+      <View style={styles.content}>
+        <Text>{item.item?.category.name}</Text>
+
+        {!!item.timestamp && (
+          <Text style={styles.date}>
+            {format(item.timestamp, patterns.DATE)}
+          </Text>
+        )}
+      </View>
+    </Card>
+  );
 
   return (
     <Screen style={styles.screen}>
@@ -64,5 +88,21 @@ const styles = StyleSheet.create({
   datalist: {flex: 1},
   separator: {
     height: 15,
+  },
+
+  image: {
+    // position: 'absolute',
+    borderWidth: 2,
+    borderColor: theme.colors.lightGrey,
+    width: 70,
+    height: 70,
+    borderRadius: 70 / 2,
+  },
+  content: {
+    marginLeft: 10,
+    // flexDirection: 'row',
+  },
+  date: {
+    color: theme.colors.grey,
   },
 });

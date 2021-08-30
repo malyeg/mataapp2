@@ -1,31 +1,24 @@
 import React, {ReactNode} from 'react';
-import {Pressable, StyleProp, StyleSheet, TextStyle} from 'react-native';
+import {Platform, Pressable, StyleSheet, ViewProps} from 'react-native';
 import theme from '../../styles/theme';
-import Icon from './Icon';
+import Icon, {IconProps} from './Icon';
 
-interface CardProps {
-  children: ReactNode;
-  icon?: {
-    name: string;
-    style?: StyleProp<TextStyle>;
-    size?: number;
-  };
+interface CardProps extends ViewProps {
+  icon?: IconProps;
   onPress?: () => void;
+  children: ReactNode;
 }
-const Card = ({children, icon, onPress}: CardProps) => {
+const Card = ({style, children, icon, onPress}: CardProps) => {
   return (
     <Pressable
-      style={[
-        styles.container,
-        icon ? styles.hasIcon : {},
-        onPress ? styles.hasChevron : {},
-      ]}
+      style={[styles.container, style, icon ? styles.hasIcon : {}]}
       onPress={onPress}>
       {!!icon && (
         <Icon
           name={icon.name}
           color={theme.colors.salmon}
           style={styles.icon}
+          type={icon.type}
           size={icon.size ?? 25}
         />
       )}
@@ -46,27 +39,41 @@ export default Card;
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    backgroundColor: theme.colors.white,
     borderColor: theme.colors.lightGrey,
-    borderWidth: 2,
-    borderRadius: 10,
-    // flexDirection: 'row',
-    justifyContent: 'center',
-    // alignItems: 'center',
-    padding: 10,
-    // paddingLeft: 50,
+    borderWidth: 1,
+    ...Platform.select({
+      ios: {
+        shadowColor: theme.colors.grey,
+        shadowOffset: {width: 1, height: 1},
+        shadowOpacity: 0.6,
+        shadowRadius: 1,
+      },
+      android: {
+        shadowColor: theme.colors.dark,
+        shadowOffset: {width: 1, height: 1},
+        shadowOpacity: 0.5,
+        elevation: 3,
+      },
+    }),
   },
   icon: {
-    position: 'absolute',
-    left: 10,
+    // position: 'absolute',
+    // left: 10,
   },
   chevron: {
-    position: 'absolute',
-    right: 5,
+    marginLeft: 'auto',
   },
   hasIcon: {
-    paddingLeft: 50,
+    marginRight: 'auto',
   },
   hasChevron: {
-    paddingRight: 20,
+    // paddingRight: 20,
+    // marginRight: 'auto',
   },
 });

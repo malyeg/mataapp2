@@ -36,7 +36,7 @@ const Header = ({title, options, route, menu, ...props}: HeaderProps) => {
             options?.headerTitle ??
             route.name}
         </Text>
-        {menu && (
+        {menu?.items && menu.items.length > 0 && (
           <Menu style={styles.menuContainer}>
             <MenuTrigger>
               <Icon

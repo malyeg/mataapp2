@@ -15,12 +15,7 @@ const Loader = (props: ViewProps) => {
 
 const styles = create({
   container: {
-    // flex: 1,
-    // height: '100%',
     flex: 1,
-    // backgroundColor: 'rgba(255,255,255, 0.1)',
-    // backgroundColor: theme.colors.white,
-    // backgroundColor: theme.colors.white,
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -28,6 +23,8 @@ const styles = create({
     right: 0,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 1,
+    // elevation: 3,
   },
   loader: {
     backgroundColor: 'rgba(52, 52, 52, 0.9)', // TODO replace with theme
@@ -36,6 +33,8 @@ const styles = create({
     height: 60,
     borderRadius: 10,
     marginBottom: 70,
+    // zIndex: 1,
+    // elevation: 3,
   },
 });
 

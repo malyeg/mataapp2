@@ -20,7 +20,7 @@ import theme from '../../styles/theme';
 import {Operation, QueryBuilder} from '../../types/DataTypes';
 import {Icon, Modal, Text} from '../core';
 import DataList from './DataList';
-import DealCard from './DealCard';
+import ItemDealCard from './ItemDealCard';
 
 interface ItemDealsTabProps {
   item: Item;
@@ -50,7 +50,7 @@ const ItemDealsTab = ({item, style}: ItemDealsTabProps) => {
 
   const renderItem = useCallback(
     ({item}) => (
-      <DealCard
+      <ItemDealCard
         deal={item}
         style={styles.card}
         imageStyle={styles.cardImage}
@@ -96,7 +96,7 @@ const ItemDealsTab = ({item, style}: ItemDealsTabProps) => {
         <DataList
           data={deals}
           renderItem={renderItem}
-          // containerStyle={styles.dataList}
+          containerStyle={styles.dataList}
         />
       </Modal>
     </>
@@ -114,6 +114,9 @@ const styles = StyleSheet.create({
     height: 75,
     backgroundColor: theme.colors.white,
     // paddingBottom: 80,
+  },
+  dataList: {
+    flex: 0,
   },
   tabContainer: {
     flexDirection: 'row',
@@ -145,6 +148,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   modal: {
+    // flex: 1,
     paddingBottom: 40,
   },
   modalHeader: {

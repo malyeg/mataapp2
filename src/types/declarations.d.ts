@@ -10,3 +10,5 @@ declare module '*.svg' {
 //   export const SCHEMA_SUFFIX: string;
 //   export const ENV: 'dev' | 'prod';
 // }
+
+declare module 'react-native-restart';
