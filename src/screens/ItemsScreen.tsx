@@ -61,7 +61,6 @@ const ItemsScreen = () => {
 
   return (
     <Screen scrollable={false} style={styles.screen}>
-      <Error error={error} />
       <View style={styles.header}>
         <ItemsFilter
           style={styles.filter}

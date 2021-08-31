@@ -5,7 +5,9 @@ import {StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, Item} from '../api/itemsApi';
-import {Button, Loader, Screen, Text} from '../components/core';
+import listsApi from '../api/listsApi';
+import {Button, Icon, Loader, Screen, Text} from '../components/core';
+import PressableOpacity from '../components/core/PressableOpacity';
 import Carousel from '../components/widgets/Carousel';
 import Header, {MenuItem} from '../components/widgets/Header';
 import ItemDealsTab from '../components/widgets/ItemDealsTab';
@@ -14,6 +16,7 @@ import ItemPicker from '../components/widgets/ItemPicker';
 import OwnerItems from '../components/widgets/OwnerItems';
 import Sheet from '../components/widgets/Sheet';
 import SwapButton from '../components/widgets/SwapButton';
+import TextDescription from '../components/widgets/TextDescription';
 import {screens} from '../config/constants';
 import swapTypes from '../data/swapTypes';
 import useApi from '../hooks/useApi';
@@ -31,6 +34,7 @@ export const ITEM_DETAILS_SCREEN_NAME = 'ItemDetailsScreen';
 const ItemDetailsScreen = () => {
   const route = useRoute<ItemDetailsRoute>();
   const [item, setItem] = useState<Item>();
+  const [inWishList, setWishList] = useState<boolean | undefined>();
   const [showItemPicker, setShowItemPicker] = useState(false);
   const {loader, request} = useApi();
   const {user} = useAuth();
@@ -58,6 +62,7 @@ const ItemDetailsScreen = () => {
         });
       },
     };
+
     const deleteMenuItem: MenuItem = {
       label: t('menu.deleteLabel'),
       icon: {name: 'delete', color: theme.colors.salmon},
@@ -105,21 +110,20 @@ const ItemDetailsScreen = () => {
       resetHeader();
       setItem(undefined);
     }
-    itemsApi
-      .getById(route.params?.id, {
-        cache: {
-          enabled: true,
-        },
-      })
-      .then(i => {
-        if (i) {
-          setHeader(i);
-          setItem(i);
-          if (route.params?.toast) {
-            showToast(route.params.toast);
-          }
+
+    return itemsApi.onDocumentSnapshot(route?.params?.id!, snapshot => {
+      if (snapshot?.doc) {
+        setHeader(snapshot.doc);
+        setItem(snapshot.doc);
+        if (route.params?.toast) {
+          showToast(route.params.toast);
         }
-      });
+        setWishList(false);
+        // listsApi.getById(snapshot.doc.id).then(listItem => {
+        //   setWishList(!!listItem);
+        // });
+      }
+    });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route.params?.id]);
@@ -206,6 +210,26 @@ const ItemDetailsScreen = () => {
     i => i.id === item?.condition?.type,
   )?.name;
 
+  const toggleWishList = async () => {
+    try {
+      console.log('toggleWishList');
+      setWishList(current => {
+        // if (current) {
+        //   listsApi.deleteById(item?.id!);
+        // } else {
+        //   listsApi.set(item?.id!, {
+        //     id: item?.id!,
+        //     userId: user.id,
+        //     type: 'wish',
+        //   });
+        // }
+        return !current;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return item ? (
     <>
       <Screen scrollable={true} style={styles.screen}>
@@ -217,15 +241,30 @@ const ItemDetailsScreen = () => {
           )}
         </View>
         {!!item.description && (
-          <Text style={styles.descriptionText}>{item.description}</Text>
+          <TextDescription textStyle={styles.descriptionText}>
+            {item.description}
+          </TextDescription>
         )}
 
-        <Carousel
-          images={item.images!}
-          style={styles.carousel}
-          resizeMode="center"
-          viewImageInFullScreen
-        />
+        <View>
+          <Carousel
+            images={item.images!}
+            style={styles.carousel}
+            viewImageInFullScreen
+          />
+          {user.id !== item.userId && inWishList !== undefined && (
+            <PressableOpacity
+              hitSlop={5}
+              onPress={toggleWishList}
+              style={styles.wishListIcon}>
+              <Icon
+                name={inWishList ? 'heart' : 'heart-outline'}
+                size={30}
+                color={theme.colors.salmon}
+              />
+            </PressableOpacity>
+          )}
+        </View>
         {item.userId !== user.id && (
           <ItemDetailsCard
             title="Owner: "
@@ -304,9 +343,6 @@ const ItemDetailsScreen = () => {
           style={styles.sendSwapButton}
         />
       ) : (
-        // <Pressable style={styles.swapContainer} onPress={swapHandler}>
-        //   <Text style={styles.swapButton}>{t('sendSwapButton')}</Text>
-        // </Pressable>
         !!item && <ItemDealsTab item={item} />
       )}
     </>
@@ -427,22 +463,18 @@ const styles = StyleSheet.create({
     height: 70,
     transform: [{rotate: '-10deg'}],
   },
-  // swapButton: {
-  //   height: 30,
-  //   // backgroundColor: 'grey',
-  // },
+  wishListIcon: {
+    position: 'absolute',
+    bottom: 20,
+    right: 10,
+    zIndex: 1,
+  },
 
   swapContainer: {
-    // position: 'absolute',
-    // bottom: -30,
-    // marginBottom: 10,
-    // paddingBottom: 40,
     height: 60,
-    // marginHorizontal: 5,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     backgroundColor: theme.colors.salmon,
-    // width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,

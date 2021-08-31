@@ -11,7 +11,7 @@ export interface Notification extends Entity {
   timestamp: Date;
   delivered: boolean;
   deliveredAt: Date;
-  type: 'push' | 'email';
+  type: 'push' | 'email' | 'chat';
   data: {
     url: string;
   };

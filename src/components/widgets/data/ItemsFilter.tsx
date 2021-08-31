@@ -72,7 +72,6 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
   }, []);
 
   const onSubmit = (data: ItemsFilterFormValues) => {
-    console.log('data', data);
     const newFilters: Filter<Item>[] = [];
     !!data.category &&
       newFilters.push({
@@ -86,7 +85,6 @@ const ItemsFilter = ({filters, onChange, style}: ItemsFilterProps) => {
       newFilters.push({field: 'swapOption.category', value: data.swapCategory});
     onChange(newFilters);
     if (!newFilters || newFilters.length === 0) {
-      console.log('resetting form');
       reset();
     }
 

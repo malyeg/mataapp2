@@ -7,6 +7,7 @@ import itemsApi from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Card from '../components/core/Card';
 import DataList from '../components/widgets/DataList';
+import DealStatus from '../components/widgets/DealStatus';
 import {patterns, screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
@@ -43,6 +44,9 @@ const OutgoingDealsScreen = () => {
   const renderItem = ({item}: {item: Deal}) => (
     <Card
       onPress={() => navigation.navigate(screens.DEAL_DETAILS, {id: item.id})}>
+      {/* <View style={styles.dealStatus}>
+        <DealStatus deal={item} />
+      </View> */}
       <Image
         uri={itemsApi.getImageUrl(item.item)}
         style={[styles.image]}
@@ -85,9 +89,21 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
   },
+  dealStatus: {
+    position: 'absolute',
+    // marginLeft: 'auto',
+    top: 0,
+    right: 10,
+    // bottom: 0,
+  },
   datalist: {flex: 1},
   separator: {
     height: 15,
+  },
+  cardBody: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   image: {

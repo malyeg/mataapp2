@@ -34,7 +34,7 @@ export function useFirestoreSnapshot<T extends Entity>({
     //   collectionQuery = collectionQuery.startAfter(state.lastDoc);
     // }
 
-    const unsubscribe = collectionQuery.onSnapshot(
+    return collectionQuery.onSnapshot(
       snapshot => {
         console.log('useFirestoreSnapshot snapshot', snapshot.size);
         dispatch({type: 'SET_DOCS', docs: snapshot.docs, docMapper});
@@ -44,11 +44,6 @@ export function useFirestoreSnapshot<T extends Entity>({
         dispatch({type: 'SET_ERROR', error});
       },
     );
-
-    return () => {
-      // console.log('useFirestoreSnapshot unsubscribe');
-      unsubscribe();
-    };
   }, [collectionName, dispatch, docMapper, state.query]);
 
   const updateQuery = (newQuery: Query<T>) => {

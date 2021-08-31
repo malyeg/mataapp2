@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingTop: 10,
+
     ...Platform.select({
       ios: {
         borderColor: theme.colors.lightGrey,
@@ -105,6 +106,8 @@ const styles = StyleSheet.create({
         shadowColor: 'rgba(0, 0, 0, 0.5)',
         shadowOpacity: 1,
         elevation: 3,
+        paddingBottom: 5,
+        paddingTop: 15,
       },
     }),
   },

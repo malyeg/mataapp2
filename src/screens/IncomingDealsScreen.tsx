@@ -54,7 +54,6 @@ const IncomingDealsScreen = () => {
 
       <View style={styles.content}>
         <Text>{item.item?.category.name}</Text>
-        <Text>{item.user?.name}</Text>
         {/* <Text>{item.item?.swapOption.type}</Text> */}
         {!!item.timestamp && (
           <Text style={styles.date}>
@@ -110,5 +109,10 @@ const styles = StyleSheet.create({
   },
   date: {
     color: theme.colors.grey,
+  },
+  cardBody: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -47,7 +47,7 @@ export default [
     name: 'Home Furnitures',
     parent: 'home',
     level: -1,
-    path: ['home', 'home furniture'],
+    path: ['home', 'home furnitures'],
     style: {
       iconName: 'home-outline',
     },

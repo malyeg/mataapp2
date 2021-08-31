@@ -27,7 +27,7 @@ interface ItemImageProps extends ViewProps {
   defaultValue?: string;
   disabled?: boolean;
   onChange: (imageSource: ImageSource) => void;
-  onMaxSize?: (maxsize: number, fileSize: number) => void;
+  onMaxSize?: (maxSize: number, fileSize: number) => void;
   onImageDelete?: (imageSource: ImageSource) => void;
   onMarkAsDefault?: (imageSource: ImageSource) => void;
   onPress?: () => boolean | void;
@@ -122,7 +122,8 @@ const ImagePicker: FC<ItemImageProps> = ({
       const task = itemsApi.upload(user.id, resizedImage!);
       task.on(
         storage.TaskEvent.STATE_CHANGED,
-        snapshot => console.info('bytesTransferred', snapshot.bytesTransferred),
+        snapshot =>
+          console.debug('bytesTransferred', snapshot.bytesTransferred),
         error => console.error(error),
         async () => {
           const downloadURL = await task.snapshot?.ref.getDownloadURL();
@@ -133,12 +134,11 @@ const ImagePicker: FC<ItemImageProps> = ({
             isTemplate: false,
             downloadURL,
           };
-          // delete (newImageSource as any).uri;
+
           onChange(newImageSource);
           field.onChange(newImageSource);
           field.value = newImageSource;
           setImageSource(newImageSource);
-          console.log('name', resizedImage?.name);
           if (onUpload) {
             onUpload(newImageSource, 'finished');
           }
@@ -150,23 +150,23 @@ const ImagePicker: FC<ItemImageProps> = ({
 
   const resizeImage = async (image: ImageSource) => {
     try {
-      // const response = await ImageResizer.createResizedImage(
-      //   image.uri!,
-      //   600,
-      //   600,
-      //   'JPEG',
-      //   100,
-      //   0,
-      //   undefined,
-      //   false,
-      //   {mode: 'contain', onlyScaleDown: true},
-      // );
-      // if (maxSize && onMaxSize && response.size > maxSize) {
-      //   onMaxSize(maxSize, response.size);
-      //   return;
-      // }
-      // return {...image, ...response} as ImageSource;
-      return image;
+      const response = await ImageResizer.createResizedImage(
+        image.uri!,
+        600,
+        600,
+        'JPEG',
+        100,
+        0,
+        undefined,
+        false,
+        {mode: 'contain', onlyScaleDown: true},
+      );
+      if (maxSize && onMaxSize && response.size > maxSize) {
+        onMaxSize(maxSize, response.size);
+        return;
+      }
+      return {...image, ...response} as ImageSource;
+      // return image;
       // response.uri is the URI of the new image that can now be displayed, uploaded...
       // response.path is the path of the new image
       // response.name is the name of the new image with the extension

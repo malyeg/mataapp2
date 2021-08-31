@@ -44,6 +44,11 @@ const sharedStyles = StyleSheet.create({
   greenBtn: {
     backgroundColor: theme.colors.green,
   },
+  centerRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default sharedStyles;

@@ -1,5 +1,13 @@
 import React, {ReactNode} from 'react';
-import {Platform, Pressable, StyleSheet, ViewProps} from 'react-native';
+import {
+  Platform,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
 import theme from '../../styles/theme';
 import Icon, {IconProps} from './Icon';
 
@@ -7,8 +15,9 @@ interface CardProps extends ViewProps {
   icon?: IconProps;
   onPress?: () => void;
   children: ReactNode;
+  contentStyle?: StyleProp<ViewStyle>;
 }
-const Card = ({style, children, icon, onPress}: CardProps) => {
+const Card = ({style, contentStyle, children, icon, onPress}: CardProps) => {
   return (
     <Pressable
       style={[styles.container, style, icon ? styles.hasIcon : {}]}
@@ -39,6 +48,7 @@ export default Card;
 
 const styles = StyleSheet.create({
   container: {
+    // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 5,
@@ -65,15 +75,19 @@ const styles = StyleSheet.create({
   icon: {
     // position: 'absolute',
     // left: 10,
+    marginRight: 5,
   },
   chevron: {
     marginLeft: 'auto',
   },
   hasIcon: {
-    marginRight: 'auto',
+    // marginRight: 'auto',
   },
   hasChevron: {
     // paddingRight: 20,
     // marginRight: 'auto',
+  },
+  content: {
+    flex: 1,
   },
 });

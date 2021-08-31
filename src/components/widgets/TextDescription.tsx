@@ -1,66 +1,76 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
-  Pressable,
   StyleProp,
   StyleSheet,
   TextProps,
   TextStyle,
-  View,
   ViewStyle,
 } from 'react-native';
+import useLocale from '../../hooks/useLocale';
+import theme from '../../styles/theme';
 import {Text} from '../core';
 
 interface TextDescriptionProps extends TextProps {
   maxLines?: number;
   children: any;
   textStyle?: StyleProp<TextStyle>;
+  style?: StyleProp<ViewStyle>;
 }
 const TextDescription = ({
   children,
   maxLines = 2,
-  textStyle,
+  style,
 }: TextDescriptionProps) => {
-  const [showAll, setShowAll] = useState(false);
-  const [numLines, setNumLines] = useState(maxLines);
-
-  const toggleViewMore = () => {
-    setShowAll(v => !v);
-  };
-  const onTextLayout = e => {
-    if (e.nativeEvent.lines.length > maxLines) {
-      setNumLines(e.lines);
-    }
+  const {t} = useLocale('components');
+  const [textShown, setTextShown] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+  const toggleNumberOfLines = () => {
+    setTextShown(!textShown);
   };
 
-  // const numberOfLines = showAll ? maxLines : minLines;
-  const showLinks = numLines > maxLines;
+  const onTextLayout = useCallback(
+    e => {
+      setShowMore(e.nativeEvent.lines.length >= maxLines);
+    },
+    [maxLines],
+  );
 
   return (
-    <Pressable style={styles.container}>
-      <Text onTextLayout={onTextLayout} numberOfLines={5} style={textStyle}>
+    <>
+      <Text
+        style={[styles.text, style]}
+        onTextLayout={onTextLayout}
+        numberOfLines={textShown ? undefined : maxLines}>
         {children}
       </Text>
-      {/* {!showAll ? (
-        <Text style={styles.moreText} onPress={() => setShowAll(true)}>
-          view more
+
+      {showMore ? (
+        <Text
+          style={textShown ? styles.lessText : styles.moreText}
+          onPress={toggleNumberOfLines}>
+          {textShown
+            ? t('textDescription.showLessTitle')
+            : t('textDescription.showMoreTitle')}
         </Text>
-      ) : (
-        <Text style={styles.moreText} onPress={() => setShowAll(false)}>
-          view less
-        </Text>
-      )} */}
-    </Pressable>
+      ) : null}
+    </>
   );
 };
 
-export default TextDescription;
+export default React.memo(TextDescription);
 
 const styles = StyleSheet.create({
-  container: {
-    flexWrap: 'wrap',
+  text: {
+    marginBottom: 10,
   },
   moreText: {
-    color: 'red',
-    // backgroundColor: 'grey',
+    color: theme.colors.grey,
+    textAlign: 'right',
+    marginBottom: 10,
+  },
+  lessText: {
+    color: theme.colors.grey,
+    textAlign: 'right',
+    marginBottom: 10,
   },
 });

@@ -165,6 +165,7 @@ export interface Entity extends DataSearchable {
   id: string;
   name?: string;
   timestamp?: Date;
+  userId: string;
 }
 
 // Form types

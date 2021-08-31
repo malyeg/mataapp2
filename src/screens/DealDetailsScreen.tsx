@@ -9,6 +9,7 @@ import Card from '../components/core/Card';
 import Date from '../components/core/Date';
 import SwapIcon from '../components/icons/SwapIcon';
 import Chat from '../components/widgets/Chat';
+import DealStatus from '../components/widgets/DealStatus';
 import Header, {MenuItem} from '../components/widgets/Header';
 import Sheet from '../components/widgets/Sheet';
 import {screens} from '../config/constants';
@@ -16,6 +17,7 @@ import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
 import useSheet from '../hooks/useSheet';
+import useToast from '../hooks/useToast';
 import {StackParams} from '../navigation/HomeStack';
 import sharedStyles from '../styles/SharedStyles';
 import theme from '../styles/theme';
@@ -31,27 +33,19 @@ const DealDetailsScreen = () => {
   const [deal, setDeal] = useState<Deal>();
   const {t} = useLocale('dealDetailsScreen');
   const {show, sheetRef} = useSheet();
+  const {showErrorToast} = useToast();
 
   useEffect(() => {
-    const loadData = async () => {
-      if (route.params?.id) {
-        const freshDeal = await request<Deal>(() =>
-          dealsApi.getById(route.params?.id!, {
-            cache: {enabled: false},
-          }),
-        );
-        if (freshDeal) {
-          setDeal(freshDeal);
-          return freshDeal;
-        }
-      } else {
-        navigation.navigate(screens.DEALS_TABS);
-      }
-    };
-    loadData().then(d => {
+    if (!route?.params?.id) {
+      navigation.navigate(screens.DEALS_TABS);
+    }
+
+    const loadData = (d: Deal) => {
       if (!d) {
+        navigation.navigate(screens.DEALS_TABS);
         return;
       }
+      setDeal(d);
       let menuItems: MenuItem[] = [];
       const title = user.id === d.userId ? 'Outgoing deal' : 'Incoming deal';
       if (d.status === 'accepted' || d.status === 'new') {
@@ -63,16 +57,7 @@ const DealDetailsScreen = () => {
               show({
                 header: t('cancelOfferConfirmationHeader'),
                 body: t('cancelOfferConfirmationBody'),
-                cancelCallback: () => console.log('canceling'),
-                confirmCallback: () => {
-                  console.log(d.id);
-                  dealsApi.cancelOffer(d.id).then(
-                    () => {
-                      navigation.navigate(screens.DEALS_TABS);
-                    },
-                    error => console.log(error),
-                  );
-                },
+                confirmCallback: () => cancelHandler(deal?.id!),
               });
             },
           },
@@ -83,23 +68,47 @@ const DealDetailsScreen = () => {
           <Header {...props} title={title} menu={{items: menuItems}} />
         ),
       });
+    };
+
+    return dealsApi.onDocumentSnapshot(route?.params?.id!, snapshot => {
+      loadData(snapshot.doc);
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, route.params]);
 
   const acceptHandler = async () => {
-    await request(() => dealsApi.acceptOffer(deal?.id!));
-    setDeal({...deal!, status: 'accepted'});
+    try {
+      await request(() => dealsApi.acceptOffer(deal?.id!));
+      setDeal({...deal!, status: 'accepted'});
+    } catch (error) {
+      showErrorToast(error);
+    }
+  };
+  const cancelHandler = async (dealId: string) => {
+    try {
+      await request(() => dealsApi.cancelOffer(dealId));
+      navigation.navigate(screens.DEALS_TABS);
+    } catch (error) {
+      showErrorToast(error);
+    }
   };
   const rejectHandler = async () => {
     // TODO show rejection reason modal
-    await request(() => dealsApi.rejectOffer(deal?.id!, 'other'));
-    navigation.navigate(screens.DEALS_TABS);
+    try {
+      await request(() => dealsApi.rejectOffer(deal?.id!, 'other'));
+      navigation.navigate(screens.DEALS_TABS);
+    } catch (error) {
+      showErrorToast(error);
+    }
   };
   const closeHandler = async () => {
-    await request(() => dealsApi.closeOffer(deal?.id!));
-    navigation.navigate(screens.DEALS_TABS);
+    try {
+      await request(() => dealsApi.closeOffer(deal?.id!));
+      navigation.navigate(screens.DEALS_TABS);
+    } catch (error) {
+      showErrorToast(error);
+    }
   };
 
   const isOpen =
@@ -122,18 +131,8 @@ const DealDetailsScreen = () => {
     : undefined;
   return deal ? (
     <Screen style={styles.screen}>
-      <Card style={styles.card}>
-        <Text
-          style={[
-            styles.statusText,
-            deal.status === 'accepted' ? sharedStyles.greenBtn : {},
-            deal.status === 'new' ? {backgroundColor: theme.colors.orange} : {},
-            deal.status === 'closed'
-              ? {backgroundColor: theme.colors.dark}
-              : {},
-          ]}>
-          {deal.status}
-        </Text>
+      <Card style={styles.card} contentStyle={sharedStyles.centerRow}>
+        <DealStatus deal={deal} style={styles.statusText} />
         <Date date={deal.timestamp!} style={styles.dealDateText} />
         <Pressable style={styles.imageContainer} onPress={onItemPress}>
           <Image
@@ -143,6 +142,7 @@ const DealDetailsScreen = () => {
                 ? styles.image
                 : styles.swapImage
             }
+            cache="web"
           />
         </Pressable>
         {deal.item.swapOption.type !== 'free' && deal.swapItem && (
@@ -155,6 +155,7 @@ const DealDetailsScreen = () => {
                 uri={swapImageUrl}
                 style={styles.swapImage}
                 resizeMode="stretch"
+                cache="web"
               />
             </Pressable>
           </>
@@ -252,12 +253,16 @@ const styles = StyleSheet.create({
     height: imageSize,
     borderRadius: imageSize / 2,
     backgroundColor: theme.colors.lightGrey,
+    borderColor: theme.colors.lightGrey,
+    borderWidth: 2,
   },
   swapImage: {
     width: swapImageSize,
     height: swapImageSize,
     borderRadius: swapImageSize / 2,
     backgroundColor: theme.colors.lightGrey,
+    borderColor: theme.colors.lightGrey,
+    borderWidth: 2,
   },
   date: {
     color: theme.colors.grey,
@@ -276,14 +281,6 @@ const styles = StyleSheet.create({
   },
   statusText: {
     position: 'absolute',
-    backgroundColor: theme.colors.salmon,
-    color: theme.colors.white,
-    padding: 5,
-    borderRadius: 5,
-    // borderWidth: 2,
-    overflow: 'hidden',
-    top: 5,
-    left: 5,
     zIndex: 1,
   },
   dealDateText: {

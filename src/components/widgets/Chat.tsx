@@ -88,13 +88,13 @@ const Chat = ({deal, disableComposer, style, alwaysShowSend}: ChatProps) => {
         renderBubble={renderBubble}
         renderSend={renderSend}
         messages={data!}
-        renderInputToolbar={props => (
-          <InputToolbar
-            {...props}
-            containerStyle={styles.toolbar}
-            // primaryStyle={styles.toolbar}
-          />
-        )}
+        renderInputToolbar={props =>
+          !disableComposer ? (
+            <InputToolbar {...props} containerStyle={styles.toolbar} />
+          ) : (
+            <></>
+          )
+        }
         onSend={messages => onSend(messages)}
         user={{
           _id: user.id,
@@ -117,16 +117,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sendContainer: {
-    // height: 60,
-    // width: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderColor: theme.colors.dark,
-    // borderWidth: 2,
   },
-  messagesContainer: {
-    // backgroundColor: 'blue',
-  },
+  messagesContainer: {},
   rightBubble: {
     backgroundColor: theme.colors.lightGrey,
   },
@@ -144,22 +138,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     color: theme.colors.dark,
-    // backgroundColor: 'red',
-    // borderColor: 'red',
-    // borderWidth: 2,
   },
   toolbar: {
-    // height: 20,
-    // backgroundColor: 'grey',
     borderWidth: 2,
     borderColor: theme.colors.lightGrey,
     borderRadius: 10,
   },
-  chatFooter: {
-    // backgroundColor: 'red',
-    // height: 5,
-    // borderColor: 'red',
-    // borderWidth: 2,
-    // marginVertical: 5,
-  },
+  chatFooter: {},
 });

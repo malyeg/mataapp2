@@ -12,7 +12,7 @@ import {
   Operation,
   Query,
 } from '../types/DataTypes';
-import {QuerySnapshot} from '../types/UtilityTypes';
+import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
 // import {DocumentSnapshot, QuerySnapshot} from '../types/UtilityTypes';
 import cache, {CacheConfig} from '../utils/cache/cacheManager';
 import {allCombinations} from '../utils/CommonUtils';
@@ -33,7 +33,7 @@ export class DataApi<T extends Entity> extends Api {
 
   onDocumentSnapshot = (
     id: string,
-    observerCallback: (snapshot: any) => void,
+    observerCallback: (snapshot: DocumentSnapshot<T>) => void,
     onError?: (error: Error) => void,
   ) => {
     this.logger.debug('onDocumentSnapshot', id);
@@ -55,30 +55,25 @@ export class DataApi<T extends Entity> extends Api {
     onError?: ((error: Error) => void) | undefined,
     query?: Query<T>,
   ) => {
-    try {
-      let collectionQuery = query
-        ? this.getQuery(query, this.collection)
-        : this.collection;
+    this.logger.debug('onDocumentSnapshot', query);
 
-      return collectionQuery.onSnapshot(snapshot => {
-        this.logger.debug('onQuerySnapshot observerCallback');
-        const data: T[] = snapshot.docs.map(doc => {
-          const timestamp = (doc.data()?.timestamp as any)?.toDate();
-          const item: T = {
-            ...doc.data(),
-            id: doc.id,
-            timestamp,
-          };
-          return item;
-        });
-        observerCallback({...snapshot, data});
-      }, onError);
-    } catch (error) {
-      this.logger.error(error);
-      if (onError) {
-        onError(error);
-      }
-    }
+    let collectionQuery = query
+      ? this.getQuery(query, this.collection)
+      : this.collection;
+
+    return collectionQuery.onSnapshot(snapshot => {
+      this.logger.debug('onQuerySnapshot observerCallback');
+      const data: T[] = snapshot.docs.map(doc => {
+        const timestamp = (doc.data()?.timestamp as any)?.toDate();
+        const item: T = {
+          ...doc.data(),
+          id: doc.id,
+          timestamp,
+        };
+        return item;
+      });
+      observerCallback({...snapshot, data});
+    }, onError);
   };
 
   getAll = async (query?: Query<T>, options?: APIOptions) => {
@@ -306,7 +301,7 @@ export class DataApi<T extends Entity> extends Api {
       for (const filter of query.filters) {
         if (!!filter.field && filter.value !== undefined) {
           const idField = filter.field === 'id' ? '__name__' : filter.field;
-          const newFilter: Filter<T> = {...filter, field: idField};
+          const newFilter: Filter<E> = {...filter, field: idField};
           const operation: Operation = newFilter.operation
             ? newFilter.operation
             : Operation.EQUAL;

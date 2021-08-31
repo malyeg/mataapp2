@@ -17,7 +17,7 @@ export interface ImageProps {
 
 // const placeholder = require('../../assets/images/placeholder.png');
 
-const defaultCache = FastImage.cacheControl.cacheOnly;
+const defaultCache = FastImage.cacheControl.immutable;
 const Image = ({
   style,
   cache,
@@ -28,16 +28,7 @@ const Image = ({
   ...props
 }: ImageProps) => {
   const [isVisible, setVisible] = useState(false);
-  // const [imageSource, setImageSource] = useState<Source>(placeholder);
-  // const {landscape} = useDeviceOrientation();
   const styleList = [styles.image, style];
-  // const onLoadEnd = () => {
-  //   setImageSource({
-  //     uri,
-  //     priority: FastImage.priority.normal,
-  //     cache: cache ?? FastImage.cacheControl.web,
-  //   });
-  // };
 
   return onPressViewInFullScreen ? (
     <>
@@ -71,8 +62,9 @@ const Image = ({
               cache: cache ?? defaultCache,
             }
           }
+          // onLoadStart={() => console.log('load start')}
+          // onLoadEnd={() => console.log('load end')}
           resizeMode={FastImage.resizeMode.contain}
-          // onLoadEnd={onLoadEnd}
         />
       </Modal>
     </>

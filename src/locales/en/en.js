@@ -85,6 +85,12 @@ export default {
       },
     },
   },
+  components: {
+    textDescription: {
+      showMoreTitle: 'Read more ...',
+      showLessTitle: 'Read less ...',
+    },
+  },
   widgets: {
     nearByItems: {
       title: 'Items Nearby ({{city}})',

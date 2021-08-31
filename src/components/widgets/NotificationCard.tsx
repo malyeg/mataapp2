@@ -13,6 +13,17 @@ interface NotificationCardProps {
   notification: Notification;
   style?: StyleProp<ViewStyle>;
 }
+const icons = {
+  push: {
+    name: 'bell-outline',
+  },
+  email: {
+    name: 'email-outline',
+  },
+  chat: {
+    name: 'chat-outline',
+  },
+};
 const NotificationCard = ({notification, style}: NotificationCardProps) => {
   const {linkTo} = useNavigationHelper();
   const onPress = () => {
@@ -25,14 +36,10 @@ const NotificationCard = ({notification, style}: NotificationCardProps) => {
     <Card
       style={[styles.card, style]}
       onPress={onPress}
-      // icon={{
-      //   name:
-      //     notification.type === 'push' ? 'bell-outline' : 'email-alert-outline',
-      // }}
-    >
+      icon={icons[notification.type]}>
       <View>
-        <Text> {notification.title}</Text>
-        <Text>{notification.body}</Text>
+        <Text style={styles.title}>{notification.title}</Text>
+        <Text style={styles.body}>{notification.body}</Text>
         {!!notification.timestamp && (
           <Text style={styles.date}>
             {format(notification.timestamp, patterns.DATE_TIME)}
@@ -43,7 +50,7 @@ const NotificationCard = ({notification, style}: NotificationCardProps) => {
   );
 };
 
-export default NotificationCard;
+export default React.memo(NotificationCard);
 
 const styles = StyleSheet.create({
   card: {
@@ -53,5 +60,11 @@ const styles = StyleSheet.create({
   date: {
     ...theme.styles.scale.body2,
     color: theme.colors.grey,
+  },
+  title: {
+    ...theme.styles.scale.body1,
+  },
+  body: {
+    ...theme.styles.scale.body2,
   },
 });

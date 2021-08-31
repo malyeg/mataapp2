@@ -31,7 +31,7 @@ const Carousel = ({
   images,
   layout = 'default',
   style,
-  resizeMode = 'cover',
+  resizeMode = 'contain',
   renderItem,
   viewImageInFullScreen = false,
 }: CarouselProps) => {
