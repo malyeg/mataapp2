@@ -1,27 +1,19 @@
-import React, {FC} from 'react';
+import {Link as LinkBase} from '@react-navigation/native';
+import React, {ComponentProps} from 'react';
 import {StyleSheet} from 'react-native';
-import theme, {LinkProps} from '../../styles/theme';
-import PressableOpacity from './PressableOpacity';
-import Text from './Text';
+import theme from '../../styles/theme';
 
-const Link: FC<LinkProps> = ({onPress, style, textStyle, scale, ...props}) => {
+export type LinkProps = ComponentProps<typeof LinkBase>;
+
+const Link = ({...props}: LinkProps) => {
   return (
-    <PressableOpacity {...props} style={[styles.container, style]}>
-      <Text
-        {...props}
-        scale={scale}
-        onPress={onPress}
-        style={[styles.text, textStyle]}>
-        {props.children}
-      </Text>
-    </PressableOpacity>
+    <LinkBase {...props} style={[styles.text, props.style]}>
+      {props.children}
+    </LinkBase>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // width: '100%',
-  },
   text: {
     ...theme.styles.scale.h6,
     fontWeight: theme.fontWeight.medium,

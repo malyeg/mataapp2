@@ -56,7 +56,12 @@ const NearByItems = ({location, title, style}: NearByItemsProps) => {
   }, [location?.city, user.id]);
 
   const listEmptyComponent = (
-    <NoDataFound body={'no items found in ' + location.city} icon="" />
+    <NoDataFound
+      body={'no items found in ' + location.city}
+      icon=""
+      style={styles.noData}>
+      {/* <Link to={{screen: screens.ITEMS}}>{title ?? t('try another area')}</Link> */}
+    </NoDataFound>
   );
 
   // const onSwap = useCallback():
@@ -111,13 +116,6 @@ const styles = StyleSheet.create({
     ...theme.styles.scale.h6,
     fontWeight: theme.fontWeight.bold,
   },
-  itemsLink: {
-    ...theme.styles.scale.h6,
-    fontWeight: theme.fontWeight.semiBold,
-  },
-  flatList: {
-    flexGrow: 0,
-  },
   card: {
     borderRadius: 10,
     borderColor: theme.colors.lightGrey,
@@ -126,37 +124,8 @@ const styles = StyleSheet.create({
     height: 200,
     padding: 10,
   },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  eyeIcon: {
-    paddingRight: 5,
-  },
-  pressableContainer: {
-    flex: 3,
-    marginBottom: 5,
-  },
-  image: {
+  noData: {
     flex: 1,
-  },
-  cardCategory: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    flex: 1,
-    width: '100%',
-    borderTopColor: theme.colors.lightGrey,
-    borderTopWidth: 2,
-  },
-  listActivityContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     // backgroundColor: 'grey',
-  },
-  anotherAreaLink: {
-    textDecorationLine: 'underline',
   },
 });

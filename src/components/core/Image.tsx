@@ -16,7 +16,7 @@ export interface ImageProps {
 }
 
 // const placeholder = require('../../assets/images/placeholder.png');
-
+// https://blog.logrocket.com/caching-images-react-native-tutorial-with-examples/
 const defaultCache = FastImage.cacheControl.immutable;
 const Image = ({
   style,
@@ -80,6 +80,7 @@ const Image = ({
         }
       }
       resizeMode={resizeMode ?? FastImage.resizeMode.cover}
+      onError={() => console.log('error')}
       // onLoadEnd={onLoadEnd}
     />
   );

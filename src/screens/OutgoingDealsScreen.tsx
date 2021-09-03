@@ -7,7 +7,6 @@ import itemsApi from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Card from '../components/core/Card';
 import DataList from '../components/widgets/DataList';
-import DealStatus from '../components/widgets/DealStatus';
 import {patterns, screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
@@ -22,9 +21,12 @@ const OutgoingDealsScreen = () => {
   const {user} = useAuth();
 
   useEffect(() => {
-    const filter = QueryBuilder.filterFrom('userId', user.id);
+    // const filter = QueryBuilder.filterFrom('userId', user.id);
     const query = new QueryBuilder<Deal>()
-      .filters([filter])
+      .filters([
+        {field: 'userId', value: user.id},
+        // {field: 'status', operation: Operation.IN, value: ['new', 'accepted']},
+      ])
       .orderBy('timestamp', 'desc')
       .build();
     const unsubscribe = dealsApi.onQuerySnapshot(

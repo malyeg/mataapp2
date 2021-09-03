@@ -32,7 +32,7 @@ const MyItemsScreen = () => {
           containerStyle={styles.datalist}
           listStyle={styles.datalist}
           showsVerticalScrollIndicator={false}
-          data={{items: data}}
+          data={{items: data?.filter(i => (i as Item).status !== 'archived')}}
           columnWrapperStyle={styles.columnWrapper}
           numColumns={2}
           renderItem={renderItem}

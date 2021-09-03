@@ -4,7 +4,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Pressable, StyleSheet} from 'react-native';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi from '../api/itemsApi';
-import {Button, Icon, Image, Loader, Screen, Text} from '../components/core';
+import {Button, Image, Loader, Screen, Text} from '../components/core';
 import Card from '../components/core/Card';
 import Date from '../components/core/Date';
 import SwapIcon from '../components/icons/SwapIcon';
@@ -142,7 +142,6 @@ const DealDetailsScreen = () => {
                 ? styles.image
                 : styles.swapImage
             }
-            cache="web"
           />
         </Pressable>
         {deal.item.swapOption.type !== 'free' && deal.swapItem && (
@@ -155,7 +154,6 @@ const DealDetailsScreen = () => {
                 uri={swapImageUrl}
                 style={styles.swapImage}
                 resizeMode="stretch"
-                cache="web"
               />
             </Pressable>
           </>

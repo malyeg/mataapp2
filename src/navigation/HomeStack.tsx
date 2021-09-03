@@ -4,7 +4,7 @@ import {
 } from '@react-navigation/stack';
 import React from 'react';
 import {ItemStatus} from '../api/itemsApi';
-import Header from '../components/widgets/Header';
+import Header, {MenuItem} from '../components/widgets/Header';
 import {screens} from '../config/constants';
 import useLocale from '../hooks/useLocale';
 import AddItemScreen from '../screens/AddItemScreen';
@@ -65,6 +65,15 @@ const Stack = createStackNavigator<StackParams>();
 
 const HomeStack = () => {
   const {t} = useLocale('common');
+  // const {navigation} = useNavigationHelper();
+
+  const archivedMenuItem: MenuItem = {
+    label: t('Closed deals'),
+    // icon: {name: 'delete'},
+    onPress: () => {
+      // navigation.navigate(screens.ARCHIVED_DEALS_TABS);
+    },
+  };
   return (
     <Stack.Navigator
       screenOptions={screenOptions}
@@ -113,7 +122,16 @@ const HomeStack = () => {
       <Stack.Screen
         name={screens.DEALS_TABS}
         component={DealsTabs}
-        options={{headerTitle: t('screens.deals')}}
+        // options={{header headerTitle: t('screens.deals')}}
+        options={{
+          header: props => (
+            <Header
+              title={t('screens.deals')}
+              menu={{items: [archivedMenuItem]}}
+              {...props}
+            />
+          ),
+        }}
       />
       <Stack.Screen
         name={screens.DEAL_DETAILS}

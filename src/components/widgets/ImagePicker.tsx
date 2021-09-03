@@ -126,8 +126,12 @@ const ImagePicker: FC<ItemImageProps> = ({
           console.debug('bytesTransferred', snapshot.bytesTransferred),
         error => console.error(error),
         async () => {
-          const downloadURL = await task.snapshot?.ref.getDownloadURL();
-
+          let downloadURL = await task.snapshot?.ref.getDownloadURL();
+          if (downloadURL?.includes('?')) {
+            downloadURL =
+              downloadURL.substr(0, downloadURL.indexOf('?')) + '?alt=media';
+          }
+          console.log('downloadURL', downloadURL);
           const newImageSource: ImageSource = {
             ...resizedImage,
             uri: resizedImage?.uri!,
@@ -166,11 +170,6 @@ const ImagePicker: FC<ItemImageProps> = ({
         return;
       }
       return {...image, ...response} as ImageSource;
-      // return image;
-      // response.uri is the URI of the new image that can now be displayed, uploaded...
-      // response.path is the path of the new image
-      // response.name is the name of the new image with the extension
-      // response.size is the size of the new image
     } catch (error) {
       console.error(error);
       return image;

@@ -409,6 +409,7 @@ export default {
       shareLabel: 'Share',
       editItemLabel: 'Edit',
       deleteLabel: 'Delete',
+      archivedDealsLabel: 'Closed deals',
     },
     itemPickerTitle: 'Select Item',
   },
