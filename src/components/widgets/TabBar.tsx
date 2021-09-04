@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     bottom: 0,
-    zIndex: 10000,
+    zIndex: 1,
+    backgroundColor: 'white',
   },
   itemsContainer: {
     flex: 1,

@@ -19,7 +19,9 @@ const SwapIcon = ({item, iconSize = 15, style}: SwapIconProps) => {
         color={theme.colors.salmon}
       />
       {!!item && (
-        <Text style={styles.offersText}>{item.offers ? item.offers : 0}</Text>
+        <Text style={styles.offersText}>
+          {item.offers ? item.offers.length : 0}
+        </Text>
       )}
     </View>
   );

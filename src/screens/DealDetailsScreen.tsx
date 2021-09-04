@@ -57,7 +57,7 @@ const DealDetailsScreen = () => {
               show({
                 header: t('cancelOfferConfirmationHeader'),
                 body: t('cancelOfferConfirmationBody'),
-                confirmCallback: () => cancelHandler(deal?.id!),
+                confirmCallback: () => cancelHandler(d?.id!),
               });
             },
           },
@@ -87,6 +87,7 @@ const DealDetailsScreen = () => {
   };
   const cancelHandler = async (dealId: string) => {
     try {
+      console.log('cancelHandler dealId', dealId);
       await request(() => dealsApi.cancelOffer(dealId));
       navigation.navigate(screens.DEALS_TABS);
     } catch (error) {

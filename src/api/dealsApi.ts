@@ -96,6 +96,7 @@ class DealsApi extends DataApi<Deal> {
   };
 
   cancelOffer = async (dealId: string, reason: string = 'other') => {
+    console.log('dealId', dealId);
     return await this.functions.httpsCallable('cancelOffer')({dealId, reason});
   };
   closeOffer = async (dealId: string) => {

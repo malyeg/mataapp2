@@ -143,8 +143,8 @@ android {
         applicationId "com.mataapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 32
-        versionName "0.4.4"
+        versionCode 33
+        versionName "0.4.6"
         multiDexEnabled true
     }
     splits {
