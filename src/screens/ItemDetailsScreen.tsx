@@ -5,8 +5,6 @@ import {StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, Item} from '../api/itemsApi';
-import listsApi from '../api/listsApi';
-import profilesApi from '../api/profileApi';
 import {Button, Icon, Loader, Screen, Text} from '../components/core';
 import PressableOpacity from '../components/core/PressableOpacity';
 import Carousel from '../components/widgets/Carousel';
@@ -300,11 +298,11 @@ const ItemDetailsScreen = () => {
         <ItemDetailsCard
           title={t('itemConditionTitle')}
           content={conditionName ?? item.condition?.type}
-          icon="cast-connected"
+          icon="note-text-outline"
           contentStyle={(styles as any)[item.condition?.type]}>
-          {/* {!!item.condition?.desc && (
-          <Text style={styles.status}>{item.condition?.desc}</Text>
-        )} */}
+          {!!item.condition?.desc && (
+            <Text style={styles.conditionDesc}>{item.condition?.desc}</Text>
+          )}
         </ItemDetailsCard>
         <ItemDetailsCard
           title={t('categoryTitle')}
@@ -441,6 +439,13 @@ const styles = StyleSheet.create({
   status: {
     color: theme.colors.grey,
     fontWeight: theme.fontWeight.semiBold,
+  },
+  conditionDesc: {
+    color: theme.colors.grey,
+    // position: 'absolute',
+    ...theme.styles.scale.body2,
+    // flexWrap: 'wrap',
+    // fontWeight: theme.fontWeight.semiBold,
   },
 
   row: {

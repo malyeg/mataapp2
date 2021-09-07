@@ -18,7 +18,7 @@ export type DealStatus =
 
 export interface Deal extends DataSearchable, Entity {
   id: string;
-  userId: string; //deprected
+  userId: string; //deprecated
   user: {
     id: string;
     name: string;

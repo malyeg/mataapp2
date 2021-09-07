@@ -73,10 +73,16 @@ export default {
       items: '{{name}} Items',
       itemDetails: 'Item details',
       deals: 'Deals',
+      archivedDeals: 'Archived deals',
+      incomingDeals: 'INCOMING',
+      outgoingDeals: 'OUTGOING',
       dealDetails: 'Deal details',
       faq: 'FAQ',
       notifications: 'Notifications',
       supportUs: 'Support mata',
+    },
+    menu: {
+      archivedDealsLabel: 'Archived deals',
     },
     location: {
       title: 'Select location',
@@ -375,6 +381,11 @@ export default {
     },
     submitSuccess: 'Password changed successfully 👋',
   },
+  dealsScreen: {
+    menu: {
+      archivedDealsLabel: 'Archived deals',
+    },
+  },
   dealDetailsScreen: {
     approveBtnTitle: 'Start deal',
     rejectBtnTitle: 'Reject deal',
@@ -410,7 +421,7 @@ export default {
       shareLabel: 'Share',
       editItemLabel: 'Edit',
       deleteLabel: 'Delete',
-      archivedDealsLabel: 'Closed deals',
+      archivedDealsLabel: 'Archived deals',
     },
     itemPickerTitle: 'Select Item',
   },

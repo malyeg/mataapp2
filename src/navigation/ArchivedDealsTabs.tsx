@@ -1,10 +1,8 @@
-import {RouteProp} from '@react-navigation/core';
 import {
   createMaterialTopTabNavigator,
   MaterialTopTabNavigationOptions,
 } from '@react-navigation/material-top-tabs';
 import React from 'react';
-import {screens} from '../config/constants';
 import useLocale from '../hooks/useLocale';
 import IncomingDealsScreen from '../screens/IncomingDealsScreen';
 import OutgoingDealsScreen from '../screens/OutgoingDealsScreen';
@@ -14,37 +12,26 @@ const dealsTabsOptions: MaterialTopTabNavigationOptions = {
   lazy: true,
   tabBarIndicatorStyle: {backgroundColor: theme.colors.salmon},
 };
+const Tab = createMaterialTopTabNavigator();
 
-export type StackParams = {
-  [screens.OUTGOING_DEALS]: {archived: boolean} | undefined;
-  [screens.INCOMING_DEALS]: {archived: boolean} | undefined;
-};
-export type OutgoingDealsRoute = RouteProp<
-  StackParams,
-  typeof screens.OUTGOING_DEALS
->;
-export type IngoingDealsRoute = RouteProp<
-  StackParams,
-  typeof screens.INCOMING_DEALS
->;
-const Tab = createMaterialTopTabNavigator<StackParams>();
-
-const DealsTabs = () => {
+const ArchivedDealsTabs = () => {
   const {t} = useLocale('common');
   return (
     <Tab.Navigator screenOptions={dealsTabsOptions}>
       <Tab.Screen
-        name={screens.OUTGOING_DEALS}
+        name="Outgoing"
         component={OutgoingDealsScreen}
+        initialParams={{archived: true}}
         options={{tabBarLabel: t('screens.outgoingDeals')}}
       />
       <Tab.Screen
-        name={screens.INCOMING_DEALS}
+        name="Incoming"
         component={IncomingDealsScreen}
+        initialParams={{archived: true}}
         options={{tabBarLabel: t('screens.incomingDeals')}}
       />
     </Tab.Navigator>
   );
 };
 
-export default DealsTabs;
+export default ArchivedDealsTabs;

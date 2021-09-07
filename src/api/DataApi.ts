@@ -55,7 +55,7 @@ export class DataApi<T extends Entity> extends Api {
     onError?: ((error: Error) => void) | undefined,
     query?: Query<T>,
   ) => {
-    this.logger.debug('onDocumentSnapshot', query);
+    this.logger.debug('onQuerySnapshot', query);
 
     let collectionQuery = query
       ? this.getQuery(query, this.collection)

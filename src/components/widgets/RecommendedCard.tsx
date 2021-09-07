@@ -88,14 +88,15 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   image: {
-    width: 125,
-    height: 125,
+    flex: 0.8,
+    // width: 125,
+    // height: 125,
     borderRadius: 10,
   },
   contentContainer: {
+    flex: 1,
     alignItems: 'flex-start',
     padding: 10,
-    flex: 1,
     justifyContent: 'space-between',
   },
   categoryText: {

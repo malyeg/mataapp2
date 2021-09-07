@@ -82,6 +82,9 @@ export const screens = {
   DEALS: 'DealsScreen' as 'DealsScreen',
   MY_DEALS: 'MyDealsScreen' as 'MyDealsScreen',
   DEALS_TABS: 'DealsTabs' as 'DealsTabs',
+  ARCHIVED_DEALS_TABS: 'ArchivedDealsTabs' as 'ArchivedDealsTabs',
+  OUTGOING_DEALS: 'OutgoingDealsScreen' as 'OutgoingDealsScreen',
+  INCOMING_DEALS: 'IncomingDealsScreen' as 'IncomingDealsScreen',
   DEAL_DETAILS: 'DealDetailsScreen' as 'DealDetailsScreen',
 
   NOTIFICATIONS: 'NotificationsScreen' as 'NotificationsScreen',

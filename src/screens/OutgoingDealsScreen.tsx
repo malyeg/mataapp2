@@ -1,3 +1,4 @@
+import {useRoute} from '@react-navigation/core';
 import {format} from 'date-fns';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -12,25 +13,37 @@ import {patterns, screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useNavigationHelper from '../hooks/useNavigationHelper';
+import {OutgoingDealsRoute} from '../navigation/DealsTabs';
 import theme from '../styles/theme';
-import {QueryBuilder} from '../types/DataTypes';
+import {Filter, Operation, QueryBuilder} from '../types/DataTypes';
 
 const OutgoingDealsScreen = () => {
   const [deals, setDeals] = useState<ApiResponse<Deal>>();
   const {navigation} = useNavigationHelper();
+  const route = useRoute<OutgoingDealsRoute>();
   const {loader} = useApi();
   const {user} = useAuth();
 
   useEffect(() => {
-    // const filter = QueryBuilder.filterFrom('userId', user.id);
+    const filters: Filter<Deal>[] = [{field: 'userId', value: user.id}];
+    if (route?.params?.archived === true) {
+      filters.push({
+        field: 'status',
+        operation: Operation.IN,
+        value: ['closed', 'rejected', 'canceled'],
+      });
+    } else {
+      filters.push({
+        field: 'status',
+        operation: Operation.IN,
+        value: ['new', 'accepted'],
+      });
+    }
     const query = new QueryBuilder<Deal>()
-      .filters([
-        {field: 'userId', value: user.id},
-        // {field: 'status', operation: Operation.IN, value: ['new', 'accepted']},
-      ])
+      .filters(filters)
       .orderBy('timestamp', 'desc')
       .build();
-    const unsubscribe = dealsApi.onQuerySnapshot(
+    return dealsApi.onQuerySnapshot(
       snapshot => {
         setDeals({items: snapshot.data});
       },
@@ -39,17 +52,12 @@ const OutgoingDealsScreen = () => {
       },
       query,
     );
-
-    return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderItem = ({item}: {item: Deal}) => (
     <Card
       onPress={() => navigation.navigate(screens.DEAL_DETAILS, {id: item.id})}>
-      {/* <View style={styles.dealStatus}>
-        <DealStatus deal={item} />
-      </View> */}
       <Image
         uri={itemsApi.getImageUrl(item.item)}
         style={[styles.image]}
@@ -63,7 +71,7 @@ const OutgoingDealsScreen = () => {
             {format(item.timestamp, patterns.DATE)}
           </Text>
         )}
-        {/* <Text style={styles.dealStatusText}>{item.status}</Text> */}
+
         <DealStatus deal={item} style={styles.dealStatusText} />
       </View>
     </Card>
@@ -129,14 +137,8 @@ const styles = StyleSheet.create({
     ...theme.styles.scale.body2,
   },
   dealStatusText: {
-    // position: 'absolute',
-    // right: 0,
-    // top: 0,
     marginRight: 'auto',
-    textTransform: 'capitalize',
     minWidth: 100,
     textAlign: 'center',
-    // flex: 0,
-    // alignSelf: 'flex-end',
   },
 });

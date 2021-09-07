@@ -102,15 +102,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: 2,
-    // backgroundColor: 'grey',
-    // flex: 1,
     height: 30,
   },
   activityStatusContainer: {
-    // position: 'absolute',
-    // marginTop: 5,
-    // right: 0,
-    width: 45,
+    width: 60,
     height: 25,
     borderTopLeftRadius: 11.5,
     borderBottomLeftRadius: 11.5,
@@ -121,14 +116,18 @@ const styles = StyleSheet.create({
   activityStatusText: {
     color: theme.colors.white,
     ...theme.styles.scale.body3,
+    textTransform: 'capitalize',
   },
   onlineBackgroundColor: {
     backgroundColor: theme.colors.green,
   },
   image: {
-    flex: 3,
+    flex: 1,
+    // width: 125,
+    // height: 125,
     marginBottom: 5,
     backgroundColor: 'grey',
+    borderRadius: 10,
   },
   cardCategory: {
     justifyContent: 'center',

@@ -71,7 +71,7 @@ const ItemConditionPicker = ({
                 <Button
                   title={t('itemConditionPicker.submit')}
                   onPress={() => {
-                    if (desc) {
+                    if (desc && desc.length < 200) {
                       setError(undefined);
                       onItemChange(WITH_ISSUES_ITEM);
                       onCloseModal();
@@ -96,7 +96,6 @@ const ItemConditionPicker = ({
       modalStyle={styles.modal}
       name={name}
       items={conditionList}
-      defaultValue={defaultValue}
       placeholder={t('itemConditionPicker.placeholder')}
       modalTitle={t('itemConditionPicker.modalTitle')}
       onChange={onPickerChange}

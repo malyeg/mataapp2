@@ -3,10 +3,12 @@ import {
   StackNavigationOptions,
 } from '@react-navigation/stack';
 import React from 'react';
+import {DealStatus} from '../api/dealsApi';
 import {ItemStatus} from '../api/itemsApi';
 import Header, {MenuItem} from '../components/widgets/Header';
 import {screens} from '../config/constants';
 import useLocale from '../hooks/useLocale';
+import useNavigationHelper from '../hooks/useNavigationHelper';
 import AddItemScreen from '../screens/AddItemScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import DealDetailsScreen from '../screens/DealDetailsScreen';
@@ -21,6 +23,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SupportUsScreen from '../screens/SupportUsScreen';
 import {Status} from '../types/DataTypes';
+import ArchivedDealsTabs from './ArchivedDealsTabs';
 import DealsTabs from './DealsTabs';
 
 const screenOptions: StackNavigationOptions = {
@@ -53,6 +56,7 @@ export type StackParams = {
   [screens.CHANGE_PASSWORD]: undefined;
 
   [screens.DEALS_TABS]: undefined;
+  [screens.ARCHIVED_DEALS_TABS]: {dealStatus: DealStatus} | undefined;
   [screens.DEAL_DETAILS]: {id: string; title: string} | undefined;
 
   [screens.SETTINGS]: undefined;
@@ -65,13 +69,15 @@ const Stack = createStackNavigator<StackParams>();
 
 const HomeStack = () => {
   const {t} = useLocale('common');
-  // const {navigation} = useNavigationHelper();
+  const {navigation} = useNavigationHelper();
 
   const archivedMenuItem: MenuItem = {
-    label: t('Closed deals'),
+    label: t('menu.archivedDealsLabel'),
     // icon: {name: 'delete'},
     onPress: () => {
-      // navigation.navigate(screens.ARCHIVED_DEALS_TABS);
+      navigation.navigate(screens.ARCHIVED_DEALS_TABS, {
+        dealStatus: 'archived',
+      });
     },
   };
   return (
@@ -128,6 +134,20 @@ const HomeStack = () => {
             <Header
               title={t('screens.deals')}
               menu={{items: [archivedMenuItem]}}
+              {...props}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name={screens.ARCHIVED_DEALS_TABS}
+        component={ArchivedDealsTabs}
+        // options={{header headerTitle: t('screens.deals')}}
+        options={{
+          header: props => (
+            <Header
+              title={t('screens.archivedDeals')}
+              // menu={{items: [archivedMenuItem]}}
               {...props}
             />
           ),

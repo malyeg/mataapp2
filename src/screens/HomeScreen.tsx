@@ -99,7 +99,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categories: {
+    // position: 'absolute'
     marginVertical: 10,
+    // backgroundColor: 'grey',
+    marginLeft: theme.defaults.SCREEN_PADDING * -1,
   },
   tabBar: {
     position: 'absolute',

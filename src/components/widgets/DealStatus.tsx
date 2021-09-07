@@ -19,7 +19,7 @@ const DealStatus = ({deal, style}: DealStatusProps) => {
         deal.status === 'closed' ? {backgroundColor: theme.colors.dark} : {},
         style,
       ]}>
-      {deal.status}
+      {deal.status === 'accepted' ? 'Started' : deal.status}
     </Text>
   );
 };
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     top: 5,
     // left: 5,
     zIndex: 1,
+    textTransform: 'capitalize',
   },
   greenBtn: {
     backgroundColor: theme.colors.green,

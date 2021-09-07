@@ -39,8 +39,6 @@ type AddItemFormValues = {
   status: boolean;
 };
 
-type EditItemRoute = RouteProp<StackParams, typeof screens.EDIT_ITEM>;
-
 const AddItemScreen = () => {
   const {t} = useLocale('addItemScreen');
   const defaultImage = useRef<ImageSource | null>(null);
@@ -153,7 +151,7 @@ const AddItemScreen = () => {
           },
         },
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       showToast({
         code: err.code,

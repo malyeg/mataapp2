@@ -1,3 +1,4 @@
+import {useRoute} from '@react-navigation/core';
 import {format} from 'date-fns';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -12,22 +13,37 @@ import {patterns, screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useNavigationHelper from '../hooks/useNavigationHelper';
+import {IngoingDealsRoute} from '../navigation/DealsTabs';
 import theme from '../styles/theme';
-import {QueryBuilder} from '../types/DataTypes';
+import {Filter, Operation, QueryBuilder} from '../types/DataTypes';
 
 const IncomingDealsScreen = () => {
   const [deals, setDeals] = useState<ApiResponse<Deal>>();
   const {loader} = useApi();
   const {user} = useAuth();
   const {navigation} = useNavigationHelper();
+  const route = useRoute<IngoingDealsRoute>();
 
   useEffect(() => {
-    const filter = QueryBuilder.filterFrom('item.userId', user.id);
+    const filters: Filter<Deal>[] = [{field: 'item.userId', value: user.id}];
+    if (route?.params?.archived) {
+      filters.push({
+        field: 'status',
+        operation: Operation.IN,
+        value: ['closed', 'rejected', 'canceled'],
+      });
+    } else {
+      filters.push({
+        field: 'status',
+        operation: Operation.IN,
+        value: ['new', 'accepted'],
+      });
+    }
     const query = new QueryBuilder<Deal>()
-      .filters([filter])
+      .filters(filters)
       .orderBy('timestamp', 'desc')
       .build();
-    const unsubscribe = dealsApi.onQuerySnapshot(
+    return dealsApi.onQuerySnapshot(
       snapshot => {
         setDeals({items: snapshot.data});
       },
@@ -36,8 +52,6 @@ const IncomingDealsScreen = () => {
       },
       query,
     );
-
-    return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

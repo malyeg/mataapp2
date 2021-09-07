@@ -43,7 +43,7 @@ const ItemDetailsCard = ({
             {content}
           </Text>
         </View>
-        {!!children && children}
+        {!!children && <View style={styles.childrenContainer}>{children}</View>}
       </View>
     </View>
   );
@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
     marginVertical: 5,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -78,11 +79,14 @@ const styles = StyleSheet.create({
     }),
   },
   icon: {
-    marginRight: 7,
+    position: 'absolute',
+    left: 7,
   },
   header: {
     flexDirection: 'row',
+    // flexWrap: 'wrap',
     alignItems: 'center',
+    marginLeft: 25,
   },
   title: {
     color: theme.colors.salmon,
@@ -94,9 +98,8 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     width: '70%',
     textAlign: 'justify',
-    // flex: 1,
-    // flexWrap: 'wrap',
-    // textAlign: 'justify',
-    // flexShrink: 1,
+  },
+  childrenContainer: {
+    marginLeft: 25,
   },
 });
