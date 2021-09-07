@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/core';
+import {Link} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -6,7 +7,7 @@ import * as yup from 'yup';
 import citiesApi, {City} from '../api/citiesApi';
 import countriesApi, {Country, State} from '../api/countriesApi';
 import {Profile} from '../api/profileApi';
-import {Button, Link, Text} from '../components/core';
+import {Button, Screen, Text} from '../components/core';
 import Logo from '../components/core/Logo';
 import {
   CheckBox,
@@ -23,11 +24,13 @@ import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
 import useLocale from '../hooks/useLocale';
 import useToast from '../hooks/useToast';
+import sharedStyles from '../styles/SharedStyles';
 import BackgroundScreen from './BackgroundScreen';
 
 type SignUpFormValues = {
   username: string;
   password: string;
+  confirmPassword: string;
   terms: boolean;
   phone: string;
   country: string;
@@ -51,7 +54,7 @@ const SignUpScreen = () => {
   );
   const [states, setStates] = useState<State[]>(countriesApi.getStates('158'));
 
-  const {control, handleSubmit, formState, setValue} =
+  const {control, handleSubmit, formState, setValue, setFocus} =
     useForm<SignUpFormValues>({
       username: yup
         .string()
@@ -85,10 +88,6 @@ const SignUpScreen = () => {
         }),
       terms: yup.boolean().oneOf([true], t('terms.required')),
     });
-
-  const signInLinkHandler = () => {
-    navigation.navigate(screens.SIGN_IN);
-  };
 
   const onCountryChange = useCallback(
     (value: string) => {
@@ -147,19 +146,17 @@ const SignUpScreen = () => {
         acceptTermsFlag: data.terms ? true : false,
       };
       await request<Profile>(() => signUp(credentials, profile));
-    } catch (err) {
+    } catch (err: any) {
       showToast({
         type: 'error',
         code: err.code,
-        message: err.message,
+        message: (err as any).message,
       });
     }
   };
 
   return (
-    <BackgroundScreen
-      style={styles.screen}
-      imageBackground={constants.AuthBgImage}>
+    <Screen style={styles.screen}>
       <View style={styles.logoContainer}>
         <Logo style={[styles.logo]} />
       </View>
@@ -170,6 +167,7 @@ const SignUpScreen = () => {
           placeholder={t('username.placeholder')}
           returnKeyType="next"
           control={control}
+          onSubmitEditing={() => setFocus('firstName')}
         />
         <View style={styles.rowContainer}>
           <TextInput
@@ -179,6 +177,7 @@ const SignUpScreen = () => {
             returnKeyType="next"
             control={control}
             hideError
+            onSubmitEditing={() => setFocus('lastName')}
           />
           <TextInput
             name="lastName"
@@ -222,6 +221,7 @@ const SignUpScreen = () => {
             name="city"
             items={cities}
             control={control}
+            onSubmitEditing={() => setFocus('phone')}
           />
         </View>
         <View style={styles.rowContainer}>
@@ -241,6 +241,7 @@ const SignUpScreen = () => {
             returnKeyType="next"
             hideError
             control={control}
+            onSubmitEditing={() => setFocus('password')}
           />
         </View>
         {!!formState.errors.phone && <Error error={formState.errors.phone} />}
@@ -250,6 +251,7 @@ const SignUpScreen = () => {
           placeholder={t('password.placeholder')}
           returnKeyType="next"
           control={control}
+          onSubmitEditing={() => setFocus('confirmPassword')}
         />
         <TextInput
           secureTextEntry
@@ -276,12 +278,12 @@ const SignUpScreen = () => {
 
       <KeyboardView style={styles.footer}>
         <Text body1>{t('haveAccountText')}</Text>
-        <Link body1 onPress={signInLinkHandler}>
+        <Link to={{screen: screens.SIGN_IN}} style={sharedStyles.link}>
           {t('LoginLink')}
         </Link>
       </KeyboardView>
       {loader}
-    </BackgroundScreen>
+    </Screen>
   );
 };
 

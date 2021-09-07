@@ -69,6 +69,7 @@ const ProfileScreen = () => {
           </Text>
           <View style={styles.modalButtonContainer}>
             <Button
+              themeType="white"
               title={t('logout.cancelBtnTitle')}
               style={[styles.modalButton]}
               onPress={closeModal}
@@ -76,7 +77,6 @@ const ProfileScreen = () => {
             <Button
               title={t('logout.confirmLogoutBtnTitle')}
               style={[styles.modalButton, styles.confirmButton]}
-              textStyle={styles.confirmText}
               onPress={() => signOut()}
             />
           </View>
@@ -177,9 +177,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderColor: theme.colors.grey,
     borderWidth: 1,
-  },
-  confirmText: {
-    color: theme.colors.dark,
   },
   confirmLogoutTitle: {
     ...theme.styles.scale.h5,

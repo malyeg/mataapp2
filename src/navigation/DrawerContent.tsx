@@ -20,7 +20,11 @@ const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
 
   return (
     <DrawerContentScrollView {...props}>
-      <ProfileHeader style={styles.header} userNameStyle={styles.profileName} />
+      <ProfileHeader
+        style={styles.header}
+        userNameStyle={styles.profileName}
+        onPress={() => navigation.navigate(screens.PROFILE)}
+      />
 
       <DrawerItem
         label={t('drawer.myItemsLabel')}

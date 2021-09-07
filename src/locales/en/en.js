@@ -257,6 +257,7 @@ export default {
       placeholder: 'Category',
       required: 'Category is required',
       invalid: 'Invalid Category',
+      modalTitle: 'Category',
     },
     swapType: {
       placeholder: 'Swap type',
@@ -375,10 +376,10 @@ export default {
     submitSuccess: 'Password changed successfully 👋',
   },
   dealDetailsScreen: {
-    approveBtnTitle: 'Accept',
-    rejectBtnTitle: 'Reject',
-    closeBtnTitle: 'Close',
-    cancelBtnTitle: 'Cancel',
+    approveBtnTitle: 'Start deal',
+    rejectBtnTitle: 'Reject deal',
+    closeBtnTitle: 'Close deal',
+    cancelBtnTitle: 'Cancel deal',
     chatHeader: 'Chat with "{{userName}}"',
     menu: {
       cancelLabel: 'Cancel',

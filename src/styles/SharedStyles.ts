@@ -49,6 +49,11 @@ const sharedStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  link: {
+    ...theme.styles.scale.h6,
+    fontWeight: theme.fontWeight.medium,
+    color: theme.colors.green,
+  },
 });
 
 export default sharedStyles;

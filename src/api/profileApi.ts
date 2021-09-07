@@ -6,7 +6,7 @@ import {DataApi} from './DataApi';
 import {Country, State} from './countriesApi';
 import {City} from './citiesApi';
 
-export interface Profile extends DataSearchable, Entity {
+export interface Profile extends DataSearchable, Omit<Entity, 'userId'> {
   id: string;
   mobile: string;
   email: string;
@@ -21,7 +21,7 @@ export interface Profile extends DataSearchable, Entity {
   targetCategories?: string[];
   token?: string;
   appRated?: boolean;
-  isPublic: boolean;
+  isPublic?: boolean;
 }
 
 class ProfilesApi extends DataApi<Profile> {

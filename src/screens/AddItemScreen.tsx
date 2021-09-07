@@ -46,15 +46,12 @@ const AddItemScreen = () => {
   const defaultImage = useRef<ImageSource | null>(null);
   const [swapType, setSwapType] = useState<SwapType | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
-  const [item, setItem] = useState<Item | undefined>();
   const uploadSet = useRef(new Set()).current;
   const {loader, request} = useApi();
   const {user, profile, addTargetCategory, getName} = useAuth();
   const {showToast, hideToast} = useToast();
-  const route = useRoute<EditItemRoute>();
   const navigation = useNavigation<StackNavigationHelpers>();
-
-  const {control, reset, handleSubmit} = useForm<AddItemFormValues>({
+  const {control, reset, handleSubmit, setFocus} = useForm<AddItemFormValues>({
     name: yup.string().trim().max(50).required(t('name.required')),
     category: yup.string().trim().required(t('category.required')),
     conditionType: yup.string().trim().required(t('status.required')),
@@ -75,23 +72,6 @@ const AddItemScreen = () => {
         return true;
       }),
   });
-
-  // useEffect(() => {
-  //   const itemId = route.params?.id;
-  //   if (itemId) {
-  //     itemsApi.getById(itemId).then(i => {
-  //       console.log('item found');
-  //       setItem(i);
-  //       reset({
-  //         ...i,
-  //         category: i?.category.id,
-  //         conditionType: i?.condition.type,
-  //         swapType: i?.swapOption.type,
-  //         swapCategory: i?.swapOption.category,
-  //       });
-  //     });
-  //   }
-  // }, [route.params?.id]);
 
   const onFormError = async (data: any) => {
     console.log('onFormError', data);
@@ -228,6 +208,7 @@ const AddItemScreen = () => {
         placeholder={t('name.placeholder')}
         returnKeyType="next"
         control={control}
+        onSubmitEditing={() => setFocus('description')}
       />
       <TextInput
         name="description"

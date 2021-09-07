@@ -26,12 +26,7 @@ const TopCategories = ({style}: TopCategoriesProps) => {
         key={item.id}
         style={styles.categoryContainer}>
         <View style={[styles.category, {backgroundColor: item.style?.bgColor}]}>
-          <Icon
-            name={item.style?.iconName ?? 'home'}
-            // color="#F2A39C"
-            color="white"
-            size={35}
-          />
+          <Icon name={item.style?.iconName ?? 'home'} color="white" size={35} />
         </View>
         <Text style={styles.name}>{item.name}</Text>
       </PressableOpacity>
@@ -55,6 +50,8 @@ export default React.memo(TopCategories);
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   categoryContainer: {
     alignItems: 'center',
@@ -64,12 +61,17 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   name: {
     ...theme.styles.scale.body3,
     paddingTop: 7,
+  },
+  rightChevron: {
+    // position: 'absolute',
+    // right: -20,
+    // backgroundColor: 'red',
   },
 });

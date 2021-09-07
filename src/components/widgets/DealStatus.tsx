@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     overflow: 'hidden',
     top: 5,
-    left: 5,
+    // left: 5,
     zIndex: 1,
   },
   greenBtn: {

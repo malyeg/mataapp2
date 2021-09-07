@@ -1,8 +1,9 @@
 import {useNavigation} from '@react-navigation/core';
+import {Link} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
-import {Button, Link, Text} from '../components/core';
+import {Button, Text} from '../components/core';
 import Logo from '../components/core/Logo';
 import {FormView, KeyboardView} from '../components/form';
 import TextInput from '../components/form/TextInput';
@@ -12,6 +13,7 @@ import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
 import useLocale from '../hooks/useLocale';
 import useToast from '../hooks/useToast';
+import sharedStyles from '../styles/SharedStyles';
 import theme from '../styles/theme';
 import BackgroundScreen from './BackgroundScreen';
 
@@ -85,7 +87,7 @@ const ForgotPasswordScreen = () => {
       </FormView>
       <View style={styles.footer}>
         <Text body1>{t('haveAccountText')}</Text>
-        <Link body1 onPress={signInLinkHandler}>
+        <Link to={{screen: screens.SIGN_IN}} style={sharedStyles.link}>
           {t('LoginLink')}
         </Link>
       </View>

@@ -1,8 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
+import {Link} from '@react-navigation/native';
+import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import * as yup from 'yup';
-import {Button, Link, Text} from '../components/core';
+import {Button, Text} from '../components/core';
 import Logo from '../components/core/Logo';
 import TextInput from '../components/form/TextInput';
 import constants, {screens} from '../config/constants';
@@ -12,11 +14,11 @@ import useAuth from '../hooks/useAuth';
 import useForm from '../hooks/useForm';
 import useLocale from '../hooks/useLocale';
 import useToast from '../hooks/useToast';
+import sharedStyles from '../styles/SharedStyles';
 import BackgroundScreen from './BackgroundScreen';
 
 type SignInFormValues = {username: string; password: string};
 const SignInScreen = () => {
-  const navigation = useNavigation();
   const {t} = useLocale('signInScreen');
   const {showToast, hideToast} = useToast();
 
@@ -28,7 +30,7 @@ const SignInScreen = () => {
     loadData();
   }, []);
 
-  const {control, handleSubmit} = useForm<SignInFormValues>({
+  const {control, handleSubmit, setFocus} = useForm<SignInFormValues>({
     username: yup
       .string()
       .trim()
@@ -37,13 +39,6 @@ const SignInScreen = () => {
       .required(t('username.required')),
     password: yup.string().trim().max(100).required(t('password.required')),
   });
-
-  const signUpLinkHandler = () => {
-    navigation.navigate(screens.SIGN_UP);
-  };
-  const forgotPasswordLinkHandler = () => {
-    navigation.navigate(screens.FORGOT_PASSWORD);
-  };
 
   const onFormSuccess = async (data: SignInFormValues) => {
     hideToast();
@@ -56,8 +51,8 @@ const SignInScreen = () => {
     } catch (err) {
       showToast({
         type: 'error',
-        code: err.code,
-        message: err.message,
+        code: (err as any).code,
+        message: (err as any).message,
       });
     }
   };
@@ -76,6 +71,7 @@ const SignInScreen = () => {
           placeholder={t('username.placeholder')}
           returnKeyType="next"
           control={control}
+          onSubmitEditing={() => setFocus('password')}
         />
         <TextInput
           // style={styles.password}
@@ -87,9 +83,8 @@ const SignInScreen = () => {
         />
 
         <Link
-          body1
-          style={styles.forgotPasswordLink}
-          onPress={forgotPasswordLinkHandler}>
+          to={{screen: screens.FORGOT_PASSWORD}}
+          style={[sharedStyles.link, styles.forgotPasswordLink]}>
           {t('forgotPasswordLink')}
         </Link>
 
@@ -101,15 +96,9 @@ const SignInScreen = () => {
 
       <View style={styles.footer}>
         <Text body1>{t('dontHaveAccountText')}</Text>
-        <Link body1 onPress={signUpLinkHandler}>
+        <Link to={{screen: screens.SIGN_UP}} style={sharedStyles.link}>
           {t('signUpLink')}
         </Link>
-        {/* <Icon.Button
-        name="apple"
-        backgroundColor="#3b5998"
-        onPress={() =>
-        Login with Facebook
-      </Icon.Button> */}
       </View>
       {loader}
     </BackgroundScreen>

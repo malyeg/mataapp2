@@ -3,8 +3,8 @@ import React, {ComponentProps} from 'react';
 import {StyleSheet} from 'react-native';
 import theme from '../../styles/theme';
 
-export type LinkProps = ComponentProps<typeof LinkBase>;
-
+export type LinkBaseProps = ComponentProps<typeof LinkBase>;
+export interface LinkProps extends LinkBaseProps {}
 const Link = ({...props}: LinkProps) => {
   return (
     <LinkBase {...props} style={[styles.text, props.style]}>

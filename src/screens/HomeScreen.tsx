@@ -51,7 +51,7 @@ const HomeScreen = () => {
           <Logo size={75} style={styles.logo} />
           <ProfileIcon style={styles.profile} size={30} />
         </View>
-        <ItemsSearch style={styles.itemsSearch} />
+        {/* <ItemsSearch style={styles.itemsSearch} /> */}
         {!!location?.city && (
           <>
             {profile?.targetCategories && (

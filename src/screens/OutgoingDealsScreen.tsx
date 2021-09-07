@@ -7,6 +7,7 @@ import itemsApi from '../api/itemsApi';
 import {Image, Loader, Screen, Text} from '../components/core';
 import Card from '../components/core/Card';
 import DataList from '../components/widgets/DataList';
+import DealStatus from '../components/widgets/DealStatus';
 import {patterns, screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
@@ -62,6 +63,8 @@ const OutgoingDealsScreen = () => {
             {format(item.timestamp, patterns.DATE)}
           </Text>
         )}
+        {/* <Text style={styles.dealStatusText}>{item.status}</Text> */}
+        <DealStatus deal={item} style={styles.dealStatusText} />
       </View>
     </Card>
   );
@@ -118,9 +121,22 @@ const styles = StyleSheet.create({
   },
   content: {
     marginLeft: 10,
+    flex: 1,
     // flexDirection: 'row',
   },
   date: {
     color: theme.colors.grey,
+    ...theme.styles.scale.body2,
+  },
+  dealStatusText: {
+    // position: 'absolute',
+    // right: 0,
+    // top: 0,
+    marginRight: 'auto',
+    textTransform: 'capitalize',
+    minWidth: 100,
+    textAlign: 'center',
+    // flex: 0,
+    // alignSelf: 'flex-end',
   },
 });

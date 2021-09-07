@@ -6,6 +6,7 @@ import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, Item} from '../api/itemsApi';
 import listsApi from '../api/listsApi';
+import profilesApi from '../api/profileApi';
 import {Button, Icon, Loader, Screen, Text} from '../components/core';
 import PressableOpacity from '../components/core/PressableOpacity';
 import Carousel from '../components/widgets/Carousel';
@@ -37,7 +38,7 @@ const ItemDetailsScreen = () => {
   const [inWishList, setWishList] = useState<boolean | undefined>();
   const [showItemPicker, setShowItemPicker] = useState(false);
   const {loader, request} = useApi();
-  const {user} = useAuth();
+  const {user, getName} = useAuth();
   const navigation = useNavigation<StackNavigationHelpers>();
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
@@ -168,7 +169,14 @@ const ItemDetailsScreen = () => {
         confirmCallback: async () => {
           try {
             const offer = await request<Deal>(() =>
-              dealsApi.createOffer(user.id, item!),
+              dealsApi.createOffer(
+                {
+                  id: user.id,
+                  email: user.email,
+                  name: getName(),
+                },
+                item!,
+              ),
             );
             refreshItem.current = true;
             navigation.navigate(screens.DEAL_DETAILS, {
@@ -194,7 +202,15 @@ const ItemDetailsScreen = () => {
       confirmCallback: async () => {
         try {
           const offer = await request<Deal>(() =>
-            dealsApi.createOffer(user.id, item!, swapItem),
+            dealsApi.createOffer(
+              {
+                id: user.id,
+                email: user.email,
+                name: getName(),
+              },
+              item!,
+              swapItem,
+            ),
           );
           refreshItem.current = true;
           navigation.navigate(screens.DEAL_DETAILS, {

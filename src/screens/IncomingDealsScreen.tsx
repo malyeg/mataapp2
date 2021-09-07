@@ -1,20 +1,19 @@
+import {format} from 'date-fns';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {format} from 'date-fns';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi from '../api/itemsApi';
-import {Icon, Image, Loader, Screen, Text} from '../components/core';
+import {Image, Loader, Screen, Text} from '../components/core';
 import Card from '../components/core/Card';
 import DataList from '../components/widgets/DataList';
-import ItemDealCard from '../components/widgets/ItemDealCard';
+import DealStatus from '../components/widgets/DealStatus';
 import {patterns, screens} from '../config/constants';
 import useApi from '../hooks/useApi';
 import useAuth from '../hooks/useAuth';
 import useNavigationHelper from '../hooks/useNavigationHelper';
 import theme from '../styles/theme';
 import {QueryBuilder} from '../types/DataTypes';
-import SwapIcon from '../components/icons/SwapIcon';
 
 const IncomingDealsScreen = () => {
   const [deals, setDeals] = useState<ApiResponse<Deal>>();
@@ -60,6 +59,7 @@ const IncomingDealsScreen = () => {
             {format(item.timestamp, patterns.DATE)}
           </Text>
         )}
+        <DealStatus deal={item} style={styles.dealStatusText} />
       </View>
     </Card>
   );
@@ -73,7 +73,6 @@ const IncomingDealsScreen = () => {
           showsVerticalScrollIndicator={false}
           data={deals}
           // columnWrapperStyle={styles.columnWrapper}
-
           renderItem={renderItem}
           // itemSize={ITEM_CARD_HEIGHT}
         />
@@ -109,10 +108,18 @@ const styles = StyleSheet.create({
   },
   date: {
     color: theme.colors.grey,
+    ...theme.styles.scale.body2,
   },
   cardBody: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  dealStatusText: {
+    marginRight: 'auto',
+    textTransform: 'capitalize',
+    minWidth: 100,
+    textAlign: 'center',
+    // right: 0,
   },
 });

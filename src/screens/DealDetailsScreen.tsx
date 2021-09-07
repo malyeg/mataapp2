@@ -165,9 +165,7 @@ const DealDetailsScreen = () => {
         {t('chatHeader', {
           params: {
             userName:
-              deal.item?.user?.name ??
-              deal.item?.user?.email ??
-              deal.item?.userId.substr(0, 6) + ' ...',
+              user.id === deal.userId ? deal.item?.user?.name : deal.user?.name,
           },
         })}
       </Text>
@@ -281,6 +279,7 @@ const styles = StyleSheet.create({
   statusText: {
     position: 'absolute',
     zIndex: 1,
+    left: 5,
   },
   dealDateText: {
     position: 'absolute',

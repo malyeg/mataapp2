@@ -12,9 +12,7 @@ const useController = (
 ) => {
   const methods = useFormContext();
   const control = options.control ?? methods.control;
-  const {isSubmitted, isDirty} = methods
-    ? methods.formState
-    : control.formStateRef.current;
+  const {isSubmitted, isDirty} = methods?.formState ?? control._formState;
 
   const controller = useControllerBase({...options, control});
   const ref = useRef<any>(0);

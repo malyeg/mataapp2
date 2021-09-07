@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Pressable,
   StyleProp,
   StyleSheet,
   TextStyle,
@@ -16,18 +17,20 @@ interface ProfileHeaderProps extends ViewProps {
   userNameStyle?: StyleProp<TextStyle>;
   icon?: Partial<IconProps>;
   iconContainerStyle?: StyleProp<ViewStyle>;
+  onPress?: () => void;
 }
 const ProfileHeader = ({
   style,
   userNameStyle,
   iconContainerStyle,
   icon,
+  onPress,
 }: ProfileHeaderProps) => {
   const profileIconSize = icon?.size ?? 110;
   const {user, profile} = useAuth();
   // useEffect(() => {}, [profile]);
   return (
-    <View style={[styles.container, style]}>
+    <Pressable style={[styles.container, style]} onPress={onPress}>
       <View
         style={[
           styles.iconContainer,
@@ -54,7 +57,7 @@ const ProfileHeader = ({
           ? `${profile.firstName} ${profile.lastName}`
           : user.username}
       </Text>
-    </View>
+    </Pressable>
   );
 };
 
