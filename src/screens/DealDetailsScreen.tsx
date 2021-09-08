@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Pressable, StyleSheet} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi from '../api/itemsApi';
 import {Button, Image, Loader, Screen, Text} from '../components/core';
@@ -160,6 +160,21 @@ const DealDetailsScreen = () => {
           </>
         )}
       </Card>
+      {deal.userId !== user.id && deal.status === 'new' && (
+        <View style={styles.actionButtonsContainer}>
+          <Button
+            title={t('approveBtnTitle')}
+            onPress={acceptHandler}
+            style={[styles.acceptButton, styles.actionButton]}
+          />
+          <Button
+            title={t('rejectBtnTitle')}
+            onPress={rejectHandler}
+            themeType="dark"
+            style={styles.actionButton}
+          />
+        </View>
+      )}
 
       <Text style={styles.chatHeaderText}>
         {t('chatHeader', {
@@ -170,20 +185,7 @@ const DealDetailsScreen = () => {
         })}
       </Text>
       <Chat deal={deal} disableComposer={!isOpen} style={styles.chat} />
-      {deal.userId !== user.id && deal.status === 'new' && (
-        <>
-          <Button
-            title={t('approveBtnTitle')}
-            onPress={acceptHandler}
-            style={styles.acceptButton}
-          />
-          <Button
-            title={t('rejectBtnTitle')}
-            onPress={rejectHandler}
-            themeType="white"
-          />
-        </>
-      )}
+
       {deal?.status === 'accepted' && deal.userId !== user.id && (
         <Button title={t('closeBtnTitle')} onPress={closeHandler} />
       )}
@@ -235,10 +237,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 10,
   },
-  actionButton: {
-    flex: 1,
-    marginHorizontal: 20,
-  },
+
   swapIcon: {
     marginHorizontal: -7,
     zIndex: 1000,
@@ -287,5 +286,13 @@ const styles = StyleSheet.create({
     left: 5,
     zIndex: 1,
     ...theme.styles.scale.body3,
+  },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  actionButton: {
+    flexBasis: '48%',
+    // marginHorizontal: 10,
   },
 });

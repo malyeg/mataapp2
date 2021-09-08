@@ -22,6 +22,7 @@ class MessagesApi extends DataApi<Message> {
 
     const timestamp = (doc.data()?.timestamp as any)?.toDate();
     const message: Message = {
+      ...docData,
       id: doc.id,
       _id: doc.id,
       text: docData.text,

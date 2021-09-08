@@ -7,6 +7,7 @@ import {
   GiftedChat,
   InputToolbar,
   Send,
+  SystemMessage,
 } from 'react-native-gifted-chat';
 import {Deal} from '../../api/dealsApi';
 import messagesApi, {Message} from '../../api/messagesApi';
@@ -66,6 +67,17 @@ const Chat = ({deal, disableComposer, style, alwaysShowSend}: ChatProps) => {
     [],
   );
 
+  const renderSystemMessage = (props: any) => {
+    // console.log(props);
+    return (
+      <SystemMessage
+        {...props}
+        containerStyle={styles.systemMessageContainer}
+        textStyle={styles.systemMessageText}
+      />
+    );
+  };
+
   const renderComposer = useCallback(
     props =>
       disableComposer ? (
@@ -95,6 +107,7 @@ const Chat = ({deal, disableComposer, style, alwaysShowSend}: ChatProps) => {
             <></>
           )
         }
+        renderSystemMessage={renderSystemMessage}
         onSend={messages => onSend(messages)}
         user={{
           _id: user.id,
@@ -145,4 +158,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   chatFooter: {},
+  systemMessageContainer: {
+    // backgroundColor: 'grey',
+  },
+  systemMessageText: {
+    backgroundColor: theme.colors.dark,
+    color: theme.colors.white,
+    padding: 10,
+    borderRadius: 7,
+    // borderWidth: 1,
+    // bod
+    overflow: 'hidden',
+    fontWeight: theme.fontWeight.bold,
+  },
 });

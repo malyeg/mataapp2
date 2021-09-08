@@ -11,6 +11,7 @@ import useLocale from '../hooks/useLocale';
 import useNavigationHelper from '../hooks/useNavigationHelper';
 import AddItemScreen from '../screens/AddItemScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import ContactUsScreen from '../screens/ContactUsScreen';
 import DealDetailsScreen from '../screens/DealDetailsScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import FAQScreen from '../screens/FAQScreen';
@@ -63,6 +64,7 @@ export type StackParams = {
   [screens.NOTIFICATIONS]: undefined;
   [screens.FAQ]: undefined;
   [screens.SUPPORT_US]: undefined;
+  [screens.CONTACT_US]: undefined;
 };
 
 const Stack = createStackNavigator<StackParams>();
@@ -177,6 +179,11 @@ const HomeStack = () => {
         name={screens.SUPPORT_US}
         component={SupportUsScreen}
         options={{headerTitle: t('screens.supportUs')}}
+      />
+      <Stack.Screen
+        name={screens.CONTACT_US}
+        component={ContactUsScreen}
+        options={{headerTitle: t('screens.contactUs')}}
       />
     </Stack.Navigator>
   );

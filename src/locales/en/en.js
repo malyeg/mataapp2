@@ -59,6 +59,7 @@ export default {
       searchItemsLabel: 'Search items',
       dealsLabel: 'Deals',
       faqLabel: 'FAQ',
+      aboutUsLabel: 'About us',
       contactUsLabel: 'Contact us',
       supportUsLabel: 'Support mata',
     },
@@ -80,6 +81,8 @@ export default {
       faq: 'FAQ',
       notifications: 'Notifications',
       supportUs: 'Support mata',
+      contactUs: 'Contact us',
+      aboutUs: 'About us',
     },
     menu: {
       archivedDealsLabel: 'Archived deals',
@@ -298,6 +301,7 @@ export default {
     editProfileLink: 'Edit profile',
     changePasswordLink: 'Change password',
     myInterestsLink: 'My interests',
+    inviteUserTitle: 'Invite a friend',
     logout: {
       logoutLink: 'Logout',
       confirmLogoutTitle: 'Confirm logout',
@@ -427,6 +431,19 @@ export default {
   },
   SupportUsScreen: {
     content: 'Support mata and buy us a coffee',
+  },
+  ContactUsScreen: {
+    content: 'Support mata and buy us a coffee',
+    subject: {
+      placeholder: 'Subject',
+      required: 'Subject is required',
+    },
+    body: {
+      placeholder: 'Message',
+      required: 'Message is required',
+    },
+    submitBtnTitle: 'Submit',
+    submitSuccess: 'Your message has been sent successfully',
   },
   error: {
     ['auth/user-not-found']: 'user not found',

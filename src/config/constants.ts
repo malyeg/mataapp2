@@ -1,4 +1,5 @@
 export let BASE_URL = 'https://admin.medyour.com/api';
+let SHARE_DOMAIN = 'https://mataapp.page.link/home';
 
 const AuthBgImage = require('../assets/images/bg.png');
 
@@ -98,6 +99,7 @@ export const screens = {
   SETTINGS: 'SettingsScreen' as 'SettingsScreen',
   FAQ: 'FAQScreen' as 'FAQScreen',
   SUPPORT_US: 'SupportUsScreen' as 'SupportUsScreen',
+  CONTACT_US: 'ContactUsScreen' as 'ContactUsScreen',
 };
 
 const constants = {
@@ -115,6 +117,7 @@ const constants = {
   payment,
   stacks,
   patterns,
+  SHARE_DOMAIN,
 };
 
 export default constants;

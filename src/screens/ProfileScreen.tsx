@@ -4,9 +4,10 @@ import React, {FC, useEffect, useState} from 'react';
 import {Pressable, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Button, Icon, Modal, Screen, Text} from '../components/core';
 import ProfileHeader from '../components/widgets/ProfileHeader';
-import {screens} from '../config/constants';
+import constants, {screens} from '../config/constants';
 import useAuth from '../hooks/useAuth';
 import useLocale from '../hooks/useLocale';
+import useSocial from '../hooks/useSocial';
 // import useSocial from '../hooks/useSocial';
 import theme from '../styles/theme';
 
@@ -15,13 +16,17 @@ const ProfileScreen = () => {
   const {t} = useLocale('profileScreen');
   const navigation = useNavigation<StackNavigationHelpers>();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
-  // const {onShare} = useSocial();
+  const {onShare} = useSocial();
 
   useEffect(() => {
     // TODO get profile data from back
   }, []);
   const closeModal = () => {
     setLogoutModalVisible(false);
+  };
+
+  const onInviteUser = () => {
+    onShare(constants.SHARE_DOMAIN);
   };
   return (
     <Screen style={styles.container} scrollable={false}>
@@ -42,6 +47,12 @@ const ProfileScreen = () => {
       <ProfileItem
         title={t('myItemsLink')}
         onPress={() => navigation.navigate(screens.MY_ITEMS)}
+      />
+
+      <ProfileItem
+        title={t('inviteUserTitle')}
+        onPress={onInviteUser}
+        // chevron={false}
       />
 
       <ProfileItem

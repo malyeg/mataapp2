@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
     // minHeight: 60,
-    maxHeight: 60,
+    // maxHeight: 60,
   },
   label: {
     // paddingTop: 10,

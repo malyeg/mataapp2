@@ -67,6 +67,11 @@ const DrawerContent = ({navigation, ...props}: DrawerContentComponentProps) => {
       <DrawerItem
         label={t('drawer.contactUsLabel')}
         icon="phone"
+        onPress={() => navigation.navigate(screens.CONTACT_US)}
+      />
+      <DrawerItem
+        label={t('drawer.aboutUsLabel')}
+        icon="phone"
         onPress={() => Linking.openURL('http://www.mataup.com/contact-us')}
         style={styles.lastItem}
       />
