@@ -40,6 +40,7 @@ const TopCategories = ({style}: TopCategoriesProps) => {
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
     </View>
   );
@@ -50,8 +51,9 @@ export default React.memo(TopCategories);
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // backgroundColor: 'grey',
   },
   categoryContainer: {
     alignItems: 'center',
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    marginHorizontal: 18,
+    // marginHorizontal: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -69,9 +71,7 @@ const styles = StyleSheet.create({
     ...theme.styles.scale.body3,
     paddingTop: 7,
   },
-  rightChevron: {
-    // position: 'absolute',
-    // right: -20,
-    // backgroundColor: 'red',
+  separator: {
+    width: 35,
   },
 });

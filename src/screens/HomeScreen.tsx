@@ -4,8 +4,6 @@ import {StyleSheet, View} from 'react-native';
 import {Screen} from '../components/core';
 import Icon from '../components/core/Icon';
 import Logo from '../components/core/Logo';
-import SearchInput from '../components/form/SearchInput';
-import ItemsSearch from '../components/widgets/ItemsSearch';
 import NearByItems from '../components/widgets/NearByItems';
 import ProfileIcon from '../components/widgets/ProfileIcon';
 import RecommendedItems from '../components/widgets/RecommendedItems';
@@ -99,10 +97,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categories: {
-    // position: 'absolute'
     marginVertical: 10,
-    // backgroundColor: 'grey',
-    marginLeft: theme.defaults.SCREEN_PADDING * -1,
+    marginRight: theme.defaults.SCREEN_PADDING * -1,
   },
   tabBar: {
     position: 'absolute',
