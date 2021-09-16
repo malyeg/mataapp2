@@ -54,6 +54,11 @@ const ProfileScreen = () => {
         onPress={onInviteUser}
         // chevron={false}
       />
+      <ProfileItem
+        title={t('wishListTitle')}
+        onPress={() => navigation.navigate(screens.WISH_LIST)}
+        // chevron={false}
+      />
 
       <ProfileItem
         style={styles.logout}

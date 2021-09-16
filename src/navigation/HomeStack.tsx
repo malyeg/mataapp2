@@ -23,6 +23,7 @@ import NotificationsScreen from '../screens/NotificationsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import SupportUsScreen from '../screens/SupportUsScreen';
+import WishListScreen from '../screens/WishListScreen';
 import {Status} from '../types/DataTypes';
 import ArchivedDealsTabs from './ArchivedDealsTabs';
 import DealsTabs from './DealsTabs';
@@ -65,6 +66,7 @@ export type StackParams = {
   [screens.FAQ]: undefined;
   [screens.SUPPORT_US]: undefined;
   [screens.CONTACT_US]: undefined;
+  [screens.WISH_LIST]: undefined;
 };
 
 const Stack = createStackNavigator<StackParams>();
@@ -184,6 +186,11 @@ const HomeStack = () => {
         name={screens.CONTACT_US}
         component={ContactUsScreen}
         options={{headerTitle: t('screens.contactUs')}}
+      />
+      <Stack.Screen
+        name={screens.WISH_LIST}
+        component={WishListScreen}
+        options={{headerTitle: t('screens.wishList')}}
       />
     </Stack.Navigator>
   );

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/core';
 import {StackNavigationHelpers} from '@react-navigation/stack/lib/typescript/src/types';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {Dimensions, Pressable, StyleSheet, View, ViewProps} from 'react-native';
 import categoriesApi from '../../api/categoriesApi';
 import itemsApi, {Item} from '../../api/itemsApi';
@@ -31,7 +31,10 @@ const RecommendedCard = ({item, style}: ItemCardProps) => {
 
   const imageUrl = itemsApi.getImageUrl(item);
 
-  const category = categoriesApi.getAll().find(c => c.id === item.category.id);
+  const category = useMemo(
+    () => categoriesApi.getAll().find(c => c.id === item.category.id),
+    [item.category.id],
+  );
 
   return (
     <Pressable style={[styles.card, style]} onPress={openItemDetails}>

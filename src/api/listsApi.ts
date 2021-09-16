@@ -1,9 +1,12 @@
 import {Entity} from '../types/DataTypes';
 import {DataApi} from './DataApi';
+import {Item} from './itemsApi';
 
 export interface ListItem extends Entity {
   id: string;
+  item: Item;
   type: 'wish' | 'favorite';
+  isAvailable?: boolean;
 }
 
 class ListsApi extends DataApi<ListItem> {

@@ -1,6 +1,5 @@
 import React from 'react';
 import {FlatList, StyleSheet} from 'react-native';
-import itemsApi from '../api/itemsApi';
 import notificationsApi from '../api/notificationsApi';
 import {Loader, Screen} from '../components/core';
 import NoDataFound from '../components/widgets/NoDataFound';

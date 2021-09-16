@@ -44,6 +44,7 @@ const Image = ({
             }
           }
           resizeMode={resizeMode ?? FastImage.resizeMode.cover}
+          onError={() => console.log('Image loading error')}
           // onLoadEnd={onLoadEnd}
         />
       </Pressable>
@@ -80,7 +81,7 @@ const Image = ({
         }
       }
       resizeMode={resizeMode ?? FastImage.resizeMode.cover}
-      onError={() => console.log('error')}
+      onError={() => console.log('Image loading error')}
       // onLoadEnd={onLoadEnd}
     />
   );

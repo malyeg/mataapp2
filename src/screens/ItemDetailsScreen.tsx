@@ -5,6 +5,7 @@ import {StyleSheet, View} from 'react-native';
 import {ApiResponse} from '../api/Api';
 import dealsApi, {Deal} from '../api/dealsApi';
 import itemsApi, {conditionList, Item} from '../api/itemsApi';
+import listsApi from '../api/listsApi';
 import {Button, Icon, Loader, Screen, Text} from '../components/core';
 import PressableOpacity from '../components/core/PressableOpacity';
 import Carousel from '../components/widgets/Carousel';
@@ -35,8 +36,8 @@ const ItemDetailsScreen = () => {
   const [item, setItem] = useState<Item>();
   const [inWishList, setWishList] = useState<boolean | undefined>();
   const [showItemPicker, setShowItemPicker] = useState(false);
-  const {loader, request} = useApi();
-  const {user, getName} = useAuth();
+  const {request} = useApi();
+  const {user, shardUser, getName} = useAuth();
   const navigation = useNavigation<StackNavigationHelpers>();
   const {t} = useLocale('itemDetailsScreen');
   const {show, sheetRef} = useSheet();
@@ -117,10 +118,10 @@ const ItemDetailsScreen = () => {
         if (route.params?.toast) {
           showToast(route.params.toast);
         }
-        setWishList(false);
-        // listsApi.getById(snapshot.doc.id).then(listItem => {
-        //   setWishList(!!listItem);
-        // });
+        listsApi.getById(snapshot.doc.id).then(listItem => {
+          console.log('wishList listItem data', !!listItem);
+          setWishList(!!listItem);
+        });
       }
     });
 
@@ -228,15 +229,16 @@ const ItemDetailsScreen = () => {
     try {
       console.log('toggleWishList');
       setWishList(current => {
-        // if (current) {
-        //   listsApi.deleteById(item?.id!);
-        // } else {
-        //   listsApi.set(item?.id!, {
-        //     id: item?.id!,
-        //     userId: user.id,
-        //     type: 'wish',
-        //   });
-        // }
+        if (current) {
+          listsApi.deleteById(item?.id!);
+        } else {
+          listsApi.add({
+            userId: user.id,
+            type: 'wish',
+            user: shardUser,
+            item: item!,
+          });
+        }
         return !current;
       });
     } catch (error) {
@@ -277,6 +279,7 @@ const ItemDetailsScreen = () => {
                 color={theme.colors.salmon}
               />
             </PressableOpacity>
+            // <Text>hello</Text>
           )}
         </View>
         {item.userId !== user.id && (
@@ -489,6 +492,7 @@ const styles = StyleSheet.create({
     bottom: 20,
     right: 10,
     zIndex: 1,
+    elevation: 5,
   },
 
   swapContainer: {

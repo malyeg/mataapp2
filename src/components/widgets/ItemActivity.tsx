@@ -15,7 +15,7 @@ const ItemActivity = ({item, style}: ItemActivityProps) => {
   ];
   return (
     <View style={styleList}>
-      <Text style={[styles.actvityStatusText]}>{item!.status}</Text>
+      <Text style={[styles.activityStatusText]}>{item!.status}</Text>
     </View>
   );
 };
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  actvityStatusText: {
+  activityStatusText: {
     color: theme.colors.white,
     ...theme.styles.scale.body3,
   },

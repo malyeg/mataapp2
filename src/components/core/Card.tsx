@@ -4,7 +4,6 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
-  View,
   ViewProps,
   ViewStyle,
 } from 'react-native';
@@ -16,8 +15,9 @@ interface CardProps extends ViewProps {
   onPress?: () => void;
   children: ReactNode;
   contentStyle?: StyleProp<ViewStyle>;
+  hideChevron?: boolean;
 }
-const Card = ({style, contentStyle, children, icon, onPress}: CardProps) => {
+const Card = ({style, hideChevron, children, icon, onPress}: CardProps) => {
   return (
     <Pressable
       style={[styles.container, style, icon ? styles.hasIcon : {}]}
@@ -32,7 +32,7 @@ const Card = ({style, contentStyle, children, icon, onPress}: CardProps) => {
         />
       )}
       {children}
-      {!!onPress && (
+      {!!onPress && !hideChevron && (
         <Icon
           name="chevron-right"
           color={theme.colors.salmon}

@@ -95,6 +95,7 @@ export const screens = {
   CHANGE_PASSWORD: 'ChangePasswordScreen' as 'ChangePasswordScreen',
   INTERESTS: 'MyInterestsScreen' as 'MyInterestsScreen',
   INVITE_FRIEND: 'InviteFriendScreen' as 'InviteFriendScreen',
+  WISH_LIST: 'WishListScreen' as 'WishListScreen',
 
   SETTINGS: 'SettingsScreen' as 'SettingsScreen',
   FAQ: 'FAQScreen' as 'FAQScreen',

@@ -83,6 +83,7 @@ export default {
       supportUs: 'Support mata',
       contactUs: 'Contact us',
       aboutUs: 'About us',
+      wishList: 'Wish list',
     },
     menu: {
       archivedDealsLabel: 'Archived deals',
@@ -302,6 +303,7 @@ export default {
     changePasswordLink: 'Change password',
     myInterestsLink: 'My interests',
     inviteUserTitle: 'Invite a friend',
+    wishListTitle: 'Wish list',
     logout: {
       logoutLink: 'Logout',
       confirmLogoutTitle: 'Confirm logout',

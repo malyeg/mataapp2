@@ -78,7 +78,12 @@ const useAuth = () => {
   };
 
   return {
-    user: authContext.state?.user!,
+    user: user!,
+    shardUser: {
+      id: user?.id!,
+      name: getName()!,
+      email: user?.username!,
+    },
     profile: authContext.state?.profile,
     signUp: authContext.signUp,
     signIn,
